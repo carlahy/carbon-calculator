@@ -75,16 +75,20 @@
           <div ng-repeat="decision in decisions">
             <li>
               {{decision.name}} = decision("Policy Type") {
-                <ul ng-repeat="p in decision.policies">
+                <ul>
+                  <div ng-repeat="p in decision.policies">
+                    <li>
+                      "{{p.name}}":
+                      <input type="text" value="p.value" ng-model="policyValue">;
+                      <input type="button" value="Save" ng-click="savePolicy(decision, p, policyValue)">
+                    </li>
+                  </div>
                   <li>
-                    "{{p.name}}":
-                    <input type="text" name="" ng-model="policyValue">;
-                    <input type="button" value="Save" ng-click="saveDec(decision, p, policyVal)">
+                    <input type="text" name="policyName" ng-model="policyName"> :
+                    <input type="text" name="policyValue" ng-model="policyValue">
+                    <input type="button" value="Add" ng-click="addPolicy(decision,policyName,policyValue)">
                   </li>
                 </ul>
-                <input type="text" name="policyName" ng-model="policyName"> :
-                <input type="text" name="policyValue" ng-model="policyValue">
-                <input type="button" value="Add" ng-click="addPolicy(policyName)">
               }
               <label><input type="checkbox" name="checkparam" ng-click="isParam(decision)">Param?</label>
             </li>

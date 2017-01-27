@@ -55,9 +55,7 @@ app.controller('mainController', function($scope) {
   $scope.saveParamVal = function (param, value) {
     if(value) {
       // TODO: Parse
-      var index = $scope.params.indexOf(param);
-      param = $scope.params[index];
-      param['value'] = value;
+      param.value = value;
       var pValue = getParams(value);
       for(p in pValue) {
         p = pValue[p];
@@ -91,8 +89,6 @@ app.controller('mainController', function($scope) {
   $scope.saveCurrentEq = function(obj,eq) {
     if(eq) {
       //TODO: update eq with correct param names (split, join)
-      var index = $scope.objectives.indexOf(obj);
-      obj = $scope.objectives[index];
       obj['currentEq'] = eq;
       var params = getParams(eq);
       for(p in params) {
@@ -113,8 +109,6 @@ app.controller('mainController', function($scope) {
   $scope.saveNewEq = function(obj,eq) {
     if(eq) {
       //TODO: update eq with correct param names (split, join)
-      var index = $scope.objectives.indexOf(obj);
-      obj = $scope.objectives[index];
       obj['newEq'] = eq;
       var params = getParams(eq);
       for(p in params) {
@@ -143,22 +137,31 @@ app.controller('mainController', function($scope) {
     var index = $scope.params.indexOf(param);
     $scope.params.splice(index,1);
     $scope.decisions.push({
-      name: param.name
+      name: param.name,
+      policies: []
     });
   };
 
-  $scope.saveDec = function(decision, p, policyVal) {
-    var dec = $scope.params.indexOf(decision);
-    dec[p][value] = policyValue;
-    console.log(dec);
+  $scope.savePolicy = function(decision, policy, policyValue) {
+    if(policy && policyValue) {
+      policy.value = policyValue;
+      console.log(decision);
+    }
   };
 
-  $scope.addPolicy = function(decision, policyName) {
+  $scope.addPolicy = function(decision,policyName,policyValue) {
     if(policyName) {
-      var dec = $scope.decisions.indexOf(decision);
-      dec['policies'].push({
-        name: policyName
-      });
+      // TODO: check for value here? Potentially add later?
+      if(policyValue) {
+        decision['policies'].push({
+          name:policyName,
+          value:policyValue
+        });
+      } else {
+        decision['policies'].push({
+          name:policyName
+        });
+      }
     } else {
       console.log('Policy cannot be empty');
     }
@@ -171,12 +174,6 @@ app.controller('mainController', function($scope) {
     $scope.params.push({
       name:decision.name
     });
-  };
-
-  $scope.saveDecPolicy = function(decision, d, policyVal) {
-    var index = $scope.decisions.indexOf(decision);
-    var dec = $scope.decisions[index];
-    dec[d].push({})
   };
 
   //Format model when submitting
