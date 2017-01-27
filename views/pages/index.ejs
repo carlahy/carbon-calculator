@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html ng-app="carbonCalc">
+<head>
+  <meta charset="utf-8"/>
+  <title>Carbon Calc</title>
+  <script type="text/javascript" src="js/angular.min.js"></script>
+  <script type="text/javascript" src="js/jquery-3.1.1.min.js"></script>
+  <script type="text/javascript" src="js/index.js"></script>
+  <script type="text/javascript" src="js/app.js"></script>
+  <!-- <link rel="stylesheet" type="text/css" href="css/normalize.css">
+  <link rel="stylesheet" type="text/css" href="css/skeleton.css"> -->
+  <link rel="stylesheet" type="text/css" href="css/style.css">
+
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+
+<body ng-controller="mainController">
+
+  <h1>Carbon Calculator<h1><br>
+      <h1>Model</h1>
+      <form name="mform" autocomplete="off">
+
+        <h3>Model Name:</h3>
+        <input type="text" name="modelName">
+
+        <h3>Objectives:</h3>
+        <ul id="objectives">
+          <div ng-repeat="obj in objectives">
+            <li>
+              {{obj.minmax}} {{obj.name}}
+              <input type="button" value="Remove" ng-click="delObj(obj)">
+            </li>
+          </div>
+          <li>
+            <select name="minmax" ng-model="minmax" ng-init="minmax = objOption[0]" ng-options="option for option in objOption">
+            </select>
+            <input type="text" id="obj_name" name="objname" ng-model="objname">
+            <input type="button" id="obj_add" value="Add" ng-click="addObj(minmax,objname)">
+            <!--  Type submit changes to enter -->
+          </li>
+          <input type="button" name="button" value="test" ng-click="formatObj()">
+        </ul>
+
+        <h3>Parameters:</h3>
+        <ul>
+          <div ng-repeat="param in params">
+            <li>
+              {{param.name}} =
+              <input type="text" id="param_val" name="paramVal" ng-model="paramVal">
+              <input type="button" id="param_save" value="Save" ng-click="saveParamVal(param,paramVal)">
+              <input type="button" id="param_delete" value="Remove" ng-click="delParamVal(param)">
+              <label><input type="checkbox" name="checkdec" ng-click="isDecision(param)">Decision?</label>
+            </li>
+          </div>
+        </ul>
+
+        <h3>Equations:</h3>
+        <ul id="equations">
+          <div ng-repeat="obj in objectives">
+            <li>
+              Current{{obj.name}} =
+              <input type="text" id="current_eq" name="currentEq" ng-model="currentEq">
+              <input type="button" id="current_eq_save" value="Save" ng-click="saveCurrentEq(obj,currentEq)">
+            </li>
+            <li>
+              New{{obj.name}} =
+              <input type="text" id="new_eq" name="newEq" ng-model="newEq">
+              <input type="button" id="new_eq_save" value="Save" ng-click="saveNewEq(obj,newEq)">
+            </li>
+          </div>
+        </ul>
+
+        <h3>Decisions:</h3></div>
+        <ul>
+          <div ng-repeat="decision in decisions">
+            <li>
+              {{decision.name}} = decision("Policy Type") {
+                <ul ng-repeat="p in decision.policies">
+                  <li>
+                    "{{p.name}}":
+                    <input type="text" name="" ng-model="policyValue">;
+                    <input type="button" value="Save" ng-click="saveDec(decision, p, policyVal)">
+                  </li>
+                </ul>
+                <input type="text" name="policyName" ng-model="policyName"> :
+                <input type="text" name="policyValue" ng-model="policyValue">
+                <input type="button" value="Add" ng-click="addPolicy(policyName)">
+              }
+              <label><input type="checkbox" name="checkparam" ng-click="isParam(decision)">Param?</label>
+            </li>
+          </div>
+        </ul>
+
+        <input type="button" name="Submit" value="Submit Model" ng-click="mform.$valid && submitModel()">
+      </form>
+    </div>
+
+    <div class="two columns">
+      <h1>Toggle</h1>
+
+    </div>
+
+    <div class="five columns" id="result">
+      <h1>Results</h1>
+      <%= modelResult %>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>
