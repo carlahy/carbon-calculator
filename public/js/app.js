@@ -34,7 +34,6 @@ app.controller('mainController', function($scope) {
           name: name
         });
         varNames.push(name);
-        console.log(varNames);
       } else {
         // TODO: Alert warning, duplicate names
       }
@@ -54,15 +53,16 @@ app.controller('mainController', function($scope) {
 
   $scope.saveParamVal = function (param, value) {
     if(value) {
-      // TODO: Parse
       param.value = value;
+      // Add new parameters if any
       var pValue = getParams(value);
       for(p in pValue) {
         p = pValue[p];
         if(!includes(varNames,p)) {
           varNames.push(p);
           $scope.params.push({
-            name:p
+            name:p,
+            value:''
           });
         }
       }
@@ -74,7 +74,9 @@ app.controller('mainController', function($scope) {
   // TODO: is probability distribution?
 
   $scope.delParamVal = function (param) {
-    var index = $scope.params.indexOf(param,1);
+    var index = $scope.params.indexOf(param);
+    console.log(index);
+    console.log('Param is = ', $scope.params[index]);
     $scope.params.splice(index,1);
     index = varNames.indexOf(param.name);
     varNames.splice(index,1);
@@ -82,8 +84,8 @@ app.controller('mainController', function($scope) {
 
 ///////////// Equations /////////////
 
-  $scope.currentEq = '';
-  $scope.newEq = '';
+  // $scope.currentEq = '';
+  // $scope.newEq = '';
   $scope.params = [];
 
   $scope.saveCurrentEq = function(obj,eq) {
@@ -97,10 +99,12 @@ app.controller('mainController', function($scope) {
         if(!includes(varNames,p)) {
           varNames.push(p);
           $scope.params.push({
-            name: p
+            name: p,
+            value:''
           });
         }
       }
+      console.log($scope.params);
     } else {
       console.log('Current eq cannot be empty');
     }
@@ -118,11 +122,11 @@ app.controller('mainController', function($scope) {
           varNames.push(p);
           console.log(varNames);
           $scope.params.push({
-            name: p
+            name: p,
+            value:''
           });
         }
       }
-      console.log(obj);
     } else {
       console.log('New eq cannot be empty');
     }
@@ -138,6 +142,7 @@ app.controller('mainController', function($scope) {
     $scope.params.splice(index,1);
     $scope.decisions.push({
       name: param.name,
+      value: param.value,
       policies: []
     });
   };
@@ -145,23 +150,54 @@ app.controller('mainController', function($scope) {
   $scope.savePolicy = function(decision, policy, policyValue) {
     if(policy && policyValue) {
       policy.value = policyValue;
+      // TODO: in getParams, have a special case for probabilities
+      var params = getParams(policyValue);
+      for(p in params) {
+        p = params[p];
+        if(!includes(varNames,p)) {
+          varNames.push(p);
+          $scope.params.push({
+            name:p
+          });
+        }
+      }
       console.log(decision);
+    } else {
+      console.log('Policy name and value cannot be empty');
     }
   };
 
   $scope.addPolicy = function(decision,policyName,policyValue) {
     if(policyName) {
-      // TODO: check for value here? Potentially add later?
-      if(policyValue) {
-        decision['policies'].push({
+      // Parse parameters of value, check for new variables
+      var params = getParams(policyValue);
+      for(p in params) {
+        p = params[p];
+        if(!includes(varNames,p)) {
+          varNames.push(p);
+          $scope.params.push({
+            name: p
+          });
+        }
+      }
+      // Set new policy object {name,value}
+      var found = false;
+      for(p in decision.policies) {
+        // Policy already created
+        if (decision.policies[p].name == policyName) {
+          found = true;
+          decision.policies[p].value = policyValue;
+          break;
+        }
+      }
+      if(found == false) {
+        decision.policies.push({
           name:policyName,
           value:policyValue
         });
-      } else {
-        decision['policies'].push({
-          name:policyName
-        });
+        console.log(decision.policies);
       }
+
     } else {
       console.log('Policy cannot be empty');
     }
@@ -172,7 +208,8 @@ app.controller('mainController', function($scope) {
     var index = $scope.decisions.indexOf(decision);
     $scope.decisions.splice(index,1);
     $scope.params.push({
-      name:decision.name
+      name:decision.name,
+      value:decision.value
     });
   };
 
@@ -191,6 +228,40 @@ app.controller('mainController', function($scope) {
 
   // Send model to RADAR (server)
   $scope.submitModel = function() {
+    var result = '';
+    // Format model name
+    result += 'Model '+ $scope.modelName + eol;
+
+    // Format objectives
+    for(i in $scope.objectives) {
+      var obj = $scope.objectives[i];
+      result += 'Objective ' + obj.minmax + ' ENB'+obj.name+' = EV(NBenefit'+obj.name+')'+eol;
+      result += 'NBenefit' + obj.name + ' = New'+obj.name+ ' - Current'+obj.name+eol
+    }
+    // Format parameters
+    for(i in $scope.params) {
+      var param = $scope.params[i];
+      result +=  param.name + ' = ' + param.value + eol;
+    }
+
+    // Format equations
+    for(i in $scope.objectives) {
+      var obj = $scope.objectives[i];
+      result += 'Current'+ obj.name + ' = ' + obj.currentEq + eol;
+      result += 'New'+ obj.name + ' = ' + obj.newEq + eol;
+    }
+
+    // Format decisions
+    for(i in $scope.decisions) {
+      var dec = $scope.decisions[i];
+      result += dec.name + ' = decision("Policy type") {\n';
+      for(j in dec.policies) {
+        p = dec.policies[j];
+        result += '\t"'+ p.name +'": ' + p.value + eol;
+      }
+      result += '}\n'
+    }
+
     console.log('Model Submission triggered');
     console.log(result);
   }
@@ -199,18 +270,6 @@ app.controller('mainController', function($scope) {
 
 function includes(arr,obj) {
     return (arr.indexOf(obj) != -1);
-}
-
-// Does array contain object with attribute equal to
-
-function includesAttr(arr,attr,val) {
-    for(a in arr) {
-      a = arr[a];
-      if(a[attr] == val) {
-        return true;
-      }
-    }
-    return false;
 }
 
 // function cleanVar(mvar) {
