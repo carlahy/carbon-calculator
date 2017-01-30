@@ -5,10 +5,7 @@
   <title>Carbon Calc</title>
   <script type="text/javascript" src="js/angular.min.js"></script>
   <script type="text/javascript" src="js/jquery-3.1.1.min.js"></script>
-  <script type="text/javascript" src="js/index.js"></script>
   <script type="text/javascript" src="js/app.js"></script>
-  <!-- <link rel="stylesheet" type="text/css" href="css/normalize.css">
-  <link rel="stylesheet" type="text/css" href="css/skeleton.css"> -->
   <link rel="stylesheet" type="text/css" href="css/style.css">
 
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
@@ -21,7 +18,7 @@
       <form name="mform" autocomplete="off">
 
         <h3>Model Name:</h3>
-        <input type="text" name="modelName" ng-model="modelName">
+        <input type="text" name="modelName" ng-model="modelName" ng-blur="addModelName(modelName)" required>
 
         <h3>Objectives:</h3>
         <ul id="objectives">
@@ -46,8 +43,9 @@
           <div ng-repeat="param in params">
             <li>
               {{param.name}} =
-              <input type="text" id="param_val" name="paramVal" ng-model="paramVal" ng-keydown="$event.which === 13 && saveParamVal(param,paramVal)">
-              <input type="button" id="param_save" value="Save" ng-click="saveParamVal(param,paramVal)">
+              <input type="text" id="param_val" name="paramVal" ng-model="paramVal" ng-blur="saveParamVal(param,paramVal)"
+                ng-keydown="$event.which === 13 && saveParamVal(param,paramVal)" required>
+              <!-- <input type="button" id="param_save" value="Save" ng-click="saveParamVal(param,paramVal)"> -->
               <input type="button" id="param_delete" value="Remove" ng-click="delParamVal(param)">
               <label><input type="checkbox" name="checkdec" ng-click="isDecision(param)">Decision?</label>
             </li>
@@ -59,13 +57,15 @@
           <div ng-repeat="obj in objectives">
             <li>
               Current{{obj.name}} =
-              <input type="text" id="current_eq" name="currentEq" ng-model="currentEq" ng-keydown="$event.which === 13 && saveCurrentEq(obj,currentEq)">
-              <input type="button" id="current_eq_save" value="Save" ng-click="saveCurrentEq(obj,currentEq)">
+              <input type="text" id="current_eq" name="currentEq" ng-model="currentEq" ng-blur="saveCurrentEq(obj,currentEq)"
+                ng-keydown="$event.which === 13 && saveCurrentEq(obj,currentEq)" required>
+              <!-- <input type="button" id="current_eq_save" value="Save" ng-click="saveCurrentEq(obj,currentEq)"> -->
             </li>
             <li>
               New{{obj.name}} =
-              <input type="text" id="new_eq" name="newEq" ng-model="newEq" ng-keydown="$event.which === 13 && saveNewEq(obj,newEq)">
-              <input type="button" id="new_eq_save" value="Save" ng-click="saveNewEq(obj,newEq)">
+              <input type="text" id="new_eq" name="newEq" ng-model="newEq" ng-blur="saveNewEq(obj,newEq)"
+                ng-keydown="$event.which === 13 && saveNewEq(obj,newEq)" required>
+              <!-- <input type="button" id="new_eq_save" value="Save" ng-click="saveNewEq(obj,newEq)"> -->
             </li>
           </div>
         </ul>
@@ -80,14 +80,17 @@
                     <li>
                       "{{p.name}}" :
                       <!-- TODO: change placeholder {{p.value}} -->
-                      <input type="text" placeholder="{{p.value}}" ng-model="policyValue" ng-keydown="$event.which === 13 && savePolicy(decision, p, policyValue)">;
-                      <input type="button" value="Save" ng-click="savePolicy(decision, p, policyValue)">
+                      <input type="text" placeholder="{{p.value}}" ng-model="policyValue" ng-blur="savePolicy(decision, p, policyValue)"
+                        ng-keydown="$event.which === 13 && savePolicy(decision, p, policyValue)" required>;
+                      <!-- <input type="button" value="Save" ng-click="savePolicy(decision, p, policyValue)"> -->
                     </li>
                   </div>
                   <li>
-                    <input type="text" name="policyName" ng-model="newPolicyName" ng-keydown="$event.which === 13 && addPolicy(decision,newPolicyName,newPolicyValue)"> :
-                    <input type="text" name="policyValue" ng-model="newPolicyValue" ng-keydown="$event.which === 13 && addPolicy(decision,newPolicyName,newPolicyValue)">
-                    <input type="button" value="Add" ng-click="addPolicy(decision,newPolicyName,newPolicyValue)">
+                    <input type="text" name="policyName" ng-model="newPolicyName" ng-blur="addPolicy(decision,newPolicyName,newPolicyValue)"
+                      ng-keydown="$event.which === 13 && addPolicy(decision,newPolicyName,newPolicyValue)"> :
+                    <input type="text" name="policyValue" ng-model="newPolicyValue" ng-blur="addPolicy(decision,newPolicyName,newPolicyValue)"
+                      ng-keydown="$event.which === 13 && addPolicy(decision,newPolicyName,newPolicyValue)">
+                    <!-- <input type="button" value="Add" ng-click="addPolicy(decision,newPolicyName,newPolicyValue)"> -->
                   </li>
                 </ul>
               }
@@ -95,8 +98,8 @@
             </li>
           </div>
         </ul>
-
-        <input type="button" name="Submit" value="Submit Model" ng-click="mform.$valid && submitModel()">
+        <input type="button" name="Parse" value="Parse Model" ng-click="mform.$valid && submitModel('parse')">
+        <input type="button" name="Solve" value="Solve Model" ng-click="mform.$valid && submitModel('solve')">
       </form>
     </div>
 

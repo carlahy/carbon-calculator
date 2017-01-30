@@ -2,14 +2,13 @@ var app = angular.module('carbonCalc', []);
 
 app.controller('mainController', function($scope) {
 
-  var eol = ';\n'
-
   // Keep track of variable names used to avoid duplicates
   var varNames = [];
 
+///////////// Model Name /////////////
+
   $scope.addModelName = function(name) {
     if(name) {
-      // name = cleanVar(name);
       if(!includes(varNames,name)) {
           varNames.push(name);
       } else {
@@ -27,7 +26,6 @@ app.controller('mainController', function($scope) {
 
   $scope.addObj = function(minmax, name) {
     if(name) {
-      // name = cleanVar(name);
       if(!includes(varNames,name)) {
         $scope.objectives.push({
           minmax: minmax,
@@ -50,6 +48,8 @@ app.controller('mainController', function($scope) {
   };
 
 ///////////// Parameters /////////////
+
+  $scope.params = [];
 
   $scope.saveParamVal = function (param, value) {
     if(value) {
@@ -75,18 +75,12 @@ app.controller('mainController', function($scope) {
 
   $scope.delParamVal = function (param) {
     var index = $scope.params.indexOf(param);
-    console.log(index);
-    console.log('Param is = ', $scope.params[index]);
     $scope.params.splice(index,1);
     index = varNames.indexOf(param.name);
     varNames.splice(index,1);
   };
 
 ///////////// Equations /////////////
-
-  // $scope.currentEq = '';
-  // $scope.newEq = '';
-  $scope.params = [];
 
   $scope.saveCurrentEq = function(obj,eq) {
     if(eq) {
@@ -104,7 +98,6 @@ app.controller('mainController', function($scope) {
           });
         }
       }
-      console.log($scope.params);
     } else {
       console.log('Current eq cannot be empty');
     }
@@ -120,7 +113,6 @@ app.controller('mainController', function($scope) {
         // p = cleanVar(p);
         if(!includes(varNames,p)) {
           varNames.push(p);
-          console.log(varNames);
           $scope.params.push({
             name: p,
             value:''
@@ -161,7 +153,6 @@ app.controller('mainController', function($scope) {
           });
         }
       }
-      console.log(decision);
     } else {
       console.log('Policy name and value cannot be empty');
     }
@@ -195,9 +186,7 @@ app.controller('mainController', function($scope) {
           name:policyName,
           value:policyValue
         });
-        console.log(decision.policies);
       }
-
     } else {
       console.log('Policy cannot be empty');
     }
@@ -213,38 +202,31 @@ app.controller('mainController', function($scope) {
     });
   };
 
-  //Format model when submitting
-
-  $scope.formatObj = function () {
-    objs = $scope.objectives;
-    result = '';
-    for(i in objs) {
-      obj = objs[i];
-      result += 'Objective ' + obj.minmax + ' ENB'+obj.name+' = EV(NBenefit'+obj.name+')'+eol;
-      result += 'NBenefit' + obj.name + ' = New'+obj.name+ ' - Current'+obj.name+eol
-    }
-    console.log(result);
-  };
-
   // Send model to RADAR (server)
-  $scope.submitModel = function() {
+  $scope.submitModel = function(modelCommand) {
+    var eol = ';\n';
     var result = '';
+
     // Format model name
     result += 'Model '+ $scope.modelName + eol;
 
     // Format objectives
+    result += '\n//Objectives\n\n';
     for(i in $scope.objectives) {
       var obj = $scope.objectives[i];
       result += 'Objective ' + obj.minmax + ' ENB'+obj.name+' = EV(NBenefit'+obj.name+')'+eol;
       result += 'NBenefit' + obj.name + ' = New'+obj.name+ ' - Current'+obj.name+eol
     }
+
     // Format parameters
+    result += '\n//Parameters\n\n';
     for(i in $scope.params) {
       var param = $scope.params[i];
       result +=  param.name + ' = ' + param.value + eol;
     }
 
     // Format equations
+    result += '\n//Equations\n\n';
     for(i in $scope.objectives) {
       var obj = $scope.objectives[i];
       result += 'Current'+ obj.name + ' = ' + obj.currentEq + eol;
@@ -252,6 +234,7 @@ app.controller('mainController', function($scope) {
     }
 
     // Format decisions
+    result += '\n//Decisions\n\n';
     for(i in $scope.decisions) {
       var dec = $scope.decisions[i];
       result += dec.name + ' = decision("Policy type") {\n';
@@ -259,11 +242,26 @@ app.controller('mainController', function($scope) {
         p = dec.policies[j];
         result += '\t"'+ p.name +'": ' + p.value + eol;
       }
-      result += '}\n'
+      result += '}\n\n'
+    }
+    console.log(result);
+
+    var data = {
+      modelName: $scope.modelName,
+      modelBody: result
+    };
+
+    if(modelCommand == 'solve') {
+      data.modelCommand = 'solve';
+    } else if (modelCommand == 'parse') {
+      data.modelCommand = 'parse';
     }
 
-    console.log('Model Submission triggered');
-    console.log(result);
+    $.post('/submitModel', data, function(res) {
+      alert('Sent to RADAR');
+    });
+
+    return result;
   }
 
 });
@@ -271,19 +269,6 @@ app.controller('mainController', function($scope) {
 function includes(arr,obj) {
     return (arr.indexOf(obj) != -1);
 }
-
-// function cleanVar(mvar) {
-//   // Remove all white spaces
-//   mvar = mvar.replace(/ /g,"");
-//   // Replace all non alphanumeric characters with _
-//   mvar = mvar.replace(/[^a-zA-Z 0-9]+/g,"_");
-//   // Remove leading digits
-//   mvar = mvar.replace(/^\d+/,"");
-//   if(mvar == "") {
-//     console.log('Variable name cannot be empty');
-//   }
-//   return mvar;
-// }
 
 function getParams(eq) {
   var params = eq.split(/\+|\-|\/|\*|\(|\)/);
