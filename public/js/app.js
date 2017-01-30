@@ -1,6 +1,6 @@
 var app = angular.module('carbonCalc', []);
 
-app.controller('mainController', function($scope) {
+app.controller('mainController', function($scope,$http) {
 
   // Keep track of variable names used to avoid duplicates
   var varNames = [];
@@ -203,7 +203,7 @@ app.controller('mainController', function($scope) {
   };
 
   // Send model to RADAR (server)
-  $scope.submitModel = function(modelCommand) {
+  $scope.submitModel = function( modelCommand) {
     var eol = ';\n';
     var result = '';
 
@@ -257,14 +257,40 @@ app.controller('mainController', function($scope) {
       data.modelCommand = 'parse';
     }
 
-    $.post('/submitModel', data, function(res) {
-      alert('Sent to RADAR');
+    $http({
+      method: 'POST',
+      url:'/submitModel',
+      data:data
+    }).then(function successCallback(res){
+      var output = formatResult(res.data);
+      $('#model_result').append(output);
+      console.log(res.data);
+    }, function errorCallback(res){
+      alert('Error in model response');
     });
 
     return result;
   }
 
 });
+
+function formatResult(result) {
+  var table = '<table>';
+  // Split lines
+  var rows = result.split('\n');
+  // Split cells
+  rows.forEach(function getValues(row){
+    table += '<tr>';
+    var columns = row.split(',');
+    columns.forEach(function getValue(column){
+      table += '<td>'+column+'</td>';
+    });
+    table += '</tr>';
+  });
+  table += '</table>';
+
+  return table;
+}
 
 function includes(arr,obj) {
     return (arr.indexOf(obj) != -1);
@@ -274,16 +300,24 @@ function getParams(eq) {
   var params = eq.split(/\+|\-|\/|\*|\(|\)/);
   var p = params.length
   while(p--) {
+    // If is a number
     if(!isNaN(params[p])){
       params.splice(p,1);
+    } else if(params[p] == 'triangular' || params[p] == 'normal') {
+      console.log('Found distribution');
+
     }
   }
   return params;
 }
 
-// function isDistribution(param) {
-//   return True;
-// }
+function isDistribution(param) {
+  var regex = /(triangular|normal)\(\S+,\S+,\S+\)/;
+  if(param.match(regex)) {
+    return true;
+  }
+  return false;
+}
 
 // TODO: is a probability distribution
 function isValidVar(mvar) {

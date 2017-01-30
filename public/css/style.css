@@ -4,6 +4,14 @@ body {
 	line-height: 1.5em;
 }
 
+input.ng-invalid {
+	border: 2px red solid;
+}
+
+ul{
+	list-style-type: none;
+}
+
 .container {
   width: 90%;
 	margin: 0 0 0 5%;

@@ -35,7 +35,7 @@ app.post('/submitModel', function(req,res){
   fs.writeFileSync(fileName, model);
 
   // Start RADAR child process
-  if (model.modelCommand == 'solve') {
+  if (modelData.modelCommand == 'solve') {
 
     var radar = spawnSync('java', ['-classpath', cp, 'radar.userinterface.RADAR_CMD', '--model', fileName, '--output', outputFolder, '--solve','--debug']);
     console.log('stdout: '+radar.stdout);
@@ -48,13 +48,16 @@ app.post('/submitModel', function(req,res){
     // res.render('pages/index', {modelResult: result});
     res.send(result);
 
-  } else if (model.modelCommant == 'parse') {
+  } else if (modelData.modelCommand == 'parse') {
+
     var radar = spawnSync('java', ['-classpath', cp, 'radar.userinterface.RADAR_CMD', '--model', fileName, '--output', outputFolder, '--parse','--debug']);
     console.log('stdout: '+radar.stdout);
 
     // Format output
+    // alert(radar.stdout);
 
     // Send result
+    res.send(result);
   }
 
 });

@@ -31,7 +31,8 @@
           <li>
             <select name="minmax" ng-model="minmax" ng-init="minmax = objOption[0]" ng-options="option for option in objOption">
             </select>
-            <input type="text" id="obj_name" name="objname" ng-model="objname" ng-keydown="$event.which === 13 && addObj(minmax,objname)">
+            <input type="text" name="objname" ng-model="objname" ng-blur="addObj(minmax,objname)"
+              ng-keydown="$event.which === 13 && addObj(minmax,objname)">
             <input type="button" id="obj_add" value="Add" ng-click="addObj(minmax,objname)">
             <!--  Type submit changes to enter -->
           </li>
@@ -43,7 +44,7 @@
           <div ng-repeat="param in params">
             <li>
               {{param.name}} =
-              <input type="text" id="param_val" name="paramVal" ng-model="paramVal" ng-blur="saveParamVal(param,paramVal)"
+              <input type="text" name="paramVal" ng-model="paramVal" ng-blur="saveParamVal(param,paramVal)"
                 ng-keydown="$event.which === 13 && saveParamVal(param,paramVal)" required>
               <!-- <input type="button" id="param_save" value="Save" ng-click="saveParamVal(param,paramVal)"> -->
               <input type="button" id="param_delete" value="Remove" ng-click="delParamVal(param)">
@@ -57,13 +58,13 @@
           <div ng-repeat="obj in objectives">
             <li>
               Current{{obj.name}} =
-              <input type="text" id="current_eq" name="currentEq" ng-model="currentEq" ng-blur="saveCurrentEq(obj,currentEq)"
+              <input type="text" name="currentEq" ng-model="currentEq" ng-blur="saveCurrentEq(obj,currentEq)"
                 ng-keydown="$event.which === 13 && saveCurrentEq(obj,currentEq)" required>
               <!-- <input type="button" id="current_eq_save" value="Save" ng-click="saveCurrentEq(obj,currentEq)"> -->
             </li>
             <li>
               New{{obj.name}} =
-              <input type="text" id="new_eq" name="newEq" ng-model="newEq" ng-blur="saveNewEq(obj,newEq)"
+              <input type="text" name="newEq" ng-model="newEq" ng-blur="saveNewEq(obj,newEq)"
                 ng-keydown="$event.which === 13 && saveNewEq(obj,newEq)" required>
               <!-- <input type="button" id="new_eq_save" value="Save" ng-click="saveNewEq(obj,newEq)"> -->
             </li>
@@ -80,16 +81,16 @@
                     <li>
                       "{{p.name}}" :
                       <!-- TODO: change placeholder {{p.value}} -->
-                      <input type="text" placeholder="{{p.value}}" ng-model="policyValue" ng-blur="savePolicy(decision, p, policyValue)"
+                      <input type="text" value="{{p.value}}" ng-model="policyValue" ng-blur="savePolicy(decision, p, policyValue)"
                         ng-keydown="$event.which === 13 && savePolicy(decision, p, policyValue)" required>;
                       <!-- <input type="button" value="Save" ng-click="savePolicy(decision, p, policyValue)"> -->
                     </li>
                   </div>
                   <li>
                     <input type="text" name="policyName" ng-model="newPolicyName" ng-blur="addPolicy(decision,newPolicyName,newPolicyValue)"
-                      ng-keydown="$event.which === 13 && addPolicy(decision,newPolicyName,newPolicyValue)"> :
+                      ng-keydown="$event.which === 13 && addPolicy(decision,newPolicyName,newPolicyValue)" ng-required="decision.policies.length==0"> :
                     <input type="text" name="policyValue" ng-model="newPolicyValue" ng-blur="addPolicy(decision,newPolicyName,newPolicyValue)"
-                      ng-keydown="$event.which === 13 && addPolicy(decision,newPolicyName,newPolicyValue)">
+                      ng-keydown="$event.which === 13 && addPolicy(decision,newPolicyName,newPolicyValue)" ng-required="decision.policies.length==0">
                     <!-- <input type="button" value="Add" ng-click="addPolicy(decision,newPolicyName,newPolicyValue)"> -->
                   </li>
                 </ul>
@@ -103,14 +104,9 @@
       </form>
     </div>
 
-    <div class="two columns">
-      <h1>Toggle</h1>
 
-    </div>
-
-    <div class="five columns" id="result">
+    <div class="five columns" id="model_result">
       <h1>Results</h1>
-      <%= modelResult %>
     </div>
   </div>
 
