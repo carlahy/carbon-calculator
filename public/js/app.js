@@ -2,6 +2,10 @@ var app = angular.module('carbonCalc', []);
 
 app.controller('mainController', function($scope,$http) {
 
+///////////// Instructions /////////////
+
+
+
   // Keep track of variable names used to avoid duplicates
   var varNames = [];
 
@@ -26,6 +30,7 @@ app.controller('mainController', function($scope,$http) {
 
   $scope.addObj = function(minmax, name) {
     if(name) {
+      name = 'ENB'+name;
       if(!includes(varNames,name)) {
         $scope.objectives.push({
           minmax: minmax,
@@ -193,6 +198,11 @@ app.controller('mainController', function($scope,$http) {
 
   };
 
+  $scope.delPolicy = function(decision,policy) {
+    var index = decision.policies.indexOf(policy);
+    decision.policies.splice(index,1);
+  }
+
   $scope.isParam = function(decision) {
     var index = $scope.decisions.indexOf(decision);
     $scope.decisions.splice(index,1);
@@ -202,8 +212,17 @@ app.controller('mainController', function($scope,$http) {
     });
   };
 
+  ///////////// Submit Model /////////////
+
+  $scope.submitOnInvalid = true;
   // Send model to RADAR (server)
-  $scope.submitModel = function( modelCommand) {
+  $scope.submitModel = function(isValid, modelCommand) {
+
+    if(!isValid) {
+        $scope.submitOnInvalid = false;
+        return;
+    }
+    $scope.submitOnInvalid = true;
     var eol = ';\n';
     var result = '';
 
@@ -262,9 +281,12 @@ app.controller('mainController', function($scope,$http) {
       url:'/submitModel',
       data:data
     }).then(function successCallback(res){
-      var output = formatResult(res.data);
-      $('#model_result').append(output);
-      console.log(res.data);
+      var output = res.data;
+      if(output.type == 'csvresult') {
+        $('#model_result').empty().append(formatResult(output.body,output.type));
+      } else if(output.type == 'error'){
+        $('#model_result').empty().append(formatResult(output.body,output.type));
+      }
     }, function errorCallback(res){
       alert('Error in model response');
     });
@@ -274,22 +296,35 @@ app.controller('mainController', function($scope,$http) {
 
 });
 
-function formatResult(result) {
-  var table = '<table>';
-  // Split lines
-  var rows = result.split('\n');
-  // Split cells
-  rows.forEach(function getValues(row){
-    table += '<tr>';
-    var columns = row.split(',');
-    columns.forEach(function getValue(column){
-      table += '<td>'+column+'</td>';
-    });
-    table += '</tr>';
-  });
-  table += '</table>';
+function formatResult(result,type) {
+  switch (type) {
+    case 'csvresult':
+      var table = '<table>';
+      // Split lines
+      var rows = result.split('\n');
+      // Split cells
+      rows.forEach(function getValues(row){
+        table += '<tr>';
+        var columns = row.split(',');
+        columns.forEach(function getValue(column){
+          table += '<td>'+column+'</td>';
+        });
+        table += '</tr>';
+      });
+      table += '</table>';
+      return table;
 
-  return table;
+    case 'error':
+      var errmsg = '';
+      var rows = result.split('\n');
+      rows.forEach(function getValues(row) {
+        errmsg += '<p>'+row+'</p>';
+      });
+      return errmsg;
+    default: break;
+
+  }
+
 }
 
 function includes(arr,obj) {
@@ -297,32 +332,18 @@ function includes(arr,obj) {
 }
 
 function getParams(eq) {
-  var params = eq.split(/\+|\-|\/|\*|\(|\)/);
+  var params = eq.split(/\+|\-|\/|\*|\(|\)|,/);
   var p = params.length
   while(p--) {
-    // If is a number
-    if(!isNaN(params[p])){
-      params.splice(p,1);
-    } else if(params[p] == 'triangular' || params[p] == 'normal') {
-      console.log('Found distribution');
-
+    param = params[p].trim();
+    // Is numerical, probability distribution, empty
+    if($.isNumeric(param[0]) || $.isNumeric(param) ||
+        param == 'triangular' || param == 'normal' || param == ""){
+          params.splice(p,1);
+    }
+    else {
+      params[p] = param;
     }
   }
   return params;
-}
-
-function isDistribution(param) {
-  var regex = /(triangular|normal)\(\S+,\S+,\S+\)/;
-  if(param.match(regex)) {
-    return true;
-  }
-  return false;
-}
-
-// TODO: is a probability distribution
-function isValidVar(mvar) {
-  if ($.isNumeric(mvar) || mvar == "") {
-    return false;
-  }
-  return true;
 }

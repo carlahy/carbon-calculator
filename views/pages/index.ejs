@@ -6,110 +6,143 @@
   <script type="text/javascript" src="js/angular.min.js"></script>
   <script type="text/javascript" src="js/jquery-3.1.1.min.js"></script>
   <script type="text/javascript" src="js/app.js"></script>
-  <link rel="stylesheet" type="text/css" href="css/style.css">
-
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="css/style.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+  integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 </head>
 
 <body ng-controller="mainController">
 
+  <div class="container">
+
   <h1>Carbon Calculator<h1><br>
-      <h1>Model</h1>
-      <form name="mform" autocomplete="off">
 
-        <h3>Model Name:</h3>
-        <input type="text" name="modelName" ng-model="modelName" ng-blur="addModelName(modelName)" required>
+    <h2>Step 1: Build the Model</h2>
 
-        <h3>Objectives:</h3>
-        <ul id="objectives">
-          <div ng-repeat="obj in objectives">
+    <div class="row">
+
+      <!--- ========= Form Column ========= -->
+      <div class="col-sm-6">
+        <form name="mform" autocomplete="off">
+
+          <h3>Model Name:</h3>
+          <ul>
+            <li><input type="text" name="modelName" ng-model="modelName" ng-blur="addModelName(modelName)" required></li>
+          </ul>
+
+          <h3>Objectives:</h3>
+          <ul id="objectives">
+            <div ng-repeat="obj in objectives">
+              <li>
+                {{obj.minmax}} {{obj.name}}
+                <span class="glyphicon glyphicon-remove" ng-click="delObj(obj)">
+              </li>
+            </div>
             <li>
-              {{obj.minmax}} {{obj.name}}
-              <input type="button" value="Remove" ng-click="delObj(obj)">
+              <select name="minmax" ng-model="minmax" ng-init="minmax = objOption[0]" ng-options="option for option in objOption">
+              </select>
+              <input type="text" name="objname" ng-model="objname" ng-blur="addObj(minmax,objname)"
+                ng-keydown="$event.which === 13 && addObj(minmax,objname)">
+              <span class="glyphicon glyphicon-ok" ng-click="addObj(minmax,objname)">
             </li>
-          </div>
-          <li>
-            <select name="minmax" ng-model="minmax" ng-init="minmax = objOption[0]" ng-options="option for option in objOption">
-            </select>
-            <input type="text" name="objname" ng-model="objname" ng-blur="addObj(minmax,objname)"
-              ng-keydown="$event.which === 13 && addObj(minmax,objname)">
-            <input type="button" id="obj_add" value="Add" ng-click="addObj(minmax,objname)">
-            <!--  Type submit changes to enter -->
-          </li>
-          <input type="button" name="button" value="test" ng-click="formatObj()">
-        </ul>
+          </ul>
 
-        <h3>Parameters:</h3>
-        <ul>
-          <div ng-repeat="param in params">
-            <li>
-              {{param.name}} =
-              <input type="text" name="paramVal" ng-model="paramVal" ng-blur="saveParamVal(param,paramVal)"
-                ng-keydown="$event.which === 13 && saveParamVal(param,paramVal)" required>
-              <!-- <input type="button" id="param_save" value="Save" ng-click="saveParamVal(param,paramVal)"> -->
-              <input type="button" id="param_delete" value="Remove" ng-click="delParamVal(param)">
-              <label><input type="checkbox" name="checkdec" ng-click="isDecision(param)">Decision?</label>
-            </li>
-          </div>
-        </ul>
+          <h3>Parameters:</h3>
+          <ul>
+            <div ng-repeat="param in params">
+              <li>
+                {{param.name}} =
+                <input type="text" name="paramVal" ng-model="paramVal" ng-blur="saveParamVal(param,paramVal)"
+                  ng-keydown="$event.which === 13 && saveParamVal(param,paramVal)" required>
+                <span class="glyphicon glyphicon-remove" ng-click="delParamVal(param)">
+                <label><input type="checkbox" name="checkdec" ng-click="isDecision(param)">Decision?</label>
+              </li>
+            </div>
+          </ul>
 
-        <h3>Equations:</h3>
-        <ul id="equations">
-          <div ng-repeat="obj in objectives">
-            <li>
-              Current{{obj.name}} =
-              <input type="text" name="currentEq" ng-model="currentEq" ng-blur="saveCurrentEq(obj,currentEq)"
-                ng-keydown="$event.which === 13 && saveCurrentEq(obj,currentEq)" required>
-              <!-- <input type="button" id="current_eq_save" value="Save" ng-click="saveCurrentEq(obj,currentEq)"> -->
-            </li>
-            <li>
-              New{{obj.name}} =
-              <input type="text" name="newEq" ng-model="newEq" ng-blur="saveNewEq(obj,newEq)"
-                ng-keydown="$event.which === 13 && saveNewEq(obj,newEq)" required>
-              <!-- <input type="button" id="new_eq_save" value="Save" ng-click="saveNewEq(obj,newEq)"> -->
-            </li>
-          </div>
-        </ul>
+          <h3>Equations:</h3>
+          <ul id="equations">
+            <div ng-repeat="obj in objectives">
+              <li>
+                Current{{obj.name}} =
+                <input type="text" name="currentEq" ng-model="currentEq" ng-blur="saveCurrentEq(obj,currentEq)"
+                  ng-keydown="$event.which === 13 && saveCurrentEq(obj,currentEq)" required>
+              </li>
+              <li>
+                New{{obj.name}} =
+                <input type="text" name="newEq" ng-model="newEq" ng-blur="saveNewEq(obj,newEq)"
+                  ng-keydown="$event.which === 13 && saveNewEq(obj,newEq)" required>
+              </li>
+            </div>
+          </ul>
 
-        <h3>Decisions:</h3></div>
-        <ul>
-          <div ng-repeat="decision in decisions">
-            <li>
-              {{decision.name}} = decision("Policy Type") {
-                <ul>
-                  <div ng-repeat="p in decision.policies">
+          <h3>Decisions:</h3>
+          <ul>
+            <div ng-repeat="decision in decisions">
+              <li>
+                {{decision.name}} = decision("Policy Type") {
+                  <ul>
+                    <div ng-repeat="p in decision.policies">
+                      <li>
+                        "{{p.name}}" :
+                        <!-- TODO: change placeholder {{p.value}} -->
+                        <input type="text" value="{{p.value}}" ng-model="p.value" ng-blur="savePolicy(decision, p, p.value)"
+                          ng-keydown="$event.which === 13 && savePolicy(decision, p, policyValue)" required>
+                        <span class="glyphicon glyphicon-remove" ng-click="delPolicy(decision,p)">
+                      </li>
+                    </div>
                     <li>
-                      "{{p.name}}" :
-                      <!-- TODO: change placeholder {{p.value}} -->
-                      <input type="text" value="{{p.value}}" ng-model="policyValue" ng-blur="savePolicy(decision, p, policyValue)"
-                        ng-keydown="$event.which === 13 && savePolicy(decision, p, policyValue)" required>;
-                      <!-- <input type="button" value="Save" ng-click="savePolicy(decision, p, policyValue)"> -->
+                      <input type="text" ng-model="newPolicyName" ng-blur="addPolicy(decision,newPolicyName,newPolicyValue)"
+                        ng-keydown="$event.which === 13 && addPolicy(decision,newPolicyName,newPolicyValue)" ng-required="decision.policies.length==0"> :
+                      <input type="text" ng-model="newPolicyValue" ng-blur="addPolicy(decision,newPolicyName,newPolicyValue)"
+                        ng-keydown="$event.which === 13 && addPolicy(decision,newPolicyName,newPolicyValue)" ng-required="decision.policies.length==0">
                     </li>
-                  </div>
-                  <li>
-                    <input type="text" name="policyName" ng-model="newPolicyName" ng-blur="addPolicy(decision,newPolicyName,newPolicyValue)"
-                      ng-keydown="$event.which === 13 && addPolicy(decision,newPolicyName,newPolicyValue)" ng-required="decision.policies.length==0"> :
-                    <input type="text" name="policyValue" ng-model="newPolicyValue" ng-blur="addPolicy(decision,newPolicyName,newPolicyValue)"
-                      ng-keydown="$event.which === 13 && addPolicy(decision,newPolicyName,newPolicyValue)" ng-required="decision.policies.length==0">
-                    <!-- <input type="button" value="Add" ng-click="addPolicy(decision,newPolicyName,newPolicyValue)"> -->
-                  </li>
-                </ul>
-              }
-              <label><input type="checkbox" name="checkparam" ng-click="isParam(decision)">Param?</label>
-            </li>
+                  </ul>
+                }
+                <label><input type="checkbox" name="checkparam" ng-click="isParam(decision)">Param?</label>
+              </li>
+            </div>
+          </ul>
+          <!-- <input type="button" name="Parse" value="Parse Model" ng-click="mform.$valid && submitModel('parse')"> -->
+          <button type="button" class="btn btn-default" ng-click="submitModel(mform.$valid, 'solve')">Solve Model</button>
+          <div id="submitButton" class="alert alert-warning alert-dismissable" ng-hide="submitOnInvalid" dismiss-on-timeout="5000">
+            <strong>Invalid form: </strong> Please fill in missing value(s).
+          </div>
+        </form>
+      </div>
+
+      <!--- ========= Helper Column ========= -->
+      <div class="col-sm-6">
+        <h3>How To</h3>
+        <ul>
+          <div ng-repeat="i in instructions">
+            <li>{{i.head}}: {{i.body}}</li>
           </div>
         </ul>
-        <input type="button" name="Parse" value="Parse Model" ng-click="mform.$valid && submitModel('parse')">
-        <input type="button" name="Solve" value="Solve Model" ng-click="mform.$valid && submitModel('solve')">
-      </form>
-    </div>
+        <br></br>
+        <h3>Cheat Sheet</h3>
+        <span id="cheatSheet">
+          <ul>
+            <li>ENB = Expected Net Benefit</li>
+            <li>NB = Net Benefit</li>
+            <li>Current* = represents the state of * as of now</li>
+            <li>New* = represents the state of * with new decision</li>
+          </ul>
+        </span>
+      </div>
 
 
-    <div class="five columns" id="model_result">
-      <h1>Results</h1>
     </div>
+
+    <h2>Step 2: Results</h2>
+    <div class="row">
+      <div class="col-sm-6">
+        <div id="model_result">
+        </div>
+      </div>
+    </div>
+
   </div>
-
-</div>
 </body>
 </html>
