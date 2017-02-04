@@ -2,9 +2,43 @@ var app = angular.module('carbonCalc', []);
 
 app.controller('mainController', function($scope,$http) {
 
-///////////// Instructions /////////////
+///////////// Model Upload /////////////
+
+$scope.modelUpload = function(event) {
+  var input = document.getElementById('fileinput');
+  var file = input.files[0];
+  var reader = new FileReader();
+
+  reader.onload = function(event) {
+    var content = event.target.result;
+    console.log(content);
+
+    document.getElementById('modeluploadtext').value = content;
+
+    // var lines = content.split('\n');
+    // lines.forEach(function(line) {
+    //   var args = line.split(' ');
+    //
+    //   if(args[0] == 'Objective') {
+    //     $scope.addObj(args[1],args[2]);
+    //
+    //   } else if (args[0].substring(0,7) == 'Current') {
+    //     var name = args[0].substring(7);
+    //     var obj = objWithAttr($scope.objectives,'name',name);
+    //     obj.currentEq = line.split('=')[1];
+    //     console.log($scope.objectives);
+    //   } else if (args[0].substring(0,3) == 'New') {
+    //
+    //   } else if (args[1] == '=') {
+    //
+    //   }
+    //   $scope.$apply();
+    // });
 
 
+  }
+  reader.readAsText(file);
+}
 
   // Keep track of variable names used to avoid duplicates
   var varNames = [];
@@ -30,11 +64,17 @@ app.controller('mainController', function($scope,$http) {
 
   $scope.addObj = function(minmax, name) {
     if(name) {
-      name = 'ENB'+name;
+      if(name.substring(0,3) != 'ENB') {
+        var oname = 'ENB'+name;
+      } else {
+        var oname = name;
+        name = name.substring(3);
+      }
       if(!includes(varNames,name)) {
         $scope.objectives.push({
           minmax: minmax,
-          name: name
+          name: name,
+          oname: oname
         });
         varNames.push(name);
       } else {
@@ -139,10 +179,15 @@ app.controller('mainController', function($scope,$http) {
     $scope.params.splice(index,1);
     $scope.decisions.push({
       name: param.name,
-      value: param.value,
+      label: '',
       policies: []
     });
   };
+
+  $scope.saveDecLabel = function(decision, label) {
+    decision.label = label;
+    console.log(decision);
+  }
 
   $scope.savePolicy = function(decision, policy, policyValue) {
     if(policy && policyValue) {
@@ -223,6 +268,47 @@ app.controller('mainController', function($scope,$http) {
         return;
     }
     $scope.submitOnInvalid = true;
+
+    var result = formatModel();
+
+    console.log(result);
+
+    var data = {
+      modelName: $scope.modelName,
+      modelBody: result
+    };
+
+    if(modelCommand == 'solve') {
+      data.modelCommand = 'solve';
+    } else if (modelCommand == 'parse') {
+      data.modelCommand = 'parse';
+    }
+
+    $http({
+      method: 'POST',
+      url:'/submitModel',
+      data:data
+    }).then(function successCallback(res){
+      var output = res.data;
+      if(output.type == 'csvresult') {
+        $('#model_result').empty().append(formatResult(output.body,output.type));
+      } else if(output.type == 'error'){
+        $('#model_result').empty().append(formatResult(output.body,output.type));
+      }
+    }, function errorCallback(res){
+      alert('Error in model response');
+    });
+
+    return result;
+  }
+
+  $scope.saveModel = function() {
+    var result = formatModel();
+    console.log(result);
+    return result;
+  }
+
+  function formatModel(){
     var eol = ';\n';
     var result = '';
 
@@ -263,34 +349,6 @@ app.controller('mainController', function($scope,$http) {
       }
       result += '}\n\n'
     }
-    console.log(result);
-
-    var data = {
-      modelName: $scope.modelName,
-      modelBody: result
-    };
-
-    if(modelCommand == 'solve') {
-      data.modelCommand = 'solve';
-    } else if (modelCommand == 'parse') {
-      data.modelCommand = 'parse';
-    }
-
-    $http({
-      method: 'POST',
-      url:'/submitModel',
-      data:data
-    }).then(function successCallback(res){
-      var output = res.data;
-      if(output.type == 'csvresult') {
-        $('#model_result').empty().append(formatResult(output.body,output.type));
-      } else if(output.type == 'error'){
-        $('#model_result').empty().append(formatResult(output.body,output.type));
-      }
-    }, function errorCallback(res){
-      alert('Error in model response');
-    });
-
     return result;
   }
 
@@ -299,7 +357,7 @@ app.controller('mainController', function($scope,$http) {
 function formatResult(result,type) {
   switch (type) {
     case 'csvresult':
-      var table = '<table>';
+      var table = '<table class="table">';
       // Split lines
       var rows = result.split('\n');
       // Split cells
@@ -331,6 +389,16 @@ function includes(arr,obj) {
     return (arr.indexOf(obj) != -1);
 }
 
+function objWithAttr(array,attrName, attrValue) {
+  for(o in array) {
+    var obj = array[o];
+    if (obj[attrName] == attrValue) {
+      return obj;
+    }
+  }
+  return;
+}
+
 function getParams(eq) {
   var params = eq.split(/\+|\-|\/|\*|\(|\)|,/);
   var p = params.length
@@ -338,7 +406,8 @@ function getParams(eq) {
     param = params[p].trim();
     // Is numerical, probability distribution, empty
     if($.isNumeric(param[0]) || $.isNumeric(param) ||
-        param == 'triangular' || param == 'normal' || param == ""){
+        param == 'triangular' || param == 'normalCI' || param == 'uniform' ||
+        param == 'deterministic' || param == ""){
           params.splice(p,1);
     }
     else {
