@@ -9,6 +9,7 @@ $(document).ready(function() {
         maxLines: Infinity
     });
   editor.renderer.setScrollMargin(10, 10, 10, 10);
+  editor.$blockScrolling = Infinity;
 
   // Toggle build and upload views
   $('#uploadform').hide();

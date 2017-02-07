@@ -178,7 +178,6 @@ app.controller('mainController', function($scope,$http) {
 
   $scope.saveDecLabel = function(decision, label) {
     decision.label = label;
-    console.log(decision);
   }
 
   $scope.savePolicy = function(decision, policy, policyValue) {
@@ -251,6 +250,10 @@ app.controller('mainController', function($scope,$http) {
 
   ///////////// Submit Model /////////////
 
+  $scope.outputdecisions = [];
+  $scope.filterSelect = {};
+  $scope.csvresult = '';
+
   $scope.submitOnInvalid = true;
   // Send model to RADAR (server)
   $scope.submitModel = function(isValid, modelType) {
@@ -290,10 +293,12 @@ app.controller('mainController', function($scope,$http) {
     }).then(function successCallback(res){
       var output = res.data;
       if(output.type == 'csvresult') {
-        $('#model_result').empty().append(formatResult(output.body,output.type));
+        $scope.csvresult = output.body;
+        $scope.outputdecisions = output.decisions;
+        var csv = d3.csvParse(output.body);
+        $('#model_result').empty().append(formatTable(csv));
       } else if(output.type == 'error'){
-        console.log('Error in submissions');
-        $('#model_result').empty().append(formatResult(output.body,output.type));
+        $('#model_result').empty().append(formatError(output.body));
       }
     }, function errorCallback(res){
       alert('Error in model response');
@@ -374,68 +379,26 @@ app.controller('mainController', function($scope,$http) {
     return result;
   }
 
+  ///////////// Handle Output /////////////
+
+  $scope.filterOutput = function() {
+    console.log($scope.filterSelect);
+
+    // Update table
+    var data = d3.csvParse($scope.csvresult).filter(function(row) {
+      for(s in $scope.filterSelect) {
+        if($scope.filterSelect[s] != null && row[s] != $scope.filterSelect[s]) {
+          return false;
+        }
+      }
+      return true;
+    });
+    console.log('Filtered = ', data);
+    // Update table in view
+    $('#model_result').empty().append(formatTable(data));
+
+    // TODO: Update graph in view
+    // formatGraph(data);
+  };
+
 });
-
-function formatResult(result,type) {
-  console.log('Result = ', result);
-  switch (type) {
-    case 'csvresult':
-      var table = '<table class="table">';
-      // Split lines
-      var rows = result.split('\n');
-      // Split cells
-      rows.forEach(function getValues(row){
-        table += '<tr>';
-        var columns = row.split(',');
-        columns.forEach(function getValue(column){
-          table += '<td>'+column+'</td>';
-        });
-        table += '</tr>';
-      });
-      table += '</table>';
-      return table;
-
-    case 'error':
-      var errmsg = '';
-      var rows = result.split('\n');
-      rows.forEach(function getValues(row) {
-        errmsg += '<p>'+row+'</p>';
-      });
-      return errmsg;
-    default: break;
-
-  }
-
-}
-
-function includes(arr,obj) {
-    return (arr.indexOf(obj) != -1);
-}
-
-function objWithAttr(array,attrName, attrValue) {
-  for(o in array) {
-    var obj = array[o];
-    if (obj[attrName] == attrValue) {
-      return obj;
-    }
-  }
-  return;
-}
-
-function getParams(eq) {
-  var params = eq.split(/\+|\-|\/|\*|\(|\)|,/);
-  var p = params.length
-  while(p--) {
-    param = params[p].trim();
-    // Is numerical, probability distribution, empty
-    if($.isNumeric(param[0]) || $.isNumeric(param) ||
-        param == 'triangular' || param == 'normalCI' || param == 'uniform' ||
-        param == 'deterministic' || param == ""){
-          params.splice(p,1);
-    }
-    else {
-      params[p] = param;
-    }
-  }
-  return params;
-}

@@ -36,6 +36,11 @@ label input[type='checkbox'] {
 	padding: 0 0 5% 0;
 }
 
+.inlinediv {
+	float: left;
+	display: inline;
+}
+
 .row {
 	padding: 2.5% 0 4% 5%;
 }
