@@ -2,37 +2,19 @@ var app = angular.module('carbonCalc', []);
 
 app.controller('mainController', function($scope,$http) {
 
-///////////// Model Upload /////////////
-
-  $scope.uploadModel = function(event) {
-    var input = document.getElementById('fileinput');
-    var file = input.files[0];
-    var reader = new FileReader();
-
-    reader.onload = function(event) {
-      var content = event.target.result;
-
-      // Set code editor
-      var editor = ace.edit("editor");
-      editor.setValue(content);
-    }
-    reader.readAsText(file);
-  };
-
   // Keep track of variable names used to avoid duplicates
-  var varNames = [];
-
-  // Init scope variables
-  $scope.uploadedModel = '';
+  var varnames = [];
 
 ///////////// Model Name /////////////
 
+$scope.modelName = '';
+
   $scope.addModelName = function(name) {
     if(name) {
-      if(!includes(varNames,name)) {
-          varNames.push(name);
+      if(!includes(varnames,name)) {
+          varnames.push(name);
       } else {
-        // TODO: warning
+        // TODO: warning, duplicate
       }
     } else {
       console.log('Model Name cannot be empty');
@@ -42,62 +24,83 @@ app.controller('mainController', function($scope,$http) {
 ///////////// Objectives /////////////
 
   $scope.objectives = [];
-  $scope.objOption = ['Min', 'Max'];
 
-  $scope.addObj = function(minmax, name) {
+  $scope.addObj = function(name) {
     if(name) {
-      if(name.substring(0,3) != 'ENB') {
-        var oname = 'ENB'+name;
-      } else {
-        var oname = name;
-        name = name.substring(3);
-      }
-      if(!includes(varNames,name)) {
+      if(!includes(varnames,name)) {
         $scope.objectives.push({
-          minmax: minmax,
           name: name,
-          oname: oname
+          enb: 'EV(NB'+name+')',
+          lp: 'Pr(NB'+name+'<0)',
+          nb: ''
         });
-        varNames.push(name,'Current'+name, 'New'+name);
+        varnames.push(name,'ENB'+name, 'LP'+name, 'NB'+name);
       } else {
         // TODO: Alert warning, duplicate names
       }
     } else {
       console.log('Input cannot be empty');
     }
-    $scope.objname = '';
+    $scope.inputobj = '';
   };
 
-  $scope.delObj = function(obj) {
-    var index = $scope.objectives.indexOf(obj);
+  $scope.delObj = function(o) {
+    var index = $scope.objectives.indexOf(o);
     $scope.objectives.splice(index,1);
-
-    // Remove objective name and Current/New names from list
-    index = varNames.indexOf(obj.name);
-    varNames.splice(index,1);
-    index = varNames.indexOf('Current'+obj.name);
-    varNames.splice(index,1);
-    index = varNames.indexOf('New'+obj.name);
-    varNames.splice(index,1);
+    index = varnames.indexOf(o.name);
+    varnames.splice(index,1);
+    index = varnames.indexOf('ENB'+obj.name);
+    varnames.splice(index,1);
+    index = varnames.indexOf('LP'+obj.name);
+    varnames.splice(index,1);
+    index = varnames.indexOf('NB'+obj.name);
+    varnames.splice(index,1);
   };
+
+  $scope.addNB = function(o,value) {
+    if(value) {
+      o.nb = value;
+      var vars = getVars(value);
+      for(v in vars) {
+        v = vars[v];
+        if(!includes(varnames,v)) {
+          varnames.push(v);
+          $scope.variables.push(v);
+        }
+      }
+    } else {
+      console.log('NB Value cannot be empty');
+    }
+  }
+
+///////////// Variables /////////////
+
+  // The uninitialised vars that are yet to be defined as parameters or decisions
+  $scope.variables = [];
+  $scope.varoptions = ['Parameter','Equation','Decision'];
+
+  $scope.varSelect = function(v,option) {
+    var index = $scope.variables.indexOf(v);
+    $scope.variables.splice(index,1);
+    $scope[option].push({
+      name:v
+    });
+
+  }
 
 ///////////// Parameters /////////////
 
-  $scope.params = [];
+  $scope.parameters = [];
 
-  $scope.saveParamVal = function (param, value) {
+  $scope.saveParameter = function(p,value) {
     if(value) {
-      param.value = value;
-      // Add new parameters if any
-      var pValue = getParams(value);
-      for(p in pValue) {
+      p.value = value;
+      var vars = getVars(value);
+      for(v in vars) {
         p = pValue[p];
-        if(!includes(varNames,p)) {
-          varNames.push(p);
-          $scope.params.push({
-            name:p,
-            value:''
-          });
+        if(!includes(varnames,v)) {
+          varnames.push(p);
+          $scope.varnames.push(v);
         }
       }
     } else {
@@ -105,58 +108,38 @@ app.controller('mainController', function($scope,$http) {
     }
   };
 
-  // TODO: is probability distribution?
-
-  $scope.delParamVal = function (param) {
-    var index = $scope.params.indexOf(param);
-    $scope.params.splice(index,1);
-    index = varNames.indexOf(param.name);
-    varNames.splice(index,1);
+  $scope.delParameter = function(p) {
+    var index = $scope.parameters.indexOf(p);
+    $scope.parameters.splice(index,1);
+    index = varnames.indexOf(p.name);
+    varnames.splice(index,1);
   };
 
 ///////////// Equations /////////////
 
-  $scope.saveCurrentEq = function(obj,eq) {
-    if(eq) {
-      //TODO: update eq with correct param names (split, join)
-      obj['currentEq'] = eq;
-      var params = getParams(eq);
-      for(p in params) {
-        p = params[p];
-        // p = cleanVar(p);
-        if(!includes(varNames,p)) {
-          varNames.push(p);
-          $scope.params.push({
-            name: p,
-            value:''
-          });
+  $scope.equations = [];
+
+  $scope.saveEquation = function(e,value) {
+    if(value) {
+      e.value = value;
+      var vars = getVars(value);
+      for(v in vars) {
+        v = vars[v];
+        if(!includes(varnames,v)) {
+          varnames.push(v);
+          $scope.variables.push(v);
         }
       }
     } else {
-      console.log('Current eq cannot be empty');
+      console.log('Equation cannot be empty');
     }
   };
 
-  $scope.saveNewEq = function(obj,eq) {
-    if(eq) {
-      //TODO: update eq with correct param names (split, join)
-      obj['newEq'] = eq;
-      var params = getParams(eq);
-      for(p in params) {
-        p = params[p];
-        // p = cleanVar(p);
-        if(!includes(varNames,p)) {
-          varNames.push(p);
-          $scope.params.push({
-            name: p,
-            value:''
-          });
-        }
-      }
-    } else {
-      console.log('New eq cannot be empty');
-    }
-
+  $scope.delEquation = function(e) {
+    var index = $scope.equations.indexOf(e);
+    $scope.equations.splice(index,1);
+    index = varnames.indexOf(e.name);
+    varnames.splice(index,1);
   };
 
   ///////////// Decisions /////////////
@@ -180,8 +163,8 @@ app.controller('mainController', function($scope,$http) {
   $scope.savePolicy = function(decision, policy, policyValue) {
     if(policy && policyValue) {
       policy.value = policyValue;
-      // TODO: in getParams, have a special case for probabilities
-      var params = getParams(policyValue);
+      // TODO: in getVars, have a special case for probabilities
+      var params = getVars(policyValue);
       for(p in params) {
         p = params[p];
         if(!includes(varNames,p)) {
@@ -199,7 +182,7 @@ app.controller('mainController', function($scope,$http) {
   $scope.addPolicy = function(decision,policyName,policyValue) {
     if(policyName) {
       // Parse parameters of value, check for new variables
-      var params = getParams(policyValue);
+      var params = getVars(policyValue);
       for(p in params) {
         p = params[p];
         if(!includes(varNames,p)) {
@@ -247,7 +230,25 @@ app.controller('mainController', function($scope,$http) {
     });
   };
 
+  ///////////// Model Upload /////////////
+
+    $scope.uploadModel = function(event) {
+      var input = document.getElementById('fileinput');
+      var file = input.files[0];
+      var reader = new FileReader();
+
+      reader.onload = function(event) {
+        var content = event.target.result;
+
+        // Set code editor
+        var editor = ace.edit("editor");
+        editor.setValue(content);
+      }
+      reader.readAsText(file);
+    };
+
   ///////////// Submit Model /////////////
+  $scope.uploadedModel = '';
 
   $scope.filterable = [];
   $scope.filterSelect = {};

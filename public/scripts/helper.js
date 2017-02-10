@@ -90,20 +90,20 @@ function objWithAttr(array,attrName, attrValue) {
   return;
 }
 
-function getParams(eq) {
-  var params = eq.split(/\+|\-|\/|\*|\(|\)|,/);
-  var p = params.length
-  while(p--) {
-    param = params[p].trim();
+function getVars(eq) {
+  var vars = eq.split(/\+|\-|\/|\*|\(|\)|,/);
+  var i = vars.length
+  while(i--) {
+    v = vars[i].trim();
     // Is numerical, probability distribution, empty
-    if($.isNumeric(param[0]) || $.isNumeric(param) ||
-        param == 'triangular' || param == 'normalCI' || param == 'uniform' ||
-        param == 'deterministic' || param == ""){
-          params.splice(p,1);
+    if($.isNumeric(v[0]) || $.isNumeric(v) ||
+        v == 'triangular' || v == 'normalCI' || v == 'uniform' ||
+        v == 'deterministic' || v == ""){
+          vars.splice(i,1);
     }
     else {
-      params[p] = param;
+      vars[i] = v;
     }
   }
-  return params;
+  return vars;
 }

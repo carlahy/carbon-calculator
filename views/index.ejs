@@ -23,31 +23,101 @@
     </div>
 
     <div class="row">
-      <!--- ========= Form Column ========= -->
+      <!--- ========= Form View ========= -->
       <div class="col-sm-8 formView" id="formView">
         <form name="build" autocomplete="off">
 
           <h3>Model Name:</h3>
-          <ul>
-            <li><input type="text" name="modelName" ng-model="modelName" ng-blur="addModelName(modelName)" required></li>
-          </ul>
+          <input type="text" name="modelName" ng-model="modelName" ng-blur="addModelName(modelName)" required></li>
 
-          <h3>Objectives:</h3>
-          <ul id="objectives">
-            <div ng-repeat="obj in objectives">
-              <li>
-                {{obj.minmax}} {{obj.oname}}
-                <span class="glyphicon glyphicon-remove" ng-click="delObj(obj)">
-              </li>
-            </div>
-            <li>
-              <select name="minmax" ng-model="minmax" ng-init="minmax = objOption[0]" ng-options="option for option in objOption">
-              </select>
-              <input type="text" name="objname" ng-model="objname" ng-blur="addObj(minmax,objname)"
-                ng-keydown="$event.which === 13 && addObj(minmax,objname)" ng-required="objectives.length==0">
-              <span class="glyphicon glyphicon-ok" ng-click="addObj(minmax,objname)">
-            </li>
-          </ul>
+          <!-- Objectives -->
+          <h3>Objectives</h3>
+          <table class="table-bordered">
+            <tbody>
+              <tr>
+                <th>Objectives</th>
+                <td ng-repeat="o in objectives">{{o.name}}</td>
+                <td>
+                  <input type="text" ng-model="inputobj" ng-blur="addObj(inputobj)"
+                    ng-keydown="$event.which === 13 && addObj(inputobj)" ng-required="objectives.length==0">
+                </td>
+              </tr>
+              <tr>
+                <th>ENB</th>
+                <td ng-repeat="o in objectives">{{o.enb}}</td>
+              </tr>
+              <tr>
+                <th>LP</th>
+                <td ng-repeat="o in objectives">{{o.lp}}</td>
+              </tr>
+              <tr>
+                <th>NB</th>
+                <td ng-repeat="o in objectives">
+                  <input type="text" ng-model="o.nb" ng-blur="addNB(o,o.nb)"
+                    ng-keydown="$event.which === 13 && addNB(o,o.nb)" required>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+          <!-- Variables -->
+          <h3>Variables</h3>
+          <table class="table-bordered">
+            <thead>
+              <tr>
+                <th>Variable</th>
+                <th ng-repeat="vo in varoptions">{{vo}}?</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr ng-repeat="v in variables">
+                <th>{{v}}</th>
+                <td ng-repeat="vo in varoptions">
+                  <input type="checkbox" ng-model="vo[option]">
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+          <!-- Parameters -->
+          <table>
+            <tbody>
+              <tr ng-repeat="p in parameters">
+                <th>{{p.name}}</th>
+                <td>
+                  <input type="text" ng-model="p.value" ng-blur="saveParameter(p,p.value)"
+                  ng-keydown="$event.which === 13 && saveParameter(p,p.value)" required>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+          <!-- Equations -->
+          <table>
+            <tbody>
+              <tr ng-repeat="e in equations">
+                <th>{{e.name}}</th>
+                <td>
+                  <input type="text" ng-model="e.value" ng-blur="saveEquation(e,e.value)"
+                    ng-keydown="$event.which === 13 && saveEquation(e,e.value)" required>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+          <!-- Decisions -->
+          <table>
+            <tbody>
+              <tr ng-repeat="d in decisions">
+                <th>{{d.name}}</th>
+                <td></td>
+                <td>
+                  <!-- <input type="text" ng-model="e.value" ng-blur="saveEquation(d,d.value)"
+                    ng-keydown="$event.which === 13 && saveEquation(e,e.value)" required> -->
+                </td>
+              </tr>
+            </tbody>
+          </table>
 
           <h3>Parameters:</h3>
           <ul>
@@ -58,22 +128,6 @@
                   ng-keydown="$event.which === 13 && saveParamVal(param,paramVal)" required>
                 <span class="glyphicon glyphicon-remove" ng-click="delParamVal(param)"></span>
                 <span class="glyphicon glyphicon-unchecked" ng-click="isDecision(param)">Decision?</span>
-              </li>
-            </div>
-          </ul>
-
-          <h3>Equations:</h3>
-          <ul id="equations">
-            <div ng-repeat="obj in objectives">
-              <li>
-                Current{{obj.name}} =
-                <input type="text" name="currentEq" ng-model="currentEq" ng-blur="saveCurrentEq(obj,currentEq)"
-                  ng-keydown="$event.which === 13 && saveCurrentEq(obj,currentEq)" required>
-              </li>
-              <li>
-                New{{obj.name}} =
-                <input type="text" name="newEq" ng-model="newEq" ng-blur="saveNewEq(obj,newEq)"
-                  ng-keydown="$event.which === 13 && saveNewEq(obj,newEq)" required>
               </li>
             </div>
           </ul>
@@ -120,7 +174,7 @@
       </div>
 
       <!--- ========= Code View ========= -->
-      
+
       <div class="col-sm-8" id="codeView">
         <form class="" name="upload">
           <h3>Upload Model</h3>
