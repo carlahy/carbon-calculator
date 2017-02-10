@@ -18,13 +18,13 @@
 
     <h2>Step 1: Build the Model</h2>
     <div class="btn-group">
-      <button type="button" class="btn btn-primary" id="btnBuild">Build</button>
-      <button type="button" class="btn btn-primary" id="btnUpload">Upload</button>
+      <button type="button" class="btn btn-primary" id="btnForm">Form View</button>
+      <button type="button" class="btn btn-primary" id="btnCode">Code View</button>
     </div>
 
     <div class="row">
       <!--- ========= Form Column ========= -->
-      <div class="col-sm-8 buildform" id="buildform">
+      <div class="col-sm-8 formView" id="formView">
         <form name="build" autocomplete="off">
 
           <h3>Model Name:</h3>
@@ -94,9 +94,9 @@
                       </li>
                     </div>
                     <li>
-                      <input type="text" ng-model="newPolicyName" ng-blur="addPolicy(decision,newPolicyName,newPolicyValue)"
+                      <input class="smaller" type="text" ng-model="newPolicyName" ng-blur="addPolicy(decision,newPolicyName,newPolicyValue)"
                         ng-keydown="$event.which === 13 && addPolicy(decision,newPolicyName,newPolicyValue)" ng-required="decision.policies.length==0"> :
-                      <input type="text" ng-model="newPolicyValue" ng-blur="addPolicy(decision,newPolicyName,newPolicyValue)"
+                      <input class="smaller" type="text" ng-model="newPolicyValue" ng-blur="addPolicy(decision,newPolicyName,newPolicyValue)"
                         ng-keydown="$event.which === 13 && addPolicy(decision,newPolicyName,newPolicyValue)" ng-required="decision.policies.length==0">
                         <span class="glyphicon glyphicon-ok" ng-click="addPolicy(decision,newPolicyName,newPolicyValue)">
                     </li>
@@ -119,8 +119,9 @@
         </form>
       </div>
 
-      <!--- ========= Upload View ========= -->
-      <div class="col-sm-8" id="uploadform">
+      <!--- ========= Code View ========= -->
+      
+      <div class="col-sm-8" id="codeView">
         <form class="" name="upload">
           <h3>Upload Model</h3>
           <div class="row-align">

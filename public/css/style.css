@@ -9,11 +9,17 @@ iframe {
   overflow: auto;
 }
 
+
 input[type=text] {
 	width: 50%;
 }
+
 input[type=text].ng-invalid {
 	border: 1px #ff6666 solid;
+}
+
+input[type=text].smaller {
+	width: 30%;
 }
 
 span.glyphicon {

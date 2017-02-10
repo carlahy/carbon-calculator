@@ -12,16 +12,16 @@ $(document).ready(function() {
   editor.$blockScrolling = Infinity;
 
   // Toggle build and upload views
-  $('#uploadform').hide();
+  $('#codeView').hide();
 
-  $('#btnBuild').click(function() {
-    $('#uploadform').hide();
-    $('#buildform').show();
+  $('#btnForm').click(function() {
+    $('#codeView').hide();
+    $('#formView').show();
   });
 
-  $('#btnUpload').click(function (){
-    $('#buildform').hide();
-    $('#uploadform').show();
+  $('#btnCode').click(function (){
+    $('#formView').hide();
+    $('#codeView').show();
   });
 
 });
