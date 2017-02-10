@@ -47,11 +47,12 @@ function formatGraph(csv) {
 function formatTable(csv) {
   var table = '<table class="table">';
   // Column names
-  table += '<tr>';
+  table += '<thead class="thead-inverse"><tr>';
   for(c in csv.columns) {
-    table += '<td>'+csv.columns[c]+'</td>';
+    console.log(csv.columns[c]);
+    table += '<th>'+csv.columns[c]+'</th>';
   }
-  table += '</tr>';
+  table += '</tr></thead><tbody>';
 
   for(r in csv){
     table += '<tr>';
@@ -60,14 +61,15 @@ function formatTable(csv) {
     }
     table += '</tr>';
   }
-  table += '</table>';
+  table += '</tbody></table>';
   return table;
 }
 
 // Forrmat error into HTML
 function formatError(error) {
+  console.log('Error >> ',error);
   var errmsg = '';
-  var rows = result.split('\n');
+  var rows = error.split('\n');
   rows.forEach(function getValues(row) {
     errmsg += '<p>'+row+'</p>';
   });

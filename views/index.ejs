@@ -2,7 +2,7 @@
 <html ng-app="carbonCalc">
 <head>
   <meta charset="utf-8"/>
-  <title>Carbon Calc</title>
+  <title>Carbon Calculator</title>
   <script type="text/javascript" src="scripts/libs/angular.min.js"></script>
   <script type="text/javascript" src="scripts/libs/jquery-3.1.1.min.js"></script>
 
@@ -24,7 +24,7 @@
 
     <div class="row">
       <!--- ========= Form Column ========= -->
-      <div class="col-sm-8" id="buildform">
+      <div class="col-sm-8 buildform" id="buildform">
         <form name="build" autocomplete="off">
 
           <h3>Model Name:</h3>
@@ -94,8 +94,10 @@
                       </li>
                     </div>
                     <li>
-                      <input type="text" ng-model="newPolicyName" ng-keydown="$event.which === 13 && addPolicy(decision,newPolicyName,newPolicyValue)" ng-required="decision.policies.length==0"> :
-                      <input type="text" ng-model="newPolicyValue" ng-keydown="$event.which === 13 && addPolicy(decision,newPolicyName,newPolicyValue)" ng-required="decision.policies.length==0">
+                      <input type="text" ng-model="newPolicyName" ng-blur="addPolicy(decision,newPolicyName,newPolicyValue)"
+                        ng-keydown="$event.which === 13 && addPolicy(decision,newPolicyName,newPolicyValue)" ng-required="decision.policies.length==0"> :
+                      <input type="text" ng-model="newPolicyValue" ng-blur="addPolicy(decision,newPolicyName,newPolicyValue)"
+                        ng-keydown="$event.which === 13 && addPolicy(decision,newPolicyName,newPolicyValue)" ng-required="decision.policies.length==0">
                         <span class="glyphicon glyphicon-ok" ng-click="addPolicy(decision,newPolicyName,newPolicyValue)">
                     </li>
                   </ul>
@@ -106,14 +108,18 @@
           </ul>
 
           <button type="button" class="btn btn-default" ng-click="saveModel()">Save Model</button>
-          <button type="button" class="btn btn-default" ng-click="submitModel(build.$valid,'build')">Solve Model</button>
+          <button type="button" class="btn btn-default" ng-click="submitModel(build.$valid,'build','parse')">Parse Model</button>
+          <button type="button" class="btn btn-default" ng-click="submitModel(build.$valid,'build','solve')">Solve Model</button>
           <div id="submitButton" class="alert alert-warning alert-dismissable" ng-hide="submitOnInvalid" dismiss-on-timeout="5000">
             <strong>Invalid form: </strong> Please fill in missing value(s).
+          </div>
+          <div id="successParse" class="alert alert-success alert-dismissable" ng-show="successParse" dismiss-on-timeout="5000">
+            Model parsed successfully.
           </div>
         </form>
       </div>
 
-      <!--- ========= Edit View ========= -->
+      <!--- ========= Upload View ========= -->
       <div class="col-sm-8" id="uploadform">
         <form class="" name="upload">
           <h3>Upload Model</h3>
@@ -124,10 +130,14 @@
           <div id="editor" ng-model="uploadedModel"></div>
         </form>
         <button type="button" class="btn btn-default" ng-click="saveModel()">Save Model</button>
-        <button type="button" class="btn btn-default" ng-click="submitModel(upload.$valid,'upload')">Solve Model</button>
+        <button type="button" class="btn btn-default" ng-click="submitModel(upload.$valid,'upload','parse')">Parse Model</button>
+        <button type="button" class="btn btn-default" ng-click="submitModel(upload.$valid,'upload','solve')">Solve Model</button>
       </div>
 
       <!--- ========= Helper Column ========= -->
+
+      <!-- <iframe class="googlesheet" src="https://docs.google.com/spreadsheets/d/1E9Rrh-ocXE18_huXiazzTnvBur6Gr7C62S7uDrcdRVY/edit?usp=sharing"></iframe> -->
+
       <div class="col-sm-4">
         <h3>How To</h3>
         <ul>
@@ -155,12 +165,18 @@
       <div class="col-sm-6">
         <div id="model_graph"></div>
         <div class="model_filter">
-          <div class="inlinediv" ng-repeat="d in outputdecisions">
-            <label>{{d.name}}:</label>
-            <select ng-model="filterSelect[d.name]" ng-options="value for value in d.values" ng-change="filterOutput()">
-              <option value=""></option>
-            </select>
-          </div>
+          <table>
+              <tr>
+                <!-- <div class="inlinediv" > -->
+                <td ng-repeat="f in filterable">
+                  <label>{{f.name}}:</label>
+                  <select ng-model="filterSelect[f.name]" ng-options="value for value in f.values" ng-change="filterOutput()">
+                    <option value=""></option>
+                  </select>
+                </td>
+                <!-- </div> -->
+              </tr>
+          </table>
         </div>
         <div id="model_result"></div>
       </div>
@@ -169,10 +185,10 @@
   </div>
 
   <script type="text/javascript" src="scripts/libs/d3.min.js"></script>
-
   <script type="text/javascript" src="scripts/app.js"></script>
   <script type="text/javascript" src="scripts/helper.js"></script>
   <script type="text/javascript" src="scripts/libs/src-min-noconflict/ace.js" charset="utf-8"></script>
   <script type="text/javascript" src="scripts/index.js"></script>
+  <!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script> -->
 </body>
 </html>

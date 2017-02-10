@@ -10,8 +10,7 @@ def parseCSV(mfile):
     skip = details.shape[0]
 
     # Strip details and NaN
-    model = pd.read_csv(mfile,skiprows=skip).drop('ID',1).dropna()
-
+    model = pd.read_csv(mfile,skiprows=skip).dropna().drop('ID',1)
     ndecisions = int(details.iloc[skip-3,1])
     nobjectives = model.shape[1] - ndecisions - 1
 
@@ -23,9 +22,6 @@ def parseCSV(mfile):
             'name': d
         })
 
-    # Get unique objectives
-    objectives = [i for i in model.columns.values[ndecisions:ndecisions+nobjectives]]
-
     # Scale objectives columns
     ndecisions = len(decisions)
     ncols = model.shape[1]
@@ -35,6 +31,15 @@ def parseCSV(mfile):
         col = preprocessing.scale(np.array(colvals))
         model.loc[:,c] = col.reshape(len(col),1)
 
+    model = model.round(5)
+    
+    # Get unique objectives
+    objectives = []
+    for o in model.columns.values[ndecisions:ndecisions+nobjectives]:
+        objectives.append({
+            'values': [i for i in model[o].unique()],
+            'name': o
+        })
 
     # Overwrite radar csv result
     model.to_csv(mfile)

@@ -15,16 +15,6 @@ app.controller('mainController', function($scope,$http) {
       // Set code editor
       var editor = ace.edit("editor");
       editor.setValue(content);
-
-      // Seach for model name
-      var lines = content.split('\n');
-      for(l in lines) {
-        var line = lines[l].split(' ');
-        if(line[0].trim() == 'Model') {
-          $scope.modelName = line[1].trim().split(';')[0];
-          break;
-        }
-      }
     }
     reader.readAsText(file);
   };
@@ -68,19 +58,26 @@ app.controller('mainController', function($scope,$http) {
           name: name,
           oname: oname
         });
-        varNames.push(name);
+        varNames.push(name,'Current'+name, 'New'+name);
       } else {
         // TODO: Alert warning, duplicate names
       }
     } else {
       console.log('Input cannot be empty');
     }
+    $scope.objname = '';
   };
 
   $scope.delObj = function(obj) {
     var index = $scope.objectives.indexOf(obj);
     $scope.objectives.splice(index,1);
+
+    // Remove objective name and Current/New names from list
     index = varNames.indexOf(obj.name);
+    varNames.splice(index,1);
+    index = varNames.indexOf('Current'+obj.name);
+    varNames.splice(index,1);
+    index = varNames.indexOf('New'+obj.name);
     varNames.splice(index,1);
   };
 
@@ -231,6 +228,8 @@ app.controller('mainController', function($scope,$http) {
     } else {
       console.log('Policy cannot be empty');
     }
+    $scope.newPolicyName = '';
+    $scope.newPolicyValue = '';
 
   };
 
@@ -250,13 +249,14 @@ app.controller('mainController', function($scope,$http) {
 
   ///////////// Submit Model /////////////
 
-  $scope.outputdecisions = [];
+  $scope.filterable = [];
   $scope.filterSelect = {};
   $scope.csvresult = '';
 
   $scope.submitOnInvalid = true;
+  $scope.successParse = false;
   // Send model to RADAR (server)
-  $scope.submitModel = function(isValid, modelType) {
+  $scope.submitModel = function(isValid, modelType, cmdType) {
 
     if(!isValid) {
         $scope.submitOnInvalid = false;
@@ -273,18 +273,25 @@ app.controller('mainController', function($scope,$http) {
       data = {
         modelName: $scope.modelName,
         modelBody: content,
-        modelCommand: 'solve'
+        command: cmdType
       };
-
     } else if(modelType == 'upload') {
-        content = ace.edit("editor").getValue();
-        data = {
-          modelName: $scope.modelName,
-          modelBody: content,
-          modelCommand: 'solve'
-        };
+      content = ace.edit("editor").getValue();
+      // Seach for model name
+      var lines = content.split('\n');
+      for(l in lines) {
+        var line = lines[l].split(' ');
+        if(line[0].trim() == 'Model') {
+          $scope.modelName = line[1].trim().split(';')[0];
+          break;
+        }
+      }
+      data = {
+        modelName: $scope.modelName,
+        modelBody: content,
+        command: cmdType
+      };
     }
-
     // Send to server
     $http({
       method: 'POST',
@@ -293,13 +300,20 @@ app.controller('mainController', function($scope,$http) {
     }).then(function successCallback(res){
       var output = res.data;
       if(output.type == 'csvresult') {
+
         $scope.csvresult = output.body;
-        $scope.outputdecisions = output.decisions;
+        $scope.filterable = output.decisions;
+        // $scope.filterable.push.apply($scope.filterable, output.objectives);
         var csv = d3.csvParse(output.body);
         $('#model_result').empty().append(formatTable(csv));
+
       } else if(output.type == 'error'){
+        $scope.filterable = [];
         $('#model_result').empty().append(formatError(output.body));
+      } else if(output.type == 'success'){
+        $scope.successParse = true;
       }
+
     }, function errorCallback(res){
       alert('Error in model response');
     });
@@ -382,8 +396,6 @@ app.controller('mainController', function($scope,$http) {
   ///////////// Handle Output /////////////
 
   $scope.filterOutput = function() {
-    console.log($scope.filterSelect);
-
     // Update table
     var data = d3.csvParse($scope.csvresult).filter(function(row) {
       for(s in $scope.filterSelect) {
@@ -393,7 +405,6 @@ app.controller('mainController', function($scope,$http) {
       }
       return true;
     });
-    console.log('Filtered = ', data);
     // Update table in view
     $('#model_result').empty().append(formatTable(data));
 
