@@ -31,7 +31,7 @@ $scope.modelName = '';
         $scope.objectives.push({
           name: name,
           enb: 'EV(NB'+name+')',
-          lp: 'Pr(NB'+name+'<0)',
+          lp: 'Pr(NB'+name+' < 0)',
           nb: ''
         });
         varnames.push(name,'ENB'+name, 'LP'+name, 'NB'+name);
@@ -44,16 +44,16 @@ $scope.modelName = '';
     $scope.inputobj = '';
   };
 
-  $scope.delObj = function(o) {
+  $scope.deleteObj = function(o) {
     var index = $scope.objectives.indexOf(o);
     $scope.objectives.splice(index,1);
     index = varnames.indexOf(o.name);
     varnames.splice(index,1);
-    index = varnames.indexOf('ENB'+obj.name);
+    index = varnames.indexOf('ENB'+o.name);
     varnames.splice(index,1);
-    index = varnames.indexOf('LP'+obj.name);
+    index = varnames.indexOf('LP'+o.name);
     varnames.splice(index,1);
-    index = varnames.indexOf('NB'+obj.name);
+    index = varnames.indexOf('NB'+o.name);
     varnames.splice(index,1);
   };
 
@@ -65,7 +65,9 @@ $scope.modelName = '';
         v = vars[v];
         if(!includes(varnames,v)) {
           varnames.push(v);
-          $scope.variables.push(v);
+          $scope.variables.push({
+            name:v
+          });
         }
       }
     } else {
@@ -78,14 +80,65 @@ $scope.modelName = '';
   // The uninitialised vars that are yet to be defined as parameters or decisions
   $scope.variables = [];
   $scope.varoptions = ['Parameter','Equation','Decision'];
+  $scope.varselect;
 
-  $scope.varSelect = function(v,option) {
+  $scope.assignVariable = function(v,option) {
+    reassignVariable(v);
+    switch (option) {
+      case 'Parameter': $scope.parameters.push(v);
+        break;
+      case 'Equation': $scope.equations.push(v);
+        break;
+      case 'Decision': $scope.decisions.push({
+          name:v.name,
+          decision:'',
+          options:[]
+        });
+        break;
+      default:
+        break;
+    }
+  }
+
+  // Remove variable from inappropriate type assignment so it is not duplicated
+  function reassignVariable(v) {
+    var index = $scope.parameters.indexOf(v);
+    if(index != -1) {
+      $scope.parameters.splice(index,1);
+      return;
+    }
+    index = $scope.equations.indexOf(v);
+    if(index != -1) {
+      $scope.equations.splice(index,1);
+      return;
+    }
+    index = indexOfAttribute($scope.decisions, 'name', v.name);
+    if(index != -1) {
+      $scope.decisions.splice(index,1);
+      return;
+    }
+    return;
+  }
+
+  // Remove variable from its type
+  $scope.deleteVariable = function (v) {
     var index = $scope.variables.indexOf(v);
     $scope.variables.splice(index,1);
-    $scope[option].push({
-      name:v
-    });
+    index = varnames.indexOf(v.name);
+    varnames.splice(index,1);
 
+    if(v.type == 'Parameter') {
+      index = $scope.parameters.indexOf(v);
+      $scope.parameters.splice(index,1);
+    } else if (v.type == 'Equation'){
+      index = $scope.equations.indexOf(v);
+      $scope.equations.splice(index,1);
+    } else if (v.type == 'Decision') {
+      index = $scope.decisions.indexOf(v);
+      $scope.decisions.splice(index,1);
+    }
+    // Else, variabel was unassigned
+    return;
   }
 
 ///////////// Parameters /////////////
@@ -97,10 +150,12 @@ $scope.modelName = '';
       p.value = value;
       var vars = getVars(value);
       for(v in vars) {
-        p = pValue[p];
+        v = vars[v];
         if(!includes(varnames,v)) {
-          varnames.push(p);
-          $scope.varnames.push(v);
+          varnames.push(v);
+          $scope.variables.push({
+            name:v
+          });
         }
       }
     } else {
@@ -108,7 +163,7 @@ $scope.modelName = '';
     }
   };
 
-  $scope.delParameter = function(p) {
+  $scope.deleteParameter = function(p) {
     var index = $scope.parameters.indexOf(p);
     $scope.parameters.splice(index,1);
     index = varnames.indexOf(p.name);
@@ -125,9 +180,13 @@ $scope.modelName = '';
       var vars = getVars(value);
       for(v in vars) {
         v = vars[v];
+        console.log(v);
         if(!includes(varnames,v)) {
+          console.log('not includes');
           varnames.push(v);
-          $scope.variables.push(v);
+          $scope.variables.push({
+            name:v
+          });
         }
       }
     } else {
@@ -135,7 +194,7 @@ $scope.modelName = '';
     }
   };
 
-  $scope.delEquation = function(e) {
+  $scope.deleteEquation = function(e) {
     var index = $scope.equations.indexOf(e);
     $scope.equations.splice(index,1);
     index = varnames.indexOf(e.name);
@@ -145,107 +204,68 @@ $scope.modelName = '';
   ///////////// Decisions /////////////
 
   $scope.decisions = [];
+// Decision {name,decision,options:{option:value}}
 
-  $scope.isDecision = function(param) {
-    var index = $scope.params.indexOf(param);
-    $scope.params.splice(index,1);
-    $scope.decisions.push({
-      name: param.name,
-      label: '',
-      policies: []
-    });
+  $scope.saveOption = function(d,oname) {
+    if(oname) {
+      d.options.push({
+        name:oname,
+        value:''
+      });
+    }
+    // Reset variable values
+    $scope.oname = null;
+    $scope.ovalue = null;
   };
 
-  $scope.saveDecLabel = function(decision, label) {
-    decision.label = label;
-  }
-
-  $scope.savePolicy = function(decision, policy, policyValue) {
-    if(policy && policyValue) {
-      policy.value = policyValue;
+  $scope.saveOptionValue = function(d, option, value) {
+    if(!option) {
+      console.log('Option must have a name');
+    } else if(option && value) {
+      // Find the option
+      var index = indexOfAttribute(d.options,'name',option);
+      // Set the value
+      d.options[index].value = value;
       // TODO: in getVars, have a special case for probabilities
-      var params = getVars(policyValue);
+      var params = getVars(value);
       for(p in params) {
         p = params[p];
-        if(!includes(varNames,p)) {
-          varNames.push(p);
-          $scope.params.push({
+        if(!includes(varnames,p)) {
+          varnames.push(p);
+          $scope.variables.push({
             name:p
           });
         }
       }
     } else {
-      console.log('Policy name and value cannot be empty');
+      console.log('Option name and value cannot be empty');
     }
+    // Reset variable values
+    $scope.oname = null;
+    $scope.ovalue = null;
   };
 
-  $scope.addPolicy = function(decision,policyName,policyValue) {
-    if(policyName) {
-      // Parse parameters of value, check for new variables
-      var params = getVars(policyValue);
-      for(p in params) {
-        p = params[p];
-        if(!includes(varNames,p)) {
-          varNames.push(p);
-          $scope.params.push({
-            name: p
-          });
-        }
-      }
-      // Set new policy object {name,value}
-      var found = false;
-      for(p in decision.policies) {
-        // Policy already created
-        if (decision.policies[p].name == policyName) {
-          found = true;
-          decision.policies[p].value = policyValue;
-          break;
-        }
-      }
-      if(found == false) {
-        decision.policies.push({
-          name:policyName,
-          value:policyValue
-        });
-      }
-    } else {
-      console.log('Policy cannot be empty');
-    }
-    $scope.newPolicyName = '';
-    $scope.newPolicyValue = '';
-
-  };
-
-  $scope.delPolicy = function(decision,policy) {
-    var index = decision.policies.indexOf(policy);
-    decision.policies.splice(index,1);
+  $scope.deleteOption = function(d,o) {
+    var index = d.options.indexOf(o);
+    d.options.splice(index,1);
   }
-
-  $scope.isParam = function(decision) {
-    var index = $scope.decisions.indexOf(decision);
-    $scope.decisions.splice(index,1);
-    $scope.params.push({
-      name:decision.name,
-      value:decision.value
-    });
-  };
 
   ///////////// Model Upload /////////////
 
-    $scope.uploadModel = function(event) {
-      var input = document.getElementById('fileinput');
-      var file = input.files[0];
-      var reader = new FileReader();
+  $scope.uploadModel = function(event) {
+    var input = document.getElementById('fileinput');
+    var file = input.files[0];
+    var reader = new FileReader();
 
-      reader.onload = function(event) {
-        var content = event.target.result;
+    reader.onload = function(event) {
+      var content = event.target.result;
 
-        // Set code editor
-        var editor = ace.edit("editor");
-        editor.setValue(content);
-      }
-      reader.readAsText(file);
-    };
+      // Set code editor
+      var editor = ace.edit("editor");
+      editor.setValue(content);
+    }
+    reader.readAsText(file);
+  };
 
   ///////////// Submit Model /////////////
   $scope.uploadedModel = '';
@@ -268,7 +288,7 @@ $scope.modelName = '';
     var data = {};
     var content = '';
 
-    if(modelType == 'build') {
+    if(modelType == 'formView') {
       // Format model data to send
       content = formatModel();
       data = {
@@ -276,7 +296,7 @@ $scope.modelName = '';
         modelBody: content,
         command: cmdType
       };
-    } else if(modelType == 'upload') {
+    } else if(modelType == 'codeView') {
       content = ace.edit("editor").getValue();
       // Seach for model name
       var lines = content.split('\n');
@@ -361,36 +381,37 @@ $scope.modelName = '';
     result += '\n//Objectives\n\n';
     for(i in $scope.objectives) {
       var obj = $scope.objectives[i];
-      result += 'Objective ' + obj.minmax + ' ENB'+obj.name+' = EV(NBenefit'+obj.name+')'+eol;
-      result += 'NBenefit' + obj.name + ' = New'+obj.name+ ' - Current'+obj.name+eol
+      result += 'Objective Max ENB'+obj.name+' = '+ obj.enb +eol;
+      result += 'Objective Min LP'+obj.name+' = '+ obj.lp +eol;
+      result += 'NB' + obj.name + ' = '+ obj.nb +eol;
     }
 
     // Format parameters
     result += '\n//Parameters\n\n';
-    for(i in $scope.params) {
-      var param = $scope.params[i];
+    for(i in $scope.parameters) {
+      var param = $scope.parameters[i];
       result +=  param.name + ' = ' + param.value + eol;
     }
 
     // Format equations
     result += '\n//Equations\n\n';
-    for(i in $scope.objectives) {
-      var obj = $scope.objectives[i];
-      result += 'Current'+ obj.name + ' = ' + obj.currentEq + eol;
-      result += 'New'+ obj.name + ' = ' + obj.newEq + eol;
+    for(i in $scope.equations) {
+      var eq = $scope.equations[i];
+      result += eq.name + ' = ' + eq.value + eol;
     }
 
     // Format decisions
     result += '\n//Decisions\n\n';
     for(i in $scope.decisions) {
-      var dec = $scope.decisions[i];
-      result += dec.name + ' = decision("Policy type") {\n';
-      for(j in dec.policies) {
-        p = dec.policies[j];
-        result += '\t"'+ p.name +'": ' + p.value + eol;
+      var d = $scope.decisions[i];
+      result += d.name + ' = decision("' + d.decision + '") {\n';
+      for(j in d.options) {
+        o = d.options[j];
+        result += '\t"'+ o.name +'": ' + o.value + eol;
       }
       result += '}\n\n'
     }
+    console.log(result);
     return result;
   }
 

@@ -12,16 +12,38 @@ $(document).ready(function() {
   editor.$blockScrolling = Infinity;
 
   // Toggle build and upload views
-  $('#codeView').hide();
+  $('.codeView').hide();
 
   $('#btnForm').click(function() {
-    $('#codeView').hide();
-    $('#formView').show();
+    $('.codeView').hide();
+    $('.formView').show();
   });
 
   $('#btnCode').click(function (){
-    $('#formView').hide();
-    $('#codeView').show();
+    $('.formView').hide();
+    $('.codeView').show();
+  });
+
+  /////////// Toggle Views ///////////
+
+  $("#btn-objectives").click(function(){
+    $("#objectives").toggle(200);
+  });
+
+  $("#btn-parameters").click(function(){
+    $("#parameters").toggle(200);
+  });
+
+  $("#btn-equations").click(function(){
+    $("#equations").toggle(200);
+  });
+
+  $("#btn-decisions").click(function(){
+    $("#decisions").toggle(200);
+  });
+
+  $("#btn-variables").click(function(){
+    $("#variables").toggle(200);
   });
 
 });

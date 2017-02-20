@@ -1,3 +1,38 @@
+function includes(arr,obj) {
+    return (arr.indexOf(obj) != -1);
+}
+
+function indexOfAttribute(array,attrName, attrValue) {
+  for(o in array) {
+    var obj = array[o];
+    if (obj[attrName] == attrValue) {
+      return o;
+    }
+  }
+  return -1;
+}
+
+function getVars(eq) {
+  var vars = eq.split(/\+|\-|\/|\*|\(|\)|,/);
+  var i = vars.length
+  while(i--) {
+    v = vars[i].trim();
+    // Is numerical, probability distribution, empty
+    if($.isNumeric(v[0]) || $.isNumeric(v) ||
+        v == 'triangular' || v == 'normalCI' || v == 'uniform' ||
+        v == 'deterministic' || v == ""){
+          vars.splice(i,1);
+    }
+    else {
+      vars[i] = v;
+    }
+  }
+  return vars;
+}
+
+/////////////////// Formatting ///////////////////
+
+
 function formatGraph(csv) {
 
   // Set the dimensions of the canvas / graph
@@ -65,7 +100,7 @@ function formatTable(csv) {
   return table;
 }
 
-// Forrmat error into HTML
+// Format error into HTML
 function formatError(error) {
   console.log('Error >> ',error);
   var errmsg = '';
@@ -74,36 +109,4 @@ function formatError(error) {
     errmsg += '<p>'+row+'</p>';
   });
   return errmsg;
-}
-
-function includes(arr,obj) {
-    return (arr.indexOf(obj) != -1);
-}
-
-function objWithAttr(array,attrName, attrValue) {
-  for(o in array) {
-    var obj = array[o];
-    if (obj[attrName] == attrValue) {
-      return obj;
-    }
-  }
-  return;
-}
-
-function getVars(eq) {
-  var vars = eq.split(/\+|\-|\/|\*|\(|\)|,/);
-  var i = vars.length
-  while(i--) {
-    v = vars[i].trim();
-    // Is numerical, probability distribution, empty
-    if($.isNumeric(v[0]) || $.isNumeric(v) ||
-        v == 'triangular' || v == 'normalCI' || v == 'uniform' ||
-        v == 'deterministic' || v == ""){
-          vars.splice(i,1);
-    }
-    else {
-      vars[i] = v;
-    }
-  }
-  return vars;
 }

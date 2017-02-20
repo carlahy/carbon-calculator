@@ -6,8 +6,8 @@
   <script type="text/javascript" src="scripts/libs/angular.min.js"></script>
   <script type="text/javascript" src="scripts/libs/jquery-3.1.1.min.js"></script>
 
-  <link rel="stylesheet" type="text/css" href="css/style.css">
   <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+  <link rel="stylesheet" type="text/css" href="css/style.css">
 </head>
 
 <body ng-app="carbonCalc" ng-controller="mainController">
@@ -17,153 +17,177 @@
   <h1>Carbon Calculator</h1><br>
 
     <h2>Step 1: Build the Model</h2>
-    <div class="btn-group">
-      <button type="button" class="btn btn-primary" id="btnForm">Form View</button>
-      <button type="button" class="btn btn-primary" id="btnCode">Code View</button>
+
+    <!--- ========= Toggle Form/Code ========= -->
+    <div class="btn-group" role="group">
+      <button type="button" class="btn btn-secondary" id="btnForm">Form View</button>
+      <button type="button" class="btn btn-secondary" id="btnCode">Code View</button>
     </div>
 
     <div class="row">
       <!--- ========= Form View ========= -->
-      <div class="col-sm-8 formView" id="formView">
-        <form name="build" autocomplete="off">
+      <div class="col-sm-8 formView">
+        <form name="formView" autocomplete="off">
 
-          <h3>Model Name:</h3>
-          <input type="text" name="modelName" ng-model="modelName" ng-blur="addModelName(modelName)" required></li>
+          <!-- Model Name  -->
+          <h3>Model Name</h3>
+          <input type="text" ng-model="modelName" ng-blur="addModelName(modelName)" required></li>
 
           <!-- Objectives -->
           <h3>Objectives</h3>
-          <table class="table-bordered">
-            <tbody>
-              <tr>
-                <th>Objectives</th>
-                <td ng-repeat="o in objectives">{{o.name}}</td>
-                <td>
-                  <input type="text" ng-model="inputobj" ng-blur="addObj(inputobj)"
-                    ng-keydown="$event.which === 13 && addObj(inputobj)" ng-required="objectives.length==0">
-                </td>
-              </tr>
-              <tr>
-                <th>ENB</th>
-                <td ng-repeat="o in objectives">{{o.enb}}</td>
-              </tr>
-              <tr>
-                <th>LP</th>
-                <td ng-repeat="o in objectives">{{o.lp}}</td>
-              </tr>
-              <tr>
-                <th>NB</th>
-                <td ng-repeat="o in objectives">
-                  <input type="text" ng-model="o.nb" ng-blur="addNB(o,o.nb)"
-                    ng-keydown="$event.which === 13 && addNB(o,o.nb)" required>
-                </td>
-              </tr>
-            </tbody>
-          </table>
+          <span class="glyphicon glyphicon-plus" id="btn-objectives"></span>
+          <div class="table-responsive" id="objectives">
+            <table class="table-bordered">
+              <tbody>
+                <tr>
+                  <th>Objectives</th>
+                  <td ng-repeat="o in objectives">{{o.name}}
+                    <span class="glyphicon glyphicon-remove objective" ng-click="deleteObj(o)"></span>
+                  </td>
+                  <td>
+                    <input type="text" ng-model="inputobj" ng-blur="addObj(inputobj)"
+                      ng-keydown="$event.which === 13 && addObj(inputobj)" ng-required="objectives.length==0">
+                  </td>
+                </tr>
+                <tr>
+                  <th>ENB</th>
+                  <td ng-repeat="o in objectives">{{o.enb}}</td>
+                </tr>
+                <tr>
+                  <th>LP</th>
+                  <td ng-repeat="o in objectives">{{o.lp}}</td>
+                </tr>
+                <tr>
+                  <th>NB</th>
+                  <td ng-repeat="o in objectives">
+                    <input type="text" ng-model="o.nb" ng-blur="addNB(o,o.nb)"
+                      ng-keydown="$event.which === 13 && addNB(o,o.nb)" required>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
 
           <!-- Variables -->
           <h3>Variables</h3>
-          <table class="table-bordered">
-            <thead>
-              <tr>
-                <th>Variable</th>
-                <th ng-repeat="vo in varoptions">{{vo}}?</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr ng-repeat="v in variables">
-                <th>{{v}}</th>
-                <td ng-repeat="vo in varoptions">
-                  <input type="checkbox" ng-model="vo[option]">
-                </td>
-              </tr>
-            </tbody>
-          </table>
+          <span class="glyphicon glyphicon-plus" id="btn-variables"></span>
+          <div class="" id="variables">
+            <table class="table-bordered">
+              <thead>
+                <tr>
+                  <th>Variable</th>
+                  <th ng-repeat="vo in varoptions">{{vo}}?</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr ng-repeat="v in variables">
+                  <th>{{v.name}}</th>
+                  <td ng-repeat="vo in varoptions">
+                    <input type="radio" ng-model="v.type" value="{{vo}}" ng-change="assignVariable(v,vo)">
+                  </td>
+                  <td>
+                    <span class="glyphicon glyphicon-remove" ng-click="deleteVariable(v)"></span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
 
           <!-- Parameters -->
-          <table>
-            <tbody>
-              <tr ng-repeat="p in parameters">
-                <th>{{p.name}}</th>
-                <td>
-                  <input type="text" ng-model="p.value" ng-blur="saveParameter(p,p.value)"
-                  ng-keydown="$event.which === 13 && saveParameter(p,p.value)" required>
-                </td>
-              </tr>
-            </tbody>
-          </table>
+          <h3>Parameters</h3>
+          <span class="glyphicon glyphicon-plus" id="btn-parameters"></span>
+          <div class="" id="parameters">
+            <table class="table-bordered">
+              <tbody>
+                <tr ng-repeat="p in parameters">
+                  <th>{{p.name}}</th>
+                  <td>
+                    <input type="text" ng-model="p.value" ng-blur="saveParameter(p,p.value)"
+                    ng-keydown="$event.which === 13 && saveParameter(p,p.value)" ng-required="p">
+                  </td>
+                  <td>
+                    <span class="glyphicon glyphicon-remove" ng-click="deleteParameter(p)"></span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
 
           <!-- Equations -->
-          <table>
-            <tbody>
-              <tr ng-repeat="e in equations">
-                <th>{{e.name}}</th>
-                <td>
-                  <input type="text" ng-model="e.value" ng-blur="saveEquation(e,e.value)"
-                    ng-keydown="$event.which === 13 && saveEquation(e,e.value)" required>
-                </td>
-              </tr>
-            </tbody>
-          </table>
+          <h3>Equations</h3>
+          <span class="glyphicon glyphicon-plus" id="btn-equations"></span>
+          <div class="" id="equations">
+            <table class="table-bordered">
+              <tbody>
+                <tr ng-repeat="e in equations">
+                  <th>{{e.name}}</th>
+                  <td>
+                    <input type="text" ng-model="e.value" ng-blur="saveEquation(e,e.value)"
+                      ng-keydown="$event.which === 13 && saveEquation(e,e.value)" ng-require="e">
+                  </td>
+                  <td>
+                    <span class="glyphicon glyphicon-remove" ng-click="deleteEquation(e)"></span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
 
           <!-- Decisions -->
-          <table>
-            <tbody>
-              <tr ng-repeat="d in decisions">
-                <th>{{d.name}}</th>
-                <td></td>
-                <td>
-                  <!-- <input type="text" ng-model="e.value" ng-blur="saveEquation(d,d.value)"
-                    ng-keydown="$event.which === 13 && saveEquation(e,e.value)" required> -->
-                </td>
-              </tr>
-            </tbody>
-          </table>
+          <h3>Decisions</h3>
+          <span class="glyphicon glyphicon-plus" id="btn-decisions"></span>
+          <div class="" id="decisions">
+            <table class="table table-decisions">
+              <tbody>
+                <tr class="thead-default" ng-repeat-start="d in decisions">
+                  <th>Name</th>
+                  <th>Decision</th>
+                </tr>
+                <tr>
+                  <td>{{d.name}}</td>
+                  <td><input type="text" ng-model="d.decision" required></td>
+                  <!-- <datalist id="suggest">
+                    <option ng-repeat="d in decisions" value="{{d.decision}}"></option>
+                  </datalist> -->
+                </tr>
 
-          <h3>Parameters:</h3>
-          <ul>
-            <div ng-repeat="param in params">
-              <li>
-                {{param.name}} =
-                <input type="text" name="paramVal" ng-model="paramVal" ng-blur="saveParamVal(param,paramVal)"
-                  ng-keydown="$event.which === 13 && saveParamVal(param,paramVal)" required>
-                <span class="glyphicon glyphicon-remove" ng-click="delParamVal(param)"></span>
-                <span class="glyphicon glyphicon-unchecked" ng-click="isDecision(param)">Decision?</span>
-              </li>
-            </div>
-          </ul>
+                <tr>
+                  <th colspan="2">Options</th>
+                </tr>
+                <tr ng-repeat="o in d.options">
+                  <td>"{{o.name}}"</td>
+                  <td><input type="text" value="{{o.value}}" ng-model="o.value" ng-blur="saveOptionValue(d,o.name,o.value)"
+                    ng-keydown="$event.which === 13 && saveOptionValue(d,o.name,o.value)" required></td>
+                  <td>
+                    <span class="glyphicon glyphicon-remove" ng-click="deleteOption(d,o)"></span>
+                  </td>
+                </tr>
 
-          <h3>Decisions:</h3>
-          <ul>
-            <div ng-repeat="decision in decisions">
-              <li>
-                {{decision.name}} = decision("<input type="text" value="{{decision.label}}" ng-model="decision.label" ng-blur="saveDecLabel(decision, decision.label)"
-                  ng-keydown="$event.which === 13 && saveDecLabel(decision, decision.label)" required>") {
-                  <ul>
-                    <div ng-repeat="p in decision.policies">
-                      <li>
-                        "{{p.name}}" :
-                        <input type="text" value="{{p.value}}" ng-model="p.value" ng-blur="savePolicy(decision, p, p.value)"
-                          ng-keydown="$event.which === 13 && savePolicy(decision, p, policyValue)" required>
-                        <span class="glyphicon glyphicon-remove" ng-click="delPolicy(decision,p)">
-                      </li>
-                    </div>
-                    <li>
-                      <input class="smaller" type="text" ng-model="newPolicyName" ng-blur="addPolicy(decision,newPolicyName,newPolicyValue)"
-                        ng-keydown="$event.which === 13 && addPolicy(decision,newPolicyName,newPolicyValue)" ng-required="decision.policies.length==0"> :
-                      <input class="smaller" type="text" ng-model="newPolicyValue" ng-blur="addPolicy(decision,newPolicyName,newPolicyValue)"
-                        ng-keydown="$event.which === 13 && addPolicy(decision,newPolicyName,newPolicyValue)" ng-required="decision.policies.length==0">
-                        <span class="glyphicon glyphicon-ok" ng-click="addPolicy(decision,newPolicyName,newPolicyValue)">
-                    </li>
-                  </ul>
-                }
-                <span class="glyphicon glyphicon-unchecked" ng-click="isParam(decision)">Param?</span>
-              </li>
-            </div>
-          </ul>
+                <tr>
+                  <td>
+                    <input type="text" value="{{}}" ng-model="oname" ng-blur="saveOption(d,oname)"
+                      ng-keydown="$event.which === 13 && saveOption(d,oname)" ng-required="d.options.length==0">
+                  </td>
+                  <td>
+                    <input type="text" value="{{  }}" ng-model="ovalue" ng-blur="saveOptionValue(d,oname,ovalue)"
+                      ng-keydown="$event.which === 13 && saveOptionValue(d,oname,ovalue)" ng-required="d.options.length==0">
+                  </td>
+                </tr>
+                <tr ng-repeat-end>
+                  <td colspan="2"></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
 
+
+        <!--- ========= Form Handler ========= -->
+
+        <br></br>
           <button type="button" class="btn btn-default" ng-click="saveModel()">Save Model</button>
-          <button type="button" class="btn btn-default" ng-click="submitModel(build.$valid,'build','parse')">Parse Model</button>
-          <button type="button" class="btn btn-default" ng-click="submitModel(build.$valid,'build','solve')">Solve Model</button>
+          <button type="button" class="btn btn-default" ng-click="submitModel(formView.$valid,'formView','parse')">Parse Model</button>
+          <button type="button" class="btn btn-default" ng-click="submitModel(formView.$valid,'formView','solve')">Solve Model</button>
           <div id="submitButton" class="alert alert-warning alert-dismissable" ng-hide="submitOnInvalid" dismiss-on-timeout="5000">
             <strong>Invalid form: </strong> Please fill in missing value(s).
           </div>
@@ -171,35 +195,92 @@
             Model parsed successfully.
           </div>
         </form>
+
       </div>
 
-      <!--- ========= Code View ========= -->
+      <!--- ========= How To Form ========= -->
 
-      <div class="col-sm-8" id="codeView">
-        <form class="" name="upload">
-          <h3>Upload Model</h3>
-          <div class="row-align">
-            <input type="file" id="fileinput" name="model_upload" accept=".rdr" ng-model="uploadFileData">
-            <input type="button" value="Upload" ng-click="uploadModel(event)">
-          </div>
-          <div id="editor" ng-model="uploadedModel"></div>
-        </form>
-        <button type="button" class="btn btn-default" ng-click="saveModel()">Save Model</button>
-        <button type="button" class="btn btn-default" ng-click="submitModel(upload.$valid,'upload','parse')">Parse Model</button>
-        <button type="button" class="btn btn-default" ng-click="submitModel(upload.$valid,'upload','solve')">Solve Model</button>
-      </div>
-
-      <!--- ========= Helper Column ========= -->
-
-      <!-- <iframe class="googlesheet" src="https://docs.google.com/spreadsheets/d/1E9Rrh-ocXE18_huXiazzTnvBur6Gr7C62S7uDrcdRVY/edit?usp=sharing"></iframe> -->
-
-      <div class="col-sm-4">
+      <div class="col-sm-4 formView">
         <h3>How To</h3>
-        <ul>
-          <div ng-repeat="i in instructions">
-            <li>{{i.head}}: {{i.body}}</li>
-          </div>
-        </ul>
+
+        <p>Cost Benefit Analysis Example</p>
+
+        <h4>Model Name</h4>
+        <p>CBA</p>
+
+        <h4>Objectives</h4>
+        <table class="table-bordered">
+          <tbody>
+            <tr>
+              <td>Objective</td>
+              <td>Result</td>
+            </tr>
+            <tr>
+              <td>ENB</td>
+              <td>EV(NBResult)</td>
+            </tr>
+            <tr>
+              <td>LP</td>
+              <td>Pr(NBResult < 0)</td>
+            </tr>
+            <tr>
+              <td>NB</td>
+              <td>Benefit - Cost</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h4>Parameters</h4>
+
+        <h4>Equations</h4>
+
+        <h4>Decisions</h4>
+        <table class="table">
+          <tbody>
+            <tr class="thead-default">
+              <th>Name</th>
+              <th>Decisions</th>
+            </tr>
+            <tr>
+              <td>Benefit</td>
+              <td>Architecture Choice</td>
+            </tr>
+            <tr>
+              <th colspan="2">Options</th>
+            </tr>
+            <tr>
+              <td>"As-is"</td>
+              <td>normalCI(0.9,1.1)</td>
+            </tr>
+            <tr>
+              <td>"Refactoring"</td>
+              <td>normalCI(1,9)</td>
+            </tr>
+            <tr>
+              <td colspan="2"></td>
+            </tr>
+            <tr class="thead-default">
+              <th>Name</th>
+              <th>Decisions</th>
+            </tr>
+            <tr>
+              <td>Cost</td>
+              <td>Architecture Choice</td>
+            </tr>
+            <tr>
+              <th colspan="2">Options</th>
+            </tr>
+            <tr>
+              <td>"As-is"</td>
+              <td>normalCI(0,0)</td>
+            </tr>
+            <tr>
+              <td>"Refactoring"</td>
+              <td>normalCI(1,5)</td>
+            </tr>
+          </tbody>
+        </table>
+
         <br></br>
         <h3>Cheat Sheet</h3>
         <span id="cheatSheet">
@@ -212,9 +293,67 @@
         </span>
       </div>
 
+      <!--- ========= Code View ========= -->
+
+      <div class="col-sm-8 codeView">
+        <form class="" name="codeView">
+          <h3>Upload Model</h3>
+          <div class="row-align">
+            <input type="file" id="fileinput" name="model_upload" accept=".rdr" ng-model="uploadFileData">
+            <input type="button" value="Upload" ng-click="uploadModel(event)">
+          </div>
+          <div id="editor" ng-model="uploadedModel"></div>
+        </form>
+
+      <!--- ========= Code Handler ========= -->
+        <br></br>
+        <button type="button" class="btn btn-default" ng-click="saveModel()">Save Model</button>
+        <button type="button" class="btn btn-default" ng-click="submitModel(codeView.$valid,'codeView','parse')">Parse Model</button>
+        <button type="button" class="btn btn-default" ng-click="submitModel(codeView.$valid,'codeView','solve')">Solve Model</button>
+      </div>
+
+      <!--- ========= How To Code ========= -->
+
+      <div class="col-sm-4 codeView">
+        <h3>How To</h3>
+
+        <p>Cost Benefit Analysis Example</p>
+
+        <pre>
+Model CBA;
+
+Objective Max ENB = EV(NB);
+Objective Min LP = Pr(NB < 0);
+NB = Benefit - Cost;
+
+Benefit = decision("Architecture choice"){
+    "As-is": normalCI(0.9, 1.1);
+    "Refactoring" : normalCI(1, 9);
+}
+
+Cost = decision("Architecture choice"){
+    "As-is" : normalCI(0, 0);
+    "Refactoring" : normalCI(1, 5);
+}
+        </pre>
+
+        <br></br>
+        <h3>Cheat Sheet</h3>
+        <span id="cheatSheet">
+          <ul>
+            <li>ENB = Expected Net Benefit</li>
+            <li>NB = Net Benefit</li>
+            <li>LP = Loss Probability</li>
+            <li>Pr = Probability</li>
+            <li>Triangular = ...</li>
+            <li>NormalCI = ...</li>
+          </ul>
+        </span>
+      </div>
+
 
     </div>
-
+    <!--- ========= RADAR Result ========= -->
     <h2>Step 2: Results</h2>
     <div class="row">
       <div class="col-sm-6">
@@ -237,7 +376,11 @@
       </div>
     </div>
 
-  </div>
+    <!-- <footer class="footer">
+      <div class="container">
+        <p>Footer</p>
+      </div>
+    </footer> -->
 
   <script type="text/javascript" src="scripts/libs/d3.min.js"></script>
   <script type="text/javascript" src="scripts/app.js"></script>
