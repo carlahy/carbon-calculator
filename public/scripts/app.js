@@ -1,86 +1,96 @@
 var app = angular.module('carbonCalc', []);
 
+// Encompass on click, on blur, on enter into single directive
+// Takes function to run
+app.directive('onSaveInput', function(myFunction,myArgs){
+  return {
+    require: 'ngModel',
+    scope: {
+      ngBlur:'&myFunction',
+      ngKeydown:'&myFunction'
+    },
+    // TODO:???
+  }
+});
+
 app.controller('mainController', function($scope,$http) {
 
   // Keep track of variable names used to avoid duplicates
   var varnames = [];
 
+  // ngModels for input fields
+  $scope.input = {
+    objective:'',
+    decision:'',
+    option:''
+  };
+
 ///////////// Model Name /////////////
 
-$scope.modelName = '';
+  $scope.modelName = '';
 
   $scope.addModelName = function(name) {
     if(name) {
       if(!includes(varnames,name)) {
           varnames.push(name);
       } else {
-        // TODO: warning, duplicate
+        // TODO: Warning, duplicate
       }
-    } else {
-      console.log('Model Name cannot be empty');
     }
   };
 
 ///////////// Objectives /////////////
 
+  $scope.mode = ['Min','Max']
+  $scope.statistics = ["EV", "Pr","percentile"]
   $scope.objectives = [];
 
   $scope.addObj = function(name) {
     if(name) {
       if(!includes(varnames,name)) {
         $scope.objectives.push({
-          name: name,
-          enb: 'EV(NB'+name+')',
-          lp: 'Pr(NB'+name+' < 0)',
-          nb: ''
+          name: name
         });
-        varnames.push(name,'ENB'+name, 'LP'+name, 'NB'+name);
+        varnames.push(name);
       } else {
-        // TODO: Alert warning, duplicate names
+        // TODO: Warning, duplicate names
       }
-    } else {
-      console.log('Input cannot be empty');
     }
-    $scope.inputobj = '';
+    $scope.input.objective = '';
   };
 
   $scope.deleteObj = function(o) {
+    // Remove from objectives
     var index = $scope.objectives.indexOf(o);
     $scope.objectives.splice(index,1);
+    // Remove from variables
     index = varnames.indexOf(o.name);
     varnames.splice(index,1);
-    index = varnames.indexOf('ENB'+o.name);
-    varnames.splice(index,1);
-    index = varnames.indexOf('LP'+o.name);
-    varnames.splice(index,1);
-    index = varnames.indexOf('NB'+o.name);
-    varnames.splice(index,1);
+    return;
   };
 
-  $scope.addNB = function(o,value) {
-    if(value) {
-      o.nb = value;
-      var vars = getVars(value);
+  $scope.addExpression = function(expression) {
+    if(expression) {
+      // Parse expression for new variables
+      var vars = getVars(expression);
       for(v in vars) {
         v = vars[v];
         if(!includes(varnames,v)) {
+          // Add variable to list
           varnames.push(v);
           $scope.variables.push({
             name:v
           });
         }
       }
-    } else {
-      console.log('NB Value cannot be empty');
     }
   }
 
 ///////////// Variables /////////////
 
-  // The uninitialised vars that are yet to be defined as parameters or decisions
+  // The uninitialised variables that are yet to be defined as parameters, equations, decisions
   $scope.variables = [];
   $scope.varoptions = ['Parameter','Equation','Decision'];
-  $scope.varselect;
 
   $scope.assignVariable = function(v,option) {
     reassignVariable(v);
@@ -89,11 +99,7 @@ $scope.modelName = '';
         break;
       case 'Equation': $scope.equations.push(v);
         break;
-      case 'Decision': $scope.decisions.push({
-          name:v.name,
-          decision:'',
-          options:[]
-        });
+      case 'Decision': $scope.unassignedDecisions.push(v);
         break;
       default:
         break;
@@ -107,26 +113,39 @@ $scope.modelName = '';
       $scope.parameters.splice(index,1);
       return;
     }
+
     index = $scope.equations.indexOf(v);
     if(index != -1) {
       $scope.equations.splice(index,1);
       return;
     }
-    index = indexOfAttribute($scope.decisions, 'name', v.name);
-    if(index != -1) {
-      $scope.decisions.splice(index,1);
-      return;
+    // If variable is assigned to a decision
+    if (v.decision) {
+      // Find decision
+      var d = indexOfAttribute($scope.decisions, 'name', v.decision);
+      if(d != -1) {
+        // Find variable
+        index = indexOfAttribute($scope.decisions[d].variables,'name',v.name);
+        $scope.decisions[d].variables.splice(index,1);
+      }
+      delete v.decision;
+    }
+    // If variable is a decision, but unassigned
+    else if ($scope.unassignedDecisions.indexOf(v) != -1) {
+      index = $scope.unassignedDecisions.indexOf(v);
+      $scope.unassignedDecisions.splice(index,1);
     }
     return;
   }
 
-  // Remove variable from its type
   $scope.deleteVariable = function (v) {
+    // Remove variable from variable list
     var index = $scope.variables.indexOf(v);
     $scope.variables.splice(index,1);
     index = varnames.indexOf(v.name);
     varnames.splice(index,1);
 
+    // If assigned to a type, then remove from type list
     if(v.type == 'Parameter') {
       index = $scope.parameters.indexOf(v);
       $scope.parameters.splice(index,1);
@@ -134,10 +153,15 @@ $scope.modelName = '';
       index = $scope.equations.indexOf(v);
       $scope.equations.splice(index,1);
     } else if (v.type == 'Decision') {
-      index = $scope.decisions.indexOf(v);
-      $scope.decisions.splice(index,1);
+      if(v.decision) {
+        var d = indexOfAttribute($scope.decisions,'name',v.decision);
+        index = $scope.decisions[d].variables.indexOf(v);
+        $scope.decisions[d].variables.splice(index,1);
+      } else {
+        var index = $scope.unassignedDecisions.indexOf(v);
+        $scope.unassignedDecisions.splice(index,1);
+      }
     }
-    // Else, variabel was unassigned
     return;
   }
 
@@ -158,8 +182,6 @@ $scope.modelName = '';
           });
         }
       }
-    } else {
-      console.log('Parameter value cannot be empty');
     }
   };
 
@@ -174,23 +196,19 @@ $scope.modelName = '';
 
   $scope.equations = [];
 
-  $scope.saveEquation = function(e,value) {
-    if(value) {
-      e.value = value;
-      var vars = getVars(value);
+  $scope.saveEquation = function(e,expression) {
+    if(expression) {
+      e.value = expression;
+      var vars = getVars(expression);
       for(v in vars) {
         v = vars[v];
-        console.log(v);
         if(!includes(varnames,v)) {
-          console.log('not includes');
           varnames.push(v);
           $scope.variables.push({
             name:v
           });
         }
       }
-    } else {
-      console.log('Equation cannot be empty');
     }
   };
 
@@ -203,52 +221,100 @@ $scope.modelName = '';
 
   ///////////// Decisions /////////////
 
+  $scope.unassignedDecisions = [];
   $scope.decisions = [];
-// Decision {name,decision,options:{option:value}}
+  // Decisions = [Decision]
+  // Decision = {name,options[option],variables[variable]} ]
+  // Option = 'option name'
+  // Variable {decision,name,options[{name:value}]}
 
-  $scope.saveOption = function(d,oname) {
-    if(oname) {
-      d.options.push({
-        name:oname,
-        value:''
-      });
+  $scope.addDecision = function(d) {
+    if(d) {
+      // If decision does not already exist
+      if(indexOfAttribute($scope.decisions,'name',d) == -1) {
+        $scope.decisions.push({
+          name:d,
+          options:[],
+          variables:[]
+        });
+      }
     }
-    // Reset variable values
-    $scope.oname = null;
-    $scope.ovalue = null;
+    // Reset new decision input
+    $scope.input.decision = '';
+    return;
+  }
+
+  $scope.assignDecision = function (v) {
+    // Remove variable from unassigned
+    var index = $scope.unassignedDecisions.indexOf(v);
+    $scope.unassignedDecisions.splice(index,1);
+
+    // Add variable to decision
+    index = indexOfAttribute($scope.decisions,'name',v.decision);
+    var decision = $scope.decisions[index];
+
+    // Push variable to decision variables
+    v.options = [];
+    decision.variables.push(v);
+
+    return;
   };
 
-  $scope.saveOptionValue = function(d, option, value) {
-    if(!option) {
-      console.log('Option must have a name');
-    } else if(option && value) {
-      // Find the option
-      var index = indexOfAttribute(d.options,'name',option);
-      // Set the value
-      d.options[index].value = value;
-      // TODO: in getVars, have a special case for probabilities
-      var params = getVars(value);
-      for(p in params) {
-        p = params[p];
-        if(!includes(varnames,p)) {
-          varnames.push(p);
+  // Change the decision name for an existing decision
+  $scope.reassignDecision = function(d,name) {
+    for(v in d.variables) {
+      v = d.variables[v];
+      v.decision = name;
+    }
+    return;
+  }
+
+  $scope.deleteDecision = function(d) {
+    // Push decision variables to unassigned decisions list
+    for(v in d.variables) {
+      delete d.variables[v].decision;
+      $scope.unassignedDecisions.push(d.variables[v]);
+    }
+    var index = $scope.decisions.indexOf(d);
+    $scope.decisions.splice(index,1);
+
+    return;
+  }
+
+  // Add new option for a decision
+  $scope.addOption = function(d,option) {
+    if(option && d.options.indexOf(option) == -1) {
+      d.options.push(option);
+    }
+    $scope.input.option = '';
+  };
+
+  // Parse expression for a decision variable's option assignment
+  $scope.saveOptionExpression = function(v,o) {
+    if(o == '') {
+      var index = v.options.indexOf[o];
+      v.options.splice(index,1);
+    } else {
+      // Parse expression
+      var vars = getVars(v.options[o]);
+      for(v in vars){
+        v = vars[v];
+        if(!includes(varnames,v)) {
+          varnames.push(v);
           $scope.variables.push({
-            name:p
+            name:v
           });
         }
       }
-    } else {
-      console.log('Option name and value cannot be empty');
     }
-    // Reset variable values
-    $scope.oname = null;
-    $scope.ovalue = null;
   };
 
   $scope.deleteOption = function(d,o) {
     var index = d.options.indexOf(o);
     d.options.splice(index,1);
   }
+
+  // TODO: communication between form and coding views
 
   ///////////// Model Upload /////////////
 
@@ -271,7 +337,7 @@ $scope.modelName = '';
   $scope.uploadedModel = '';
 
   $scope.filterable = [];
-  $scope.filterSelect = {};
+  $scope.filterSelect = [];
   $scope.csvresult = '';
 
   $scope.submitOnInvalid = true;
@@ -320,23 +386,27 @@ $scope.modelName = '';
       data:data
     }).then(function successCallback(res){
       var output = res.data;
+
       if(output.type == 'csvresult') {
 
         $scope.csvresult = output.body;
         $scope.filterable = output.decisions;
         // $scope.filterable.push.apply($scope.filterable, output.objectives);
         var csv = d3.csvParse(output.body);
+        $scope.csvcolumns = csv.columns;
         $('#model_result').empty().append(formatTable(csv));
 
       } else if(output.type == 'error'){
+
         $scope.filterable = [];
         $('#model_result').empty().append(formatError(output.body));
+
       } else if(output.type == 'success'){
         $scope.successParse = true;
       }
 
     }, function errorCallback(res){
-      alert('Error in model response');
+      $('#model_result').empty().append(formatError('Error in model response'));
     });
 
     return content;
@@ -381,9 +451,7 @@ $scope.modelName = '';
     result += '\n//Objectives\n\n';
     for(i in $scope.objectives) {
       var obj = $scope.objectives[i];
-      result += 'Objective Max ENB'+obj.name+' = '+ obj.enb +eol;
-      result += 'Objective Min LP'+obj.name+' = '+ obj.lp +eol;
-      result += 'NB' + obj.name + ' = '+ obj.nb +eol;
+      result += 'Objective '+obj.mode+' '+obj.name+' = '+obj.statistic+'('+obj.expression+')'+eol;
     }
 
     // Format parameters
@@ -402,14 +470,16 @@ $scope.modelName = '';
 
     // Format decisions
     result += '\n//Decisions\n\n';
-    for(i in $scope.decisions) {
-      var d = $scope.decisions[i];
-      result += d.name + ' = decision("' + d.decision + '") {\n';
-      for(j in d.options) {
-        o = d.options[j];
-        result += '\t"'+ o.name +'": ' + o.value + eol;
+    for(d in $scope.decisions) {
+      var d = $scope.decisions[d];
+      for(v in d.variables) {
+        v = d.variables[v];
+        result += v.name+' = decision("'+v.decision+'") {\n';
+        for(o in v.options) {
+          result += '\t"'+o+'": '+v.options[o]+eol;
+        }
+        result += '}\n\n';
       }
-      result += '}\n\n'
     }
     console.log(result);
     return result;
@@ -427,6 +497,9 @@ $scope.modelName = '';
       }
       return true;
     });
+    // Push columns back into filtered data
+    data.columns = $scope.csvcolumns;
+
     // Update table in view
     $('#model_result').empty().append(formatTable(data));
 

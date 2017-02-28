@@ -80,15 +80,16 @@ function formatGraph(csv) {
 
 // Format CSV file to HTML table
 function formatTable(csv) {
+
   var table = '<table class="table">';
   // Column names
   table += '<thead class="thead-inverse"><tr>';
   for(c in csv.columns) {
-    console.log(csv.columns[c]);
     table += '<th>'+csv.columns[c]+'</th>';
   }
   table += '</tr></thead><tbody>';
 
+  csv = csv.splice(0,csv.length)
   for(r in csv){
     table += '<tr>';
     for(c in csv[r]) {
@@ -102,7 +103,6 @@ function formatTable(csv) {
 
 // Format error into HTML
 function formatError(error) {
-  console.log('Error >> ',error);
   var errmsg = '';
   var rows = error.split('\n');
   rows.forEach(function getValues(row) {

@@ -32,7 +32,7 @@ def parseCSV(mfile):
         model.loc[:,c] = col.reshape(len(col),1)
 
     model = model.round(5)
-    
+
     # Get unique objectives
     objectives = []
     for o in model.columns.values[ndecisions:ndecisions+nobjectives]:

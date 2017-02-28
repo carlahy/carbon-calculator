@@ -38,32 +38,34 @@
           <span class="glyphicon glyphicon-plus" id="btn-objectives"></span>
           <div class="table-responsive" id="objectives">
             <table class="table-bordered">
+              <thead>
+                <th>Mode</th>
+                <th>Name</th>
+                <th>Statistic</th>
+                <th>Expression</th>
+                <th>Remove</th>
+              </thead>
               <tbody>
-                <tr>
-                  <th>Objectives</th>
-                  <td ng-repeat="o in objectives">{{o.name}}
-                    <span class="glyphicon glyphicon-remove objective" ng-click="deleteObj(o)"></span>
-                  </td>
+                <tr  ng-repeat="o in objectives">
+                  <td><select ng-model="o.mode" ng-options="option for option in mode" required></select></td>
                   <td>
-                    <input type="text" ng-model="inputobj" ng-blur="addObj(inputobj)"
-                      ng-keydown="$event.which === 13 && addObj(inputobj)" ng-required="objectives.length==0">
+                    <input type="text" ng-model="o.name" required>
+                  </td>
+                  <td><select ng-model="o.statistic" ng-options="option for option in statistics" required></select></td>
+                  <td>
+                    <input type="text" ng-model="o.expression" ng-blur="addExpression(o.expression)"
+                      ng-keydown="$event.which === 13 && addExpression(o.expression)" required>
+                  </td>
+                  <td><span class="glyphicon glyphicon-remove objective" ng-click="deleteObj(o)"></span></td>
+                </tr>
+                <tr>
+                  <td>Add</td>
+                  <td>
+                    <input type="text" ng-model="input.objective" ng-blur="addObj(input.objective)"
+                      ng-keydown="$event.which === 13 && addObj(input.objective)" ng-required="objectives.length==0">
                   </td>
                 </tr>
-                <tr>
-                  <th>ENB</th>
-                  <td ng-repeat="o in objectives">{{o.enb}}</td>
-                </tr>
-                <tr>
-                  <th>LP</th>
-                  <td ng-repeat="o in objectives">{{o.lp}}</td>
-                </tr>
-                <tr>
-                  <th>NB</th>
-                  <td ng-repeat="o in objectives">
-                    <input type="text" ng-model="o.nb" ng-blur="addNB(o,o.nb)"
-                      ng-keydown="$event.which === 13 && addNB(o,o.nb)" required>
-                  </td>
-                </tr>
+
               </tbody>
             </table>
           </div>
@@ -71,17 +73,18 @@
           <!-- Variables -->
           <h3>Variables</h3>
           <span class="glyphicon glyphicon-plus" id="btn-variables"></span>
-          <div class="" id="variables">
+          <div id="variables">
             <table class="table-bordered">
-              <thead>
+              <thead ng-if="variables.length > 0">
                 <tr>
                   <th>Variable</th>
-                  <th ng-repeat="vo in varoptions">{{vo}}?</th>
+                  <th ng-repeat="vo in varoptions">{{vo}}</th>
+                  <th>Remove</th>
                 </tr>
               </thead>
               <tbody>
                 <tr ng-repeat="v in variables">
-                  <th>{{v.name}}</th>
+                  <td>{{v.name}}</td>
                   <td ng-repeat="vo in varoptions">
                     <input type="radio" ng-model="v.type" value="{{vo}}" ng-change="assignVariable(v,vo)">
                   </td>
@@ -96,7 +99,7 @@
           <!-- Parameters -->
           <h3>Parameters</h3>
           <span class="glyphicon glyphicon-plus" id="btn-parameters"></span>
-          <div class="" id="parameters">
+          <div id="parameters">
             <table class="table-bordered">
               <tbody>
                 <tr ng-repeat="p in parameters">
@@ -112,7 +115,6 @@
               </tbody>
             </table>
           </div>
-
 
           <!-- Equations -->
           <h3>Equations</h3>
@@ -138,27 +140,47 @@
           <h3>Decisions</h3>
           <span class="glyphicon glyphicon-plus" id="btn-decisions"></span>
           <div class="" id="decisions">
-            <table class="table table-decisions">
-              <tbody>
-                <tr class="thead-default" ng-repeat-start="d in decisions">
-                  <th>Name</th>
-                  <th>Decision</th>
-                </tr>
-                <tr>
-                  <td>{{d.name}}</td>
-                  <td><input type="text" ng-model="d.decision" required></td>
-                  <!-- <datalist id="suggest">
-                    <option ng-repeat="d in decisions" value="{{d.decision}}"></option>
-                  </datalist> -->
-                </tr>
 
-                <tr>
-                  <th colspan="2">Options</th>
+            <!-- Variables unassigned to specific decision -->
+            <div ng-if="unassignedDecisions.length > 0">
+              <p>Assign to a decision:</p>
+              <table class="table-bordered">
+                <tbody>
+                  <tr>
+                    <th>Variable</th>
+                    <th ng-repeat="d in decisions">{{d.name}}</th>
+                    <th>
+                      <input type="text" placeholder="New Decision" ng-model="input.decision" ng-blur="addDecision(input.decision)"
+                        ng-keydown="$event.which === 13 && addDecision(input.decision)">
+                    </th>
+                  </tr>
+
+                  <tr ng-repeat="v in unassignedDecisions">
+                    <th>{{v.name}}</th>
+                    <td ng-repeat="d in decisions">
+                      <input class="radio" type="radio" ng-model="v.decision" value="{{d.name}}" ng-change="assignDecision(v)">
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <br></br>
+            </div>
+
+            <table class="table-bordered" ng-repeat-start="d in decisions">
+              <thead class="thead-default">
+                <tr class="thead-default">
+                  <th>Decision: <input type="text" class="initial" placeholder="Decision name" ng-model="d.name" ng-change="reassignDecision(d,d.name)" required></td>
+                  <th ng-repeat="v in d.variables">{{v.name}}</td>
+                  <th><span class="glyphicon glyphicon-remove" ng-click="deleteDecision(d)"></span></td>
                 </tr>
+              </thead>
+              <tbody>
                 <tr ng-repeat="o in d.options">
-                  <td>"{{o.name}}"</td>
-                  <td><input type="text" value="{{o.value}}" ng-model="o.value" ng-blur="saveOptionValue(d,o.name,o.value)"
-                    ng-keydown="$event.which === 13 && saveOptionValue(d,o.name,o.value)" required></td>
+                  <td>Option: {{o}}</td>
+                  <td ng-repeat="v in d.variables">
+                    <input type="text" ng-model="v.options[o]" ng-blur="saveOptionExpression(v,o)"
+                      ng-keydown="$event.which === 13 && saveOptionExpression(v,o)">
+                  </td>
                   <td>
                     <span class="glyphicon glyphicon-remove" ng-click="deleteOption(d,o)"></span>
                   </td>
@@ -166,19 +188,15 @@
 
                 <tr>
                   <td>
-                    <input type="text" value="{{}}" ng-model="oname" ng-blur="saveOption(d,oname)"
-                      ng-keydown="$event.which === 13 && saveOption(d,oname)" ng-required="d.options.length==0">
-                  </td>
-                  <td>
-                    <input type="text" value="{{  }}" ng-model="ovalue" ng-blur="saveOptionValue(d,oname,ovalue)"
-                      ng-keydown="$event.which === 13 && saveOptionValue(d,oname,ovalue)" ng-required="d.options.length==0">
+                    <input type="text" placeholder="New option" ng-model="input.option" ng-blur="addOption(d,input.option)"
+                      ng-keydown="$event.which === 13 && addOption(d,input.option)" ng-required="d.options.length==0">
                   </td>
                 </tr>
-                <tr ng-repeat-end>
-                  <td colspan="2"></td>
-                </tr>
+                <tr></tr>
               </tbody>
             </table>
+            <br></br>
+            <table ng-repeat-end></table>
           </div>
 
 
@@ -351,32 +369,41 @@ Cost = decision("Architecture choice"){
         </span>
       </div>
 
-
     </div>
+
     <!--- ========= RADAR Result ========= -->
+
     <h2>Step 2: Results</h2>
     <div class="row">
       <div class="col-sm-6">
+        <!-- TODO: remove?? pareto?? -->
         <div id="model_graph"></div>
-        <div class="model_filter">
-          <table>
-              <tr>
-                <!-- <div class="inlinediv" > -->
-                <td ng-repeat="f in filterable">
-                  <label>{{f.name}}:</label>
-                  <select ng-model="filterSelect[f.name]" ng-options="value for value in f.values" ng-change="filterOutput()">
-                    <option value=""></option>
-                  </select>
-                </td>
-                <!-- </div> -->
-              </tr>
+
+        <!-- Decision options to filter -->
+        <div class="model_filter" ng-if="filterSelect.length>0">
+          <p>Filter results by decision options:</p>
+          <table class="table table-bordered">
+            <tr>
+              <td ng-repeat="f in filterable">{{f.name}}</td>
+            </tr>
+            <tr>
+              <td ng-repeat="f in filterable">
+                <select ng-model="filterSelect[f.name]" ng-options="value for value in f.values" ng-change="filterOutput()">
+                  <option value=""></option>
+                </select>
+            </td>
+            </tr>
           </table>
         </div>
-        <div id="model_result"></div>
+
+        <br></br>
+        <!-- Matrix results -->
+        <div id="model_result" class="model_result"></div>
+
       </div>
     </div>
 
-    <!-- <footer class="footer">
+    <!-- TODO: <footer class="footer">
       <div class="container">
         <p>Footer</p>
       </div>
@@ -387,6 +414,5 @@ Cost = decision("Architecture choice"){
   <script type="text/javascript" src="scripts/helper.js"></script>
   <script type="text/javascript" src="scripts/libs/src-min-noconflict/ace.js" charset="utf-8"></script>
   <script type="text/javascript" src="scripts/index.js"></script>
-  <!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script> -->
 </body>
 </html>

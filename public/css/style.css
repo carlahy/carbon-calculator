@@ -2,8 +2,16 @@ h1 {
 	text-align: center;
 }
 
-td input[type=text] {
+th {
+	text-align: center;
+}
+
+tr input[type=text] {
 	width: 100%;
+}
+
+input[type=text].initial {
+	width: initial;
 }
 
 input[type=text].ng-invalid {
@@ -11,8 +19,9 @@ input[type=text].ng-invalid {
 }
 
 input[type=radio] {
-	margin-left: 41%
+	margin-left: 45%;
 }
+
 
 span.glyphicon {
 	cursor: hand;
@@ -64,19 +73,19 @@ label input[type='checkbox'] {
 }
 
 .thead-default {
-	background: gainsboro;
+	background-color: #f6f6f6;
 }
 
 table {
 	min-width:75%;
 }
 
-#decisions {
-	width: 90%;
+select {
+	max-width: 100px;
 }
 
-#result {
-
+.model_result th {
+	text-align: left;
 
 }
 
