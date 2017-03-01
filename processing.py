@@ -1,3 +1,6 @@
+'''
+This python script formats the CSV output of the RADAR model
+'''
 #!/usr/bin/python
 import sys, json
 import pandas as pd

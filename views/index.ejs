@@ -3,8 +3,6 @@
 <head>
   <meta charset="utf-8"/>
   <title>Carbon Calculator</title>
-  <script type="text/javascript" src="scripts/libs/angular.min.js"></script>
-  <script type="text/javascript" src="scripts/libs/jquery-3.1.1.min.js"></script>
 
   <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
   <link rel="stylesheet" type="text/css" href="css/style.css">
@@ -14,8 +12,11 @@
 
   <div class="container">
 
-  <h1>Carbon Calculator</h1><br>
 
+    <div class="page-header">
+      <h1>Community Carbon Calculator <small></small></h1>
+    </div>
+    <br>
     <h2>Step 1: Build the Model</h2>
 
     <!--- ========= Toggle Form/Code ========= -->
@@ -43,7 +44,7 @@
                 <th>Name</th>
                 <th>Statistic</th>
                 <th>Expression</th>
-                <th>Remove</th>
+                <th></th>
               </thead>
               <tbody>
                 <tr  ng-repeat="o in objectives">
@@ -58,12 +59,18 @@
                   </td>
                   <td><span class="glyphicon glyphicon-remove objective" ng-click="deleteObj(o)"></span></td>
                 </tr>
+                <!-- Add new objective -->
                 <tr>
-                  <td>Add</td>
+                  <td><select ng-model="input.objective.mode" ng-options="option for option in mode"></select></td>
                   <td>
-                    <input type="text" ng-model="input.objective" ng-blur="addObj(input.objective)"
-                      ng-keydown="$event.which === 13 && addObj(input.objective)" ng-required="objectives.length==0">
+                    <input type="text" placeholder="New objective" ng-model="input.objective.name"
+                    ng-keydown="$event.which === 13 && addObj()" ng-required="objectives.length==0">
                   </td>
+                  <td><select ng-model="input.objective.statistic" ng-options="option for option in statistics"></select></td>
+                  <td>
+                    <input type="text" ng-model="input.objective.expression" ng-keydown="$event.which === 13 && addObj()">
+                  </td>
+                  <td><span class="glyphicon glyphicon-plus objective" ng-click="addObj()"></span></td>
                 </tr>
 
               </tbody>
@@ -96,7 +103,7 @@
             </table>
           </div>
 
-          <!-- Parameters -->
+          <!-- Parameters and Equations -->
           <h3>Parameters</h3>
           <span class="glyphicon glyphicon-plus" id="btn-parameters"></span>
           <div id="parameters">
@@ -203,13 +210,15 @@
         <!--- ========= Form Handler ========= -->
 
         <br></br>
-          <button type="button" class="btn btn-default" ng-click="saveModel()">Save Model</button>
-          <button type="button" class="btn btn-default" ng-click="submitModel(formView.$valid,'formView','parse')">Parse Model</button>
-          <button type="button" class="btn btn-default" ng-click="submitModel(formView.$valid,'formView','solve')">Solve Model</button>
-          <div id="submitButton" class="alert alert-warning alert-dismissable" ng-hide="submitOnInvalid" dismiss-on-timeout="5000">
+          <a class="saveModel"><button type="button" class="btn btn-default">Save Model</button></a>
+          <button type="button" class="btn btn-default" ng-click="submitModel(formView.$valid,'parse')">Parse Model</button>
+          <button type="button" class="btn btn-default" ng-click="submitModel(formView.$valid,'solve')">Solve Model</button>
+          <div id="submitButton" class="alert alert-warning alert-dismissable" ng-show="submitOnInvalid" dismiss-on-timeout="5000">
+            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
             <strong>Invalid form: </strong> Please fill in missing value(s).
           </div>
-          <div id="successParse" class="alert alert-success alert-dismissable" ng-show="successParse" dismiss-on-timeout="5000">
+          <div id="successParse" class="alert alert-success alert-dismissable" ng-show="submistSucess" dismiss-on-timeout="5000">
+            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
             Model parsed successfully.
           </div>
         </form>
@@ -319,15 +328,16 @@
           <div class="row-align">
             <input type="file" id="fileinput" name="model_upload" accept=".rdr" ng-model="uploadFileData">
             <input type="button" value="Upload" ng-click="uploadModel(event)">
+            <input type="button" value="Upload Form" ng-click="switchToCode()">
           </div>
           <div id="editor" ng-model="uploadedModel"></div>
         </form>
 
       <!--- ========= Code Handler ========= -->
         <br></br>
-        <button type="button" class="btn btn-default" ng-click="saveModel()">Save Model</button>
-        <button type="button" class="btn btn-default" ng-click="submitModel(codeView.$valid,'codeView','parse')">Parse Model</button>
-        <button type="button" class="btn btn-default" ng-click="submitModel(codeView.$valid,'codeView','solve')">Solve Model</button>
+        <a class="saveModel"><button type="button" class="btn btn-default">Save Model</button></a>
+        <button type="button" class="btn btn-default" ng-click="submitModel(codeView.$valid,'parse')">Parse Model</button>
+        <button type="button" class="btn btn-default" ng-click="submitModel(codeView.$valid,'solve')">Solve Model</button>
       </div>
 
       <!--- ========= How To Code ========= -->
@@ -409,10 +419,13 @@ Cost = decision("Architecture choice"){
       </div>
     </footer> -->
 
+  <script type="text/javascript" src="scripts/libs/angular.min.js"></script>
+  <script type="text/javascript" src="scripts/libs/jquery-3.1.1.min.js"></script>
   <script type="text/javascript" src="scripts/libs/d3.min.js"></script>
+  <script type="text/javascript" src="scripts/libs/bootstrap.min.js"></script>
   <script type="text/javascript" src="scripts/app.js"></script>
-  <script type="text/javascript" src="scripts/helper.js"></script>
   <script type="text/javascript" src="scripts/libs/src-min-noconflict/ace.js" charset="utf-8"></script>
   <script type="text/javascript" src="scripts/index.js"></script>
+
 </body>
 </html>

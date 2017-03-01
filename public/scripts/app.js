@@ -14,13 +14,15 @@ app.directive('onSaveInput', function(myFunction,myArgs){
 });
 
 app.controller('mainController', function($scope,$http) {
+  // Form view or Code view, init as Form
+  $scope.viewType = 'formView';
 
   // Keep track of variable names used to avoid duplicates
   var varnames = [];
 
   // ngModels for input fields
   $scope.input = {
-    objective:'',
+    objective:{},
     decision:'',
     option:''
   };
@@ -44,19 +46,29 @@ app.controller('mainController', function($scope,$http) {
   $scope.mode = ['Min','Max']
   $scope.statistics = ["EV", "Pr","percentile"]
   $scope.objectives = [];
+  // Objectives[objective]
+  // objective = {name,mode,statistic,expression}
 
-  $scope.addObj = function(name) {
-    if(name) {
+  $scope.addObj = function() {
+    var o = $scope.input.objective;
+    if(o.name) {
       if(!includes(varnames,name)) {
         $scope.objectives.push({
-          name: name
+          mode: o.mode,
+          name: o.name,
+          statistic: o.statistic,
+          expression: o.expression
         });
-        varnames.push(name);
+        varnames.push(o.name);
+        if(o.expression) {
+          var vars = getVars(o.expression);
+          addNewVariables(vars);
+        }
       } else {
         // TODO: Warning, duplicate names
       }
     }
-    $scope.input.objective = '';
+    $scope.input.objective = {};
   };
 
   $scope.deleteObj = function(o) {
@@ -73,16 +85,7 @@ app.controller('mainController', function($scope,$http) {
     if(expression) {
       // Parse expression for new variables
       var vars = getVars(expression);
-      for(v in vars) {
-        v = vars[v];
-        if(!includes(varnames,v)) {
-          // Add variable to list
-          varnames.push(v);
-          $scope.variables.push({
-            name:v
-          });
-        }
-      }
+      addNewVariables(vars);
     }
   }
 
@@ -165,6 +168,20 @@ app.controller('mainController', function($scope,$http) {
     return;
   }
 
+  // Add new variables to variable list and as variable names
+  function addNewVariables(vars){
+    for(v in vars) {
+      v = vars[v];
+      if(!includes(varnames,v)) {
+        // Add variable to list
+        varnames.push(v);
+        $scope.variables.push({
+          name:v
+        });
+      }
+    }
+  }
+
 ///////////// Parameters /////////////
 
   $scope.parameters = [];
@@ -173,15 +190,7 @@ app.controller('mainController', function($scope,$http) {
     if(value) {
       p.value = value;
       var vars = getVars(value);
-      for(v in vars) {
-        v = vars[v];
-        if(!includes(varnames,v)) {
-          varnames.push(v);
-          $scope.variables.push({
-            name:v
-          });
-        }
-      }
+      addNewVariables(vars);
     }
   };
 
@@ -200,15 +209,7 @@ app.controller('mainController', function($scope,$http) {
     if(expression) {
       e.value = expression;
       var vars = getVars(expression);
-      for(v in vars) {
-        v = vars[v];
-        if(!includes(varnames,v)) {
-          varnames.push(v);
-          $scope.variables.push({
-            name:v
-          });
-        }
-      }
+      addNewVariables(vars);
     }
   };
 
@@ -297,15 +298,7 @@ app.controller('mainController', function($scope,$http) {
     } else {
       // Parse expression
       var vars = getVars(v.options[o]);
-      for(v in vars){
-        v = vars[v];
-        if(!includes(varnames,v)) {
-          varnames.push(v);
-          $scope.variables.push({
-            name:v
-          });
-        }
-      }
+      addNewVariables(vars);
     }
   };
 
@@ -315,6 +308,64 @@ app.controller('mainController', function($scope,$http) {
   }
 
   // TODO: communication between form and coding views
+  ///////////// Code View /////////////
+
+  // Upload the 'Form view' data to editor
+  $scope.switchToCode = function() {
+    $scope.viewType = 'codeView';
+    var content = formatModel();
+    var editor = ace.edit('editor');
+    editor.setValue(content);
+    return;
+  }
+
+  // Upload the 'Code view' data to form
+  $scope.switchToForm = function() {
+    $scope.viewType = 'formView';
+    // Clear form
+    $scope.objectives = [];
+    $scope.variables = [];
+    $scope.parameters = [];
+    $scope.equations = [];
+    $scope.decisions = [];
+
+    var editor = ace.edit('editor');
+    var content = editor.getValue().split('\n');
+    for(r in content) {
+      if(content[r]) {
+        var row = content[r].split(' ');
+        if (row[0] == 'Model') {
+          $scope.modelName = row[1].slice(0,-1);
+        } else if (row[0] == 'Objective') {
+          var expression = content[r].split('=')[1];
+          $scope.objectives.push({
+            mode: row[1],
+            name: row[2],
+            statistic: expression.split('(')[0],
+            expression: expression.split('(')[1].replace(/\s/g,'').slice(0,-2)
+          });
+        } else {
+          var row = content[r].replace(/\s/g,'');
+          console.log(row);
+          row = row.split('=');
+          // If decision
+          if (row[1].split('(')[0] == 'decision') {
+
+          }
+          // If parameter (or equation)
+          // TODO: push
+          else {
+            $scope.variables.push({
+              name:row[0],
+              type:'Parameter'
+            });
+            // $scope.
+          }
+        }
+      }
+
+    }
+  }
 
   ///////////// Model Upload /////////////
 
@@ -327,34 +378,59 @@ app.controller('mainController', function($scope,$http) {
       var content = event.target.result;
 
       // Set code editor
-      var editor = ace.edit("editor");
+      var editor = ace.edit('editor');
       editor.setValue(content);
     }
     reader.readAsText(file);
   };
 
+  ///////////// Save Model /////////////
+
+  $('.saveModel').click(function() {
+    // Get <a> tag
+    var dlbtn = this.getElementsByTagName("button")[0].parentElement;
+    console.log('saveing model ',this,dlbtn);
+    var content;
+    console.log($scope.viewType);
+    if($scope.viewType == 'formView') {
+      content = formatModel();
+    } else { // Code View
+      content = ace.edit('editor').getValue();
+    }
+
+    var fileName = $scope.modelName+'.rdr';
+    console.log(content);
+    var file = new Blob([content], {type:'text/plain'});
+    dlbtn.href = URL.createObjectURL(file);
+    dlbtn.download = fileName;
+    // return false;
+  });
+
   ///////////// Submit Model /////////////
+
   $scope.uploadedModel = '';
 
   $scope.filterable = [];
   $scope.filterSelect = [];
   $scope.csvresult = '';
 
-  $scope.submitOnInvalid = true;
-  $scope.successParse = false;
+  $scope.submitOnInvalid = false;
+  $scope.successSubmit = false;
+
   // Send model to RADAR (server)
-  $scope.submitModel = function(isValid, modelType, cmdType) {
+  $scope.submitModel = function(isValid, cmdType) {
 
     if(!isValid) {
-        $scope.submitOnInvalid = false;
+        $scope.submitOnInvalid = true;
         return;
     }
     // Reset validation
-    $scope.submitOnInvalid = true;
+    $scope.submitOnInvalid = false;
+    $scope.successSubmit = false;
     var data = {};
     var content = '';
 
-    if(modelType == 'formView') {
+    if($scope.viewType == 'formView') {
       // Format model data to send
       content = formatModel();
       data = {
@@ -362,8 +438,8 @@ app.controller('mainController', function($scope,$http) {
         modelBody: content,
         command: cmdType
       };
-    } else if(modelType == 'codeView') {
-      content = ace.edit("editor").getValue();
+    } else if($scope.viewType == 'codeView') {
+      content = ace.edit('editor').getValue();
       // Seach for model name
       var lines = content.split('\n');
       for(l in lines) {
@@ -389,6 +465,8 @@ app.controller('mainController', function($scope,$http) {
 
       if(output.type == 'csvresult') {
 
+        $scope.submitSuccess = true;
+
         $scope.csvresult = output.body;
         $scope.filterable = output.decisions;
         // $scope.filterable.push.apply($scope.filterable, output.objectives);
@@ -402,39 +480,11 @@ app.controller('mainController', function($scope,$http) {
         $('#model_result').empty().append(formatError(output.body));
 
       } else if(output.type == 'success'){
-        $scope.successParse = true;
+        $scope.successSubmit = true;
       }
 
     }, function errorCallback(res){
       $('#model_result').empty().append(formatError('Error in model response'));
-    });
-
-    return content;
-  }
-
-  $scope.saveModel = function(modelType) {
-    var content = '';
-    if(modelType == 'build') {
-      content = formatModel();
-    } else if (modelType == 'upload') {
-      content = ace.edit("editor").getValue();
-    }
-
-    var fileName = $scope.modelName+'.rdr';
-
-    var data = {
-      fileName: fileName,
-      content: content
-    };
-
-    $http({
-      method: 'POST',
-      url:'/save',
-      data:data
-    }).then(function successCallback(res){
-
-    }, function errorCallback(res){
-
     });
 
     return content;

@@ -1,3 +1,9 @@
+/*
+This file contains helper functions for the angular controller
+in app.js
+*/
+
+
 function includes(arr,obj) {
     return (arr.indexOf(obj) != -1);
 }
