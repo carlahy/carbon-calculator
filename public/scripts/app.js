@@ -185,6 +185,7 @@ app.controller('mainController', function($scope,$http) {
 ///////////// Parameters /////////////
 
   $scope.parameters = [];
+  $scope.distributions = ['uniform','triangular','normalCI','deterministic'];
 
   $scope.saveParameter = function(p,value) {
     if(value) {
@@ -508,7 +509,7 @@ app.controller('mainController', function($scope,$http) {
     result += '\n//Parameters\n\n';
     for(i in $scope.parameters) {
       var param = $scope.parameters[i];
-      result +=  param.name + ' = ' + param.value + eol;
+      result +=  param.name+' = '+param.distribution+'('+param.value+')'+eol;
     }
 
     // Format equations

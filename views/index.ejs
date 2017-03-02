@@ -108,11 +108,17 @@
           <span class="glyphicon glyphicon-plus" id="btn-parameters"></span>
           <div id="parameters">
             <table class="table-bordered">
+              <thead ng-if="objectives.length > 0">
+                <th>Parameter</th>
+                <th>Probability Distribtution</th>
+                <th>Value</th>
+              </thead>
               <tbody>
                 <tr ng-repeat="p in parameters">
                   <th>{{p.name}}</th>
                   <td>
-                    <input type="text" ng-model="p.value" ng-blur="saveParameter(p,p.value)"
+                    <select class="distribution" ng-model="p.distribution" ng-options="option for option in distributions" required></select>
+                    <input class="distribution"type="text" ng-model="p.value" ng-blur="saveParameter(p,p.value)"
                     ng-keydown="$event.which === 13 && saveParameter(p,p.value)" ng-required="p">
                   </td>
                   <td>
