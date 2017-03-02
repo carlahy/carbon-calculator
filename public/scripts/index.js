@@ -69,7 +69,7 @@ function indexOfAttribute(array,attrName, attrValue) {
 }
 
 function getVars(eq) {
-  var vars = eq.split(/\+|\-|\/|\*|\(|\)|,/);
+  var vars = eq.split(/\+|\-|\/|\*|\(|\)|,|<|>/);
   var i = vars.length
   while(i--) {
     v = vars[i].trim();

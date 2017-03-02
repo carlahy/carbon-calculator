@@ -21,8 +21,8 @@
 
     <!--- ========= Toggle Form/Code ========= -->
     <div class="btn-group" role="group">
-      <button type="button" class="btn btn-secondary" id="btnForm">Form View</button>
-      <button type="button" class="btn btn-secondary" id="btnCode">Code View</button>
+      <button type="button" class="btn btn-secondary" id="btnForm" ng-click="switchToForm()">Form View</button>
+      <button type="button" class="btn btn-secondary" id="btnCode" ng-click="switchToCode()">Code View</button>
     </div>
 
     <div class="row">
@@ -108,9 +108,9 @@
           <span class="glyphicon glyphicon-plus" id="btn-parameters"></span>
           <div id="parameters">
             <table class="table-bordered">
-              <thead ng-if="objectives.length > 0">
+              <thead ng-if="parameters.length > 0">
                 <th>Parameter</th>
-                <th>Probability Distribtution</th>
+                <th>Probability Distribution</th>
                 <th>Value</th>
               </thead>
               <tbody>
@@ -189,7 +189,7 @@
               </thead>
               <tbody>
                 <tr ng-repeat="o in d.options">
-                  <td>Option: {{o}}</td>
+                  <td>{{o}}</td>
                   <td ng-repeat="v in d.variables">
                     <input type="text" ng-model="v.options[o]" ng-blur="saveOptionExpression(v,o)"
                       ng-keydown="$event.which === 13 && saveOptionExpression(v,o)">
@@ -223,7 +223,7 @@
             <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
             <strong>Invalid form: </strong> Please fill in missing value(s).
           </div>
-          <div id="successParse" class="alert alert-success alert-dismissable" ng-show="submistSucess" dismiss-on-timeout="5000">
+          <div id="successParse" class="alert alert-success alert-dismissable" ng-show="submitSucess" dismiss-on-timeout="5000">
             <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
             Model parsed successfully.
           </div>
@@ -237,93 +237,8 @@
         <h3>How To</h3>
 
         <p>Cost Benefit Analysis Example</p>
+        <img src="images/CBAform.png" alt="CBA form example" id="howToForm">
 
-        <h4>Model Name</h4>
-        <p>CBA</p>
-
-        <h4>Objectives</h4>
-        <table class="table-bordered">
-          <tbody>
-            <tr>
-              <td>Objective</td>
-              <td>Result</td>
-            </tr>
-            <tr>
-              <td>ENB</td>
-              <td>EV(NBResult)</td>
-            </tr>
-            <tr>
-              <td>LP</td>
-              <td>Pr(NBResult < 0)</td>
-            </tr>
-            <tr>
-              <td>NB</td>
-              <td>Benefit - Cost</td>
-            </tr>
-          </tbody>
-        </table>
-
-        <h4>Parameters</h4>
-
-        <h4>Equations</h4>
-
-        <h4>Decisions</h4>
-        <table class="table">
-          <tbody>
-            <tr class="thead-default">
-              <th>Name</th>
-              <th>Decisions</th>
-            </tr>
-            <tr>
-              <td>Benefit</td>
-              <td>Architecture Choice</td>
-            </tr>
-            <tr>
-              <th colspan="2">Options</th>
-            </tr>
-            <tr>
-              <td>"As-is"</td>
-              <td>normalCI(0.9,1.1)</td>
-            </tr>
-            <tr>
-              <td>"Refactoring"</td>
-              <td>normalCI(1,9)</td>
-            </tr>
-            <tr>
-              <td colspan="2"></td>
-            </tr>
-            <tr class="thead-default">
-              <th>Name</th>
-              <th>Decisions</th>
-            </tr>
-            <tr>
-              <td>Cost</td>
-              <td>Architecture Choice</td>
-            </tr>
-            <tr>
-              <th colspan="2">Options</th>
-            </tr>
-            <tr>
-              <td>"As-is"</td>
-              <td>normalCI(0,0)</td>
-            </tr>
-            <tr>
-              <td>"Refactoring"</td>
-              <td>normalCI(1,5)</td>
-            </tr>
-          </tbody>
-        </table>
-
-        <br></br>
-        <h3>Cheat Sheet</h3>
-        <span id="cheatSheet">
-          <ul>
-            <li>ENB = Expected Net Benefit</li>
-            <li>NB = Net Benefit</li>
-            <li>Current* = represents the state of * as of now</li>
-            <li>New* = represents the state of * with new decision</li>
-          </ul>
-        </span>
       </div>
 
       <!--- ========= Code View ========= -->
@@ -334,7 +249,7 @@
           <div class="row-align">
             <input type="file" id="fileinput" name="model_upload" accept=".rdr" ng-model="uploadFileData">
             <input type="button" value="Upload" ng-click="uploadModel(event)">
-            <input type="button" value="Upload Form" ng-click="switchToCode()">
+            <input type="button" value="Upload Form" ng-click="uploadForm()">
           </div>
           <div id="editor" ng-model="uploadedModel"></div>
         </form>
@@ -344,6 +259,10 @@
         <a class="saveModel"><button type="button" class="btn btn-default">Save Model</button></a>
         <button type="button" class="btn btn-default" ng-click="submitModel(codeView.$valid,'parse')">Parse Model</button>
         <button type="button" class="btn btn-default" ng-click="submitModel(codeView.$valid,'solve')">Solve Model</button>
+        <div id="successParse" class="alert alert-success alert-dismissable" ng-show="submitSuccess" dismiss-on-timeout="5000">
+          <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+          Model parsed successfully.
+        </div>
       </div>
 
       <!--- ========= How To Code ========= -->
@@ -370,19 +289,6 @@ Cost = decision("Architecture choice"){
     "Refactoring" : normalCI(1, 5);
 }
         </pre>
-
-        <br></br>
-        <h3>Cheat Sheet</h3>
-        <span id="cheatSheet">
-          <ul>
-            <li>ENB = Expected Net Benefit</li>
-            <li>NB = Net Benefit</li>
-            <li>LP = Loss Probability</li>
-            <li>Pr = Probability</li>
-            <li>Triangular = ...</li>
-            <li>NormalCI = ...</li>
-          </ul>
-        </span>
       </div>
 
     </div>
@@ -396,8 +302,7 @@ Cost = decision("Architecture choice"){
         <div id="model_graph"></div>
 
         <!-- Decision options to filter -->
-        <div class="model_filter" ng-if="filterSelect.length>0">
-          <p>Filter results by decision options:</p>
+        <div class="model_filter">
           <table class="table table-bordered">
             <tr>
               <td ng-repeat="f in filterable">{{f.name}}</td>
@@ -415,15 +320,22 @@ Cost = decision("Architecture choice"){
         <br></br>
         <!-- Matrix results -->
         <div id="model_result" class="model_result"></div>
-
+        <br>
+        <br>
       </div>
+
     </div>
+  </div>
 
-    <!-- TODO: <footer class="footer">
-      <div class="container">
-        <p>Footer</p>
-      </div>
-    </footer> -->
+  <!-- <footer class="footer">
+    <div class="container">
+      <p class="navbar-text pull-left">FOOTER
+      </p>
+
+      <a href="https://github.com/carlahy/carbon-calculator" class="pull-right"><span class="glypihcon icon-github"></span></a>
+    </div>
+  </footer> -->
+
 
   <script type="text/javascript" src="scripts/libs/angular.min.js"></script>
   <script type="text/javascript" src="scripts/libs/jquery-3.1.1.min.js"></script>

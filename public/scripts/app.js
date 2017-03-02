@@ -15,7 +15,7 @@ app.directive('onSaveInput', function(myFunction,myArgs){
 
 app.controller('mainController', function($scope,$http) {
   // Form view or Code view, init as Form
-  $scope.viewType = 'formView';
+  $scope.viewType = 'formView' ;
 
   // Keep track of variable names used to avoid duplicates
   var varnames = [];
@@ -314,6 +314,10 @@ app.controller('mainController', function($scope,$http) {
   // Upload the 'Form view' data to editor
   $scope.switchToCode = function() {
     $scope.viewType = 'codeView';
+    return;
+  }
+
+  $scope.uploadForm = function() {
     var content = formatModel();
     var editor = ace.edit('editor');
     editor.setValue(content);
@@ -323,8 +327,8 @@ app.controller('mainController', function($scope,$http) {
   // Upload the 'Code view' data to form
   $scope.switchToForm = function() {
     $scope.viewType = 'formView';
-    // Clear form
-    $scope.objectives = [];
+    // TODO: Clear form
+    /*$scope.objectives = [];
     $scope.variables = [];
     $scope.parameters = [];
     $scope.equations = [];
@@ -365,7 +369,7 @@ app.controller('mainController', function($scope,$http) {
         }
       }
 
-    }
+    }*/
   }
 
   ///////////// Model Upload /////////////
@@ -416,18 +420,18 @@ app.controller('mainController', function($scope,$http) {
   $scope.csvresult = '';
 
   $scope.submitOnInvalid = false;
-  $scope.successSubmit = false;
+  $scope.submitSuccess = false;
 
   // Send model to RADAR (server)
   $scope.submitModel = function(isValid, cmdType) {
-
+    console.log($scope.viewType);
     if(!isValid) {
         $scope.submitOnInvalid = true;
         return;
     }
     // Reset validation
     $scope.submitOnInvalid = false;
-    $scope.successSubmit = false;
+    $scope.submitSuccess = false;
     var data = {};
     var content = '';
 
@@ -476,18 +480,16 @@ app.controller('mainController', function($scope,$http) {
         $('#model_result').empty().append(formatTable(csv));
 
       } else if(output.type == 'error'){
-
         $scope.filterable = [];
         $('#model_result').empty().append(formatError(output.body));
 
       } else if(output.type == 'success'){
-        $scope.successSubmit = true;
+        $scope.submitSuccess = true;
       }
-
     }, function errorCallback(res){
       $('#model_result').empty().append(formatError('Error in model response'));
     });
-
+    $scope.submitSuccess = false;
     return content;
   }
 

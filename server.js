@@ -37,7 +37,7 @@ app.post('/submit', function(req,res){
   fs.writeFileSync(filePath, model);
 
   // Always parse model
-  var radar = spawnSync('java', ['-classpath', cp, 'radar.userinterface.RADAR_CMD', '--model', filePath, '--output', outputFolder, '--parse','--debug']);
+  var radar = spawnSync('java', ['-classpath', cp, 'radar.userinterface.RADAR_CMD', '--model', filePath, '--output', outputFolder, '--parse','--debug','--pareto']);
 
   if(radar.stderr != '') {
     result.body = radar.stderr.toString().trim();
@@ -46,10 +46,13 @@ app.post('/submit', function(req,res){
     res.send(result);
     return;
   } else {
-    result.body = radar.stdout.toString().trim();
+    result.body = 'Model was parsed successfully';
     result.type = 'success';
     console.log('Parsed successfully');
-    // Send result at the end, maybe need to solve first
+    if(modelData.command == 'parse') {
+      res.send(result);
+      return;
+    }
   }
 
   // If command is solve
