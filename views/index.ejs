@@ -29,7 +29,11 @@
       <!--- ========= Form View ========= -->
       <div class="col-sm-8 formView">
         <form name="formView" autocomplete="off">
-
+          <div class="row-align">
+            <input type="file" id="forminput" name="form_upload" accept=".json">
+            <input type="button" value="Upload Form" ng-click="uploadForm(event)">
+            <!-- <input type="button" value="" ng-click="codeToForm()"> -->
+          </div>
           <!-- Model Name  -->
           <h3>Model Name</h3>
           <input type="text" ng-model="modelName" ng-blur="addModelName(modelName)" required></li>
@@ -247,9 +251,9 @@
         <form class="" name="codeView">
           <h3>Upload Model</h3>
           <div class="row-align">
-            <input type="file" id="fileinput" name="model_upload" accept=".rdr" ng-model="uploadFileData">
+            <input type="file" id="fileinput" name="model_upload" accept=".rdr">
             <input type="button" value="Upload" ng-click="uploadModel(event)">
-            <input type="button" value="Upload Form" ng-click="uploadForm()">
+            <input type="button" value="Upload Form" ng-click="formToCode()">
           </div>
           <div id="editor" ng-model="uploadedModel"></div>
         </form>

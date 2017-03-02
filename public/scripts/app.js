@@ -14,6 +14,7 @@ app.directive('onSaveInput', function(myFunction,myArgs){
 });
 
 app.controller('mainController', function($scope,$http) {
+
   // Form view or Code view, init as Form
   $scope.viewType = 'formView' ;
 
@@ -317,7 +318,7 @@ app.controller('mainController', function($scope,$http) {
     return;
   }
 
-  $scope.uploadForm = function() {
+  $scope.formToCode = function() {
     var content = formatModel();
     var editor = ace.edit('editor');
     editor.setValue(content);
@@ -389,26 +390,64 @@ app.controller('mainController', function($scope,$http) {
     reader.readAsText(file);
   };
 
+  ///////////////// Form Upload and Restore /////////////////
+
+  // All of the $scope variables needed to save and restore a form view
+  var saveScope = ['modelName', 'objectives', 'variables', 'parameters', 'equations', 'decisions'];
+
+  $scope.uploadForm = function(event) {
+    var input = document.getElementById('forminput');
+    var file = input.files[0];
+    var reader = new FileReader();
+
+    reader.onload = function(event) {
+      var content = event.target.result;
+      content = JSON.parse(content);
+
+      // Restore $scope variables
+      for(s in saveScope) {
+        $scope[saveScope[s]] = content[saveScope[s]];
+      }
+    }
+
+    reader.readAsText(file);
+  }
+
   ///////////// Save Model /////////////
 
   $('.saveModel').click(function() {
     // Get <a> tag
     var dlbtn = this.getElementsByTagName("button")[0].parentElement;
-    console.log('saveing model ',this,dlbtn);
+
     var content;
-    console.log($scope.viewType);
+    var type;
+    var ext;
+
     if($scope.viewType == 'formView') {
-      content = formatModel();
+
+      // Save state of $scope variables
+      content = {};
+
+      for(s in saveScope) {
+        var name = saveScope[s]
+        content[name] = $scope[name];
+      }
+
+      content = JSON.stringify(content);
+      type = 'application/json';
+      ext = '.json';
+
     } else { // Code View
       content = ace.edit('editor').getValue();
+      type = 'text/plain';
+      ext = '.rdr';
     }
 
-    var fileName = $scope.modelName+'.rdr';
-    console.log(content);
-    var file = new Blob([content], {type:'text/plain'});
+    var fileName = $scope.modelName+ext;
+    var file = new Blob([content], {type:type});
     dlbtn.href = URL.createObjectURL(file);
     dlbtn.download = fileName;
-    // return false;
+
   });
 
   ///////////// Submit Model /////////////
