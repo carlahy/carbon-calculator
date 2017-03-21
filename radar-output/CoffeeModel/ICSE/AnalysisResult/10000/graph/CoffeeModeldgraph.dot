@@ -1,0 +1,5 @@
+digraph G { 
+"0"[label="Policy type", shape = polygon, sides =8 ]"1"[label="rewarding"]"0" -> "1"
+"2"[label="penalising"]"0" -> "2"
+"3"[label="none"]"0" -> "3"
+}
