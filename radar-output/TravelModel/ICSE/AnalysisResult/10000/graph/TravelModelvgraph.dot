@@ -1,0 +1,193 @@
+digraph G { 
+rankdir = BT 
+"DistanceShortHaul"[shape = box, style = rounded] 
+AndRef0[shape = point] 
+1[label="Policy type", shape = polygon, sides =8]1->"NewNbrFlights"
+"NewNbrFlights[As-is]"[shape = box, style = rounded] 
+AndRef0->1
+"NewNbrFlights[As-is]"->AndRef0 [dir = none] 
+AndRef1[shape = point] 
+1[label="Policy type", shape = polygon, sides =8]"NewNbrFlights[Cap distance]"[shape = box, style = rounded] 
+AndRef1->1
+"NewNbrFlights[Cap distance]"->AndRef1 [dir = none] 
+AndRef2[shape = point] 
+1[label="Policy type", shape = polygon, sides =8]"NewNbrFlights[Carbon tax/flight]"[shape = box, style = rounded] 
+AndRef2->1
+"NewNbrFlights[Carbon tax/flight]"->AndRef2 [dir = none] 
+AndRef3[shape = point] 
+1[label="Policy type", shape = polygon, sides =8]"NewNbrFlights[Carbon tax/distance]"[shape = box, style = rounded] 
+AndRef3->1
+"NewNbrFlights[Carbon tax/distance]"->AndRef3 [dir = none] 
+"NewNbrFlights"[shape = box, style = rounded] 
+"CurrentNbrShortHaul"[shape = box, style = rounded] 
+"CurrentNbrFlights"[shape = box, style = rounded] 
+"PropShortHaul"[shape = box, style = rounded] 
+AndRef4[shape = point] 
+AndRef4->"PropShortHaul"
+"CurrentNbrShortHaul"->AndRef4 [dir = none] 
+"CurrentNbrFlights"->AndRef4 [dir = none] 
+AndRef5[shape = point] 
+6[label="Policy type", shape = polygon, sides =8]6->"ImpactShortHaul"
+"ImpactShortHaul[As-is]"[shape = box, style = rounded] 
+AndRef5->6
+"ImpactShortHaul[As-is]"->AndRef5 [dir = none] 
+AndRef6[shape = point] 
+6[label="Policy type", shape = polygon, sides =8]"ImpactShortHaul[Cap distance]"[shape = box, style = rounded] 
+AndRef6->6
+"ImpactShortHaul[Cap distance]"->AndRef6 [dir = none] 
+AndRef7[shape = point] 
+6[label="Policy type", shape = polygon, sides =8]"ImpactShortHaul[Cap number flights]"[shape = box, style = rounded] 
+AndRef7->6
+"ImpactShortHaul[Cap number flights]"->AndRef7 [dir = none] 
+AndRef8[shape = point] 
+6[label="Policy type", shape = polygon, sides =8]"ImpactShortHaul[Carbon tax/flight]"[shape = box, style = rounded] 
+AndRef8->6
+"ImpactShortHaul[Carbon tax/flight]"->AndRef8 [dir = none] 
+AndRef9[shape = point] 
+6[label="Policy type", shape = polygon, sides =8]"ImpactShortHaul[Carbon tax/distance]"[shape = box, style = rounded] 
+AndRef9->6
+"ImpactShortHaul[Carbon tax/distance]"->AndRef9 [dir = none] 
+"ImpactShortHaul"[shape = box, style = rounded] 
+"NbrShortHaul"[shape = box, style = rounded] 
+AndRef10[shape = point] 
+AndRef10->"NbrShortHaul"
+"NewNbrFlights"->AndRef10 [dir = none] 
+"PropShortHaul"->AndRef10 [dir = none] 
+"ImpactShortHaul"->AndRef10 [dir = none] 
+"NewDistanceShortHaul"[shape = box, style = rounded] 
+AndRef11[shape = point] 
+AndRef11->"NewDistanceShortHaul"
+"DistanceShortHaul"->AndRef11 [dir = none] 
+"NbrShortHaul"->AndRef11 [dir = none] 
+"CO2ShortHaul"[shape = box, style = rounded] 
+"NewEmissionsShortHaul"[shape = box, style = rounded] 
+AndRef12[shape = point] 
+AndRef12->"NewEmissionsShortHaul"
+"NewDistanceShortHaul"->AndRef12 [dir = none] 
+"CO2ShortHaul"->AndRef12 [dir = none] 
+"DistanceLongHaul"[shape = box, style = rounded] 
+"NbrLongHaul"[shape = box, style = rounded] 
+AndRef13[shape = point] 
+AndRef13->"NbrLongHaul"
+"NewNbrFlights"->AndRef13 [dir = none] 
+"NbrShortHaul"->AndRef13 [dir = none] 
+"NewDistanceLongHaul"[shape = box, style = rounded] 
+AndRef14[shape = point] 
+AndRef14->"NewDistanceLongHaul"
+"DistanceLongHaul"->AndRef14 [dir = none] 
+"NbrLongHaul"->AndRef14 [dir = none] 
+"CO2LongHaul"[shape = box, style = rounded] 
+"NewEmissionsLongHaul"[shape = box, style = rounded] 
+AndRef15[shape = point] 
+AndRef15->"NewEmissionsLongHaul"
+"NewDistanceLongHaul"->AndRef15 [dir = none] 
+"CO2LongHaul"->AndRef15 [dir = none] 
+"NewEmissions"[shape = box, style = rounded] 
+AndRef16[shape = point] 
+AndRef16->"NewEmissions"
+"NewEmissionsShortHaul"->AndRef16 [dir = none] 
+"NewEmissionsLongHaul"->AndRef16 [dir = none] 
+"CurrentNbrLongHaul"[shape = box, style = rounded] 
+"CurrentEmissions"[shape = box, style = rounded] 
+AndRef17[shape = point] 
+AndRef17->"CurrentEmissions"
+"DistanceShortHaul"->AndRef17 [dir = none] 
+"CurrentNbrShortHaul"->AndRef17 [dir = none] 
+"CO2ShortHaul"->AndRef17 [dir = none] 
+"DistanceLongHaul"->AndRef17 [dir = none] 
+"CurrentNbrLongHaul"->AndRef17 [dir = none] 
+"CO2LongHaul"->AndRef17 [dir = none] 
+"NBEmissions"[shape = box, style = rounded] 
+AndRef18[shape = point] 
+AndRef18->"NBEmissions"
+"NewEmissions"->AndRef18 [dir = none] 
+"CurrentEmissions"->AndRef18 [dir = none] 
+ENBEmissions [shape = box] 
+NBEmissions->"ENBEmissions"
+LPEmissions [shape = box] 
+NBEmissions->"LPEmissions"
+AndRef19[shape = point] 
+20[label="Event details", shape = polygon, sides =8]20->"ValueEventSize"
+"ValueEventSize[Conference]"[shape = box, style = rounded] 
+AndRef19->20
+"ValueEventSize[Conference]"->AndRef19 [dir = none] 
+AndRef20[shape = point] 
+20[label="Event details", shape = polygon, sides =8]"ValueEventSize[Meetings]"[shape = box, style = rounded] 
+AndRef20->20
+"ValueEventSize[Meetings]"->AndRef20 [dir = none] 
+AndRef21[shape = point] 
+20[label="Event details", shape = polygon, sides =8]"ValueEventSize[Workshop]"[shape = box, style = rounded] 
+AndRef21->20
+"ValueEventSize[Workshop]"->AndRef21 [dir = none] 
+"ValueEventSize"[shape = box, style = rounded] 
+AndRef22[shape = point] 
+23[label="Event frequency", shape = polygon, sides =8]23->"ValueEventFrequency"
+"ValueEventFrequency[Low]"[shape = box, style = rounded] 
+AndRef22->23
+"ValueEventFrequency[Low]"->AndRef22 [dir = none] 
+AndRef23[shape = point] 
+23[label="Event frequency", shape = polygon, sides =8]"ValueEventFrequency[Medium]"[shape = box, style = rounded] 
+AndRef23->23
+"ValueEventFrequency[Medium]"->AndRef23 [dir = none] 
+AndRef24[shape = point] 
+23[label="Event frequency", shape = polygon, sides =8]"ValueEventFrequency[High]"[shape = box, style = rounded] 
+AndRef24->23
+"ValueEventFrequency[High]"->AndRef24 [dir = none] 
+"ValueEventFrequency"[shape = box, style = rounded] 
+AndRef25[shape = point] 
+26[label="Event relevance", shape = polygon, sides =8]26->"ValueEventRelevance"
+"ValueEventRelevance[High]"[shape = box, style = rounded] 
+AndRef25->26
+"ValueEventRelevance[High]"->AndRef25 [dir = none] 
+AndRef26[shape = point] 
+26[label="Event relevance", shape = polygon, sides =8]"ValueEventRelevance[Medium]"[shape = box, style = rounded] 
+AndRef26->26
+"ValueEventRelevance[Medium]"->AndRef26 [dir = none] 
+AndRef27[shape = point] 
+26[label="Event relevance", shape = polygon, sides =8]"ValueEventRelevance[Low]"[shape = box, style = rounded] 
+AndRef27->26
+"ValueEventRelevance[Low]"->AndRef27 [dir = none] 
+"ValueEventRelevance"[shape = box, style = rounded] 
+AndRef28[shape = point] 
+29[label="Previous attendance", shape = polygon, sides =8]29->"ValuePreviousAttendance"
+"ValuePreviousAttendance[Low]"[shape = box, style = rounded] 
+AndRef28->29
+"ValuePreviousAttendance[Low]"->AndRef28 [dir = none] 
+AndRef29[shape = point] 
+29[label="Previous attendance", shape = polygon, sides =8]"ValuePreviousAttendance[Medium]"[shape = box, style = rounded] 
+AndRef29->29
+"ValuePreviousAttendance[Medium]"->AndRef29 [dir = none] 
+AndRef30[shape = point] 
+29[label="Previous attendance", shape = polygon, sides =8]"ValuePreviousAttendance[High]"[shape = box, style = rounded] 
+AndRef30->29
+"ValuePreviousAttendance[High]"->AndRef30 [dir = none] 
+"ValuePreviousAttendance"[shape = box, style = rounded] 
+AndRef31[shape = point] 
+32[label="Is presenting", shape = polygon, sides =8]32->"ValueIsPresenting"
+"ValueIsPresenting[Yes]"[shape = box, style = rounded] 
+AndRef31->32
+"ValueIsPresenting[Yes]"->AndRef31 [dir = none] 
+AndRef32[shape = point] 
+32[label="Is presenting", shape = polygon, sides =8]"ValueIsPresenting[No]"[shape = box, style = rounded] 
+AndRef32->32
+"ValueIsPresenting[No]"->AndRef32 [dir = none] 
+"ValueIsPresenting"[shape = box, style = rounded] 
+"ValueOfTravel"[shape = box, style = rounded] 
+AndRef33[shape = point] 
+AndRef33->"ValueOfTravel"
+"ValueEventSize"->AndRef33 [dir = none] 
+"ValueEventFrequency"->AndRef33 [dir = none] 
+"ValueEventRelevance"->AndRef33 [dir = none] 
+"ValuePreviousAttendance"->AndRef33 [dir = none] 
+"ValueIsPresenting"->AndRef33 [dir = none] 
+"ValueNoTravel"[shape = box, style = rounded] 
+"NBValueOfTravel"[shape = box, style = rounded] 
+AndRef34[shape = point] 
+AndRef34->"NBValueOfTravel"
+"ValueOfTravel"->AndRef34 [dir = none] 
+"ValueNoTravel"->AndRef34 [dir = none] 
+ENBValueOfTravel [shape = box] 
+NBValueOfTravel->"ENBValueOfTravel"
+LPEValueOfTravel [shape = box] 
+NBValueOfTravel->"LPEValueOfTravel"
+}

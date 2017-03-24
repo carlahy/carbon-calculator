@@ -309,7 +309,77 @@ app.controller('mainController', function($scope,$http) {
     d.options.splice(index,1);
   }
 
-  // TODO: communication between form and coding views
+  ///////////// Database /////////////
+
+  // Database ID
+  // $scope.modelId = null;
+
+  $scope.uploadWithID = function() {
+    if($scope.modelId) {
+      $http({
+        method: 'GET',
+        url:'/models',
+        params: {id:$scope.modelId}
+      }).then(function successCallback(res){
+        console.log('Success getting model with id');
+        content = JSON.parse(res.data.model);
+
+        for(s in saveScope) {
+          $scope[saveScope[s]] = content[saveScope[s]];
+        }
+
+      }, function errorCallback(res){
+        console.log('Error getting model with id');
+      });
+
+    } else {
+      console.log('No model ID specified');
+    }
+    return;
+  };
+
+  // Show model id to user
+  $scope.idSuccess = false;
+
+  $scope.shareModel = function() {
+    // Get unique db id of model
+    content = JSON.stringify(getState(saveScope));
+
+    if($scope.modelId) {
+      // Model already exists in database, update it
+      $http({
+        method: 'PUT',
+        url: '/models',
+        data: {id:$scope.modelId, model:content}
+      }).then(function successCallback(res){
+        $scope.modelId = res.data;
+        $scope.idSuccess = true;
+
+        console.log('Model id is ', $scope.modelId);
+      }, function errorCallback(res){
+        console.log('Error updating model in db');
+      });
+
+
+    } else {
+      // Create new entry in database
+      console.log('Creating new entry in db');
+
+      $http({
+        method: 'POST',
+        url: '/models',
+        data: {model: content}
+      }).then(function successCallback(res){
+        $scope.modelId = res.data.id;
+        $scope.idSuccess = true;
+        console.log('Model id is ', $scope.modelId);
+      }, function errorCallback(res){
+        console.log('Error saving model to DB');
+      });
+    }
+    $scope.idSuccess = false;
+  };
+
   ///////////// Code View /////////////
 
   // Upload the 'Form view' data to editor
@@ -325,57 +395,9 @@ app.controller('mainController', function($scope,$http) {
     return;
   }
 
-  // Upload the 'Code view' data to form
-  $scope.switchToForm = function() {
-    $scope.viewType = 'formView';
-    // TODO: Clear form
-    /*$scope.objectives = [];
-    $scope.variables = [];
-    $scope.parameters = [];
-    $scope.equations = [];
-    $scope.decisions = [];
-
-    var editor = ace.edit('editor');
-    var content = editor.getValue().split('\n');
-    for(r in content) {
-      if(content[r]) {
-        var row = content[r].split(' ');
-        if (row[0] == 'Model') {
-          $scope.modelName = row[1].slice(0,-1);
-        } else if (row[0] == 'Objective') {
-          var expression = content[r].split('=')[1];
-          $scope.objectives.push({
-            mode: row[1],
-            name: row[2],
-            statistic: expression.split('(')[0],
-            expression: expression.split('(')[1].replace(/\s/g,'').slice(0,-2)
-          });
-        } else {
-          var row = content[r].replace(/\s/g,'');
-          console.log(row);
-          row = row.split('=');
-          // If decision
-          if (row[1].split('(')[0] == 'decision') {
-
-          }
-          // If parameter (or equation)
-          // TODO: push
-          else {
-            $scope.variables.push({
-              name:row[0],
-              type:'Parameter'
-            });
-            // $scope.
-          }
-        }
-      }
-
-    }*/
-  }
-
   ///////////// Model Upload /////////////
 
-  $scope.uploadModel = function(event) {
+  $scope.uploadCode = function(event) {
     var input = document.getElementById('fileinput');
     var file = input.files[0];
     var reader = new FileReader();
@@ -396,26 +418,23 @@ app.controller('mainController', function($scope,$http) {
   var saveScope = ['modelName', 'objectives', 'variables', 'parameters', 'equations', 'decisions'];
 
   $scope.uploadForm = function(event) {
-    var input = document.getElementById('forminput');
+    var input = document.getElementById('form_to_upload');
     var file = input.files[0];
     var reader = new FileReader();
 
     reader.onload = function(event) {
       var content = event.target.result;
       content = JSON.parse(content);
-
-      // Restore $scope variables
       for(s in saveScope) {
         $scope[saveScope[s]] = content[saveScope[s]];
       }
     }
-
     reader.readAsText(file);
-  }
+  };
 
-  ///////////// Save Model /////////////
+  ///////////// Download Model /////////////
 
-  $('.saveModel').click(function() {
+  $('.downloadModel').click(function() {
     // Get <a> tag
     var dlbtn = this.getElementsByTagName("button")[0].parentElement;
 
@@ -425,14 +444,7 @@ app.controller('mainController', function($scope,$http) {
 
     if($scope.viewType == 'formView') {
 
-      // Save state of $scope variables
-      content = {};
-
-      for(s in saveScope) {
-        var name = saveScope[s]
-        content[name] = $scope[name];
-      }
-
+      content = getState(saveScope);
       content = JSON.stringify(content);
       type = 'application/json';
       ext = '.json';
@@ -443,12 +455,30 @@ app.controller('mainController', function($scope,$http) {
       ext = '.rdr';
     }
 
-    var fileName = $scope.modelName+ext;
+    var fileName;
+
+    if($scope.modelName) {
+      fileName = $scope.modelName+ext;
+    } else {
+      fileName = 'undefined'+ext;
+    }
+
     var file = new Blob([content], {type:type});
     dlbtn.href = URL.createObjectURL(file);
     dlbtn.download = fileName;
 
   });
+
+  // Save state of $scope variables
+  function getState(variables) {
+    content = {};
+
+    for(v in variables) {
+      var name = saveScope[v]
+      content[name] = $scope[name];
+    }
+    return content;
+  }
 
   ///////////// Submit Model /////////////
 
@@ -463,7 +493,6 @@ app.controller('mainController', function($scope,$http) {
 
   // Send model to RADAR (server)
   $scope.submitModel = function(isValid, cmdType) {
-    console.log($scope.viewType);
     if(!isValid) {
         $scope.submitOnInvalid = true;
         return;

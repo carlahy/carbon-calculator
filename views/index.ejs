@@ -30,8 +30,10 @@
       <div class="col-sm-8 formView">
         <form name="formView" autocomplete="off">
           <div class="row-align">
-            <input type="file" id="forminput" name="form_upload" accept=".json">
+            <input type="file" id="form_to_upload" accept=".json">
             <input type="button" value="Upload Form" ng-click="uploadForm(event)">
+            <input type="text" name="" value="" ng-model="modelId">
+            <input type="button" value="Database" ng-click="uploadWithID()">
             <!-- <input type="button" value="" ng-click="codeToForm()"> -->
           </div>
           <!-- Model Name  -->
@@ -220,16 +222,21 @@
         <!--- ========= Form Handler ========= -->
 
         <br></br>
-          <a class="saveModel"><button type="button" class="btn btn-default">Save Model</button></a>
+          <a class="downloadModel"><button type="button" class="btn btn-default">Download Model</button></a>
           <button type="button" class="btn btn-default" ng-click="submitModel(formView.$valid,'parse')">Parse Model</button>
           <button type="button" class="btn btn-default" ng-click="submitModel(formView.$valid,'solve')">Solve Model</button>
+          <button type="button" class="btn btn-default" ng-click="shareModel()">Get Shareable Id</button>
           <div id="submitButton" class="alert alert-warning alert-dismissable" ng-show="submitOnInvalid" dismiss-on-timeout="5000">
             <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
             <strong>Invalid form: </strong> Please fill in missing value(s).
           </div>
-          <div id="successParse" class="alert alert-success alert-dismissable" ng-show="submitSucess" dismiss-on-timeout="5000">
+          <div id="successParse" class="alert alert-success alert-dismissable" ng-show="submitSuccess" dismiss-on-timeout="5000">
             <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
             Model parsed successfully.
+          </div>
+          <div id="shareableId" class="alert alert-success alert-dismissable" ng-show="idSuccess" dismiss-on-timeout="5000">
+            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+            Shareable id is {{modelId}}
           </div>
         </form>
 
@@ -252,7 +259,7 @@
           <h3>Upload Model</h3>
           <div class="row-align">
             <input type="file" id="fileinput" name="model_upload" accept=".rdr">
-            <input type="button" value="Upload" ng-click="uploadModel(event)">
+            <input type="button" value="Upload" ng-click="uploadCode(event)">
             <input type="button" value="Upload Form" ng-click="formToCode()">
           </div>
           <div id="editor" ng-model="uploadedModel"></div>
@@ -260,7 +267,7 @@
 
       <!--- ========= Code Handler ========= -->
         <br></br>
-        <a class="saveModel"><button type="button" class="btn btn-default">Save Model</button></a>
+        <a class="downloadModel"><button type="button" class="btn btn-default">Download Model</button></a>
         <button type="button" class="btn btn-default" ng-click="submitModel(codeView.$valid,'parse')">Parse Model</button>
         <button type="button" class="btn btn-default" ng-click="submitModel(codeView.$valid,'solve')">Solve Model</button>
         <div id="successParse" class="alert alert-success alert-dismissable" ng-show="submitSuccess" dismiss-on-timeout="5000">

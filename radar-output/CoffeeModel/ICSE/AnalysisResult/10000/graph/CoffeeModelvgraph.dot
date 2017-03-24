@@ -1,0 +1,60 @@
+digraph G { 
+rankdir = BT 
+"NbrSales"[shape = box, style = rounded] 
+AndRef0[shape = point] 
+1[label="Policy type", shape = polygon, sides =8]1->"SalesImpactIncentive"
+"SalesImpactIncentive[rewarding]"[shape = box, style = rounded] 
+AndRef0->1
+"SalesImpactIncentive[rewarding]"->AndRef0 [dir = none] 
+AndRef1[shape = point] 
+1[label="Policy type", shape = polygon, sides =8]"SalesImpactIncentive[penalising]"[shape = box, style = rounded] 
+AndRef1->1
+"SalesImpactIncentive[penalising]"->AndRef1 [dir = none] 
+AndRef2[shape = point] 
+1[label="Policy type", shape = polygon, sides =8]AndRef2->1
+"SalesImpactIncentive"[shape = box, style = rounded] 
+"NewSales"[shape = box, style = rounded] 
+AndRef3[shape = point] 
+AndRef3->"NewSales"
+"NbrSales"->AndRef3 [dir = none] 
+"SalesImpactIncentive"->AndRef3 [dir = none] 
+"CurrentSales"[shape = box, style = rounded] 
+"NBenefitSales"[shape = box, style = rounded] 
+AndRef4[shape = point] 
+AndRef4->"NBenefitSales"
+"NewSales"->AndRef4 [dir = none] 
+"CurrentSales"->AndRef4 [dir = none] 
+ENBSales [shape = box] 
+NBenefitSales->"ENBSales"
+"Reusability"[shape = box, style = rounded] 
+"NewNbrSalesDispose"[shape = box, style = rounded] 
+AndRef5[shape = point] 
+AndRef5->"NewNbrSalesDispose"
+"NewSales"->AndRef5 [dir = none] 
+"Reusability"->AndRef5 [dir = none] 
+"NewNbrSalesReuse"[shape = box, style = rounded] 
+AndRef6[shape = point] 
+AndRef6->"NewNbrSalesReuse"
+"NewSales"->AndRef6 [dir = none] 
+"Reusability"->AndRef6 [dir = none] 
+"CO2Reuse"[shape = box, style = rounded] 
+"NewEmissions"[shape = box, style = rounded] 
+AndRef7[shape = point] 
+AndRef7->"NewEmissions"
+"NewNbrSalesDispose"->AndRef7 [dir = none] 
+"CO2Disposable"->AndRef7 [dir = none] 
+"NewNbrSalesReuse"->AndRef7 [dir = none] 
+"CO2Reuse"->AndRef7 [dir = none] 
+"CurrentEmissions"[shape = box, style = rounded] 
+AndRef8[shape = point] 
+AndRef8->"CurrentEmissions"
+"NbrSales"->AndRef8 [dir = none] 
+"CO2Disposable"->AndRef8 [dir = none] 
+"NBenefitEmissions"[shape = box, style = rounded] 
+AndRef9[shape = point] 
+AndRef9->"NBenefitEmissions"
+"NewEmissions"->AndRef9 [dir = none] 
+"CurrentEmissions"->AndRef9 [dir = none] 
+ENBEmissions [shape = box] 
+NBenefitEmissions->"ENBEmissions"
+CO2Disposable [shape = plaintext, fontcolor =red]CO2Disposable [shape = plaintext, fontcolor =red]CO2Disposable [shape = plaintext, fontcolor =red]CO2Disposable [shape = plaintext, fontcolor =red]CO2Disposable [shape = plaintext, fontcolor =red]CO2Disposable [shape = plaintext, fontcolor =red]CO2Disposable [shape = plaintext, fontcolor =red]CO2Disposable [shape = plaintext, fontcolor =red]}
