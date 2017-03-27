@@ -1,0 +1,62 @@
+Model CoffeeModel;
+
+//Objectives
+
+Objective Max ENBSales = EV(NBenefitSales);
+Objective Min ENBEmissions = EV(NBenefitEmissions);
+//Objective Max ENBRevenue = EV(NBenefitRevenue);
+
+NBenefitSales = NewSales - CurrentSales;
+NBenefitEmissions = NewEmissions - CurrentEmissions;
+//NBenefitRevenue = NewRevenue - CurrentRevenue;
+
+//Parameters
+
+Reusability = triangular(0,0.2,0.3);
+NbrSales = normalCI(4900,5100);
+NewNbrSalesReuse = NewSales * Reusability;
+NewNbrSalesDispose = NewSales * (1 - Reusability);
+
+drinkPrice = 2.00;
+CO2Dispose = 0.569;
+CO2Reuse = 0.175;
+
+//Modelling Sales Loss
+
+CurrentSales = NbrSales;
+NewSales = NbrSales * (1 + SalesImpactIncentive);
+
+//Modelling Financial Impact
+
+CurrentRevenue = NbrSales * drinkPrice;
+NewRevenue = NewNbrSalesDispose*(drinkPrice + FinancialIncentiveDispose) + NewNbrSalesReuse*(drinkPrice + FinancialIncentiveReuse);
+
+//Modelling Emissions
+
+CurrentEmissions = NbrSales*CO2Disposable;
+NewEmissions = NewNbrSalesDispose*CO2Disposable + NewNbrSalesReuse*CO2Reuse;
+
+//Not mutually exclusive 
+FinancialIncentiveDispose = decision("Policy type"){
+	"penalising": 0.05;
+	"none": 0;
+}
+
+FinancialIncentiveReuse = decision("Policy type"){
+	"rewarding": -0.20;
+	"none": 0;
+}
+
+SalesImpactIncentive = decision("Policy type") {
+	"rewarding": triangular(0,0.05,0.1);
+	"penalising": triangular(-0.05,-0.01,-0);
+	//"reward and penalise": triangular(0,0.025,0.05); //Adding independent policies together
+	"none": 0;
+}
+
+
+
+
+
+
+

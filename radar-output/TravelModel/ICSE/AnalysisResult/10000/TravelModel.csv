@@ -1,0 +1,649 @@
+,Policy type,Event details,Event frequency,Event relevance,Previous attendance,Is presenting,CarbonReduction,LossFromReduction,Reputation,LossFromReputation,Optimal
+0,Carbon tax/distance,Conference,Low,High,Low,Yes,1.03834,0.0,0.51539,0.0,Yes
+1,Carbon tax/flight,Workshop,High,High,High,Yes,0.85948,0.0,0.51539,0.0,No
+2,Carbon tax/distance,Workshop,Low,High,Medium,No,1.03834,0.0,0.51539,0.0,No
+3,As-is,Meetings,Medium,Low,Low,Yes,-1.38611,0.0,0.51539,0.0,No
+4,Cap distance,Workshop,Low,Low,Low,Yes,-0.51172,0.0,0.51539,0.0,No
+5,As-is,Meetings,High,High,Medium,No,-1.38611,0.0,0.51539,0.0,No
+6,As-is,Conference,Medium,Low,High,Yes,-1.38611,0.0,0.51539,0.0,No
+7,Carbon tax/flight,Conference,Medium,Medium,High,Yes,0.85948,0.0,0.51539,0.0,No
+8,Cap distance,Workshop,High,Low,Low,No,-0.51172,0.0,-1.94029,0.0,No
+9,Carbon tax/flight,Meetings,Medium,Medium,Low,Yes,0.85948,0.0,0.51539,0.0,No
+10,Cap distance,Conference,Low,Medium,Medium,No,-0.51172,0.0,0.51539,0.0,No
+11,Carbon tax/flight,Workshop,Low,Low,Medium,No,0.85948,0.0,-1.94029,0.0,No
+12,Cap distance,Meetings,Low,Medium,High,Yes,-0.51172,0.0,0.51539,0.0,No
+13,Cap distance,Meetings,High,High,High,Yes,-0.51172,0.0,0.51539,0.0,No
+14,As-is,Workshop,High,High,Low,Yes,-1.38611,0.0,0.51539,0.0,No
+15,Cap distance,Meetings,Low,Low,Medium,No,-0.51172,0.0,-1.94029,0.0,No
+16,Carbon tax/flight,Conference,Medium,Low,Medium,No,0.85948,0.0,-1.94029,0.0,No
+17,Carbon tax/distance,Workshop,Medium,Low,Low,No,1.03834,0.0,-1.94029,0.0,No
+18,Carbon tax/flight,Conference,Low,Low,Low,No,0.85948,0.0,0.51539,0.0,No
+19,Cap distance,Conference,High,Low,Medium,Yes,-0.51172,0.0,0.51539,0.0,No
+20,Carbon tax/distance,Conference,High,Low,Low,No,1.03834,0.0,-1.94029,0.0,No
+21,Cap distance,Workshop,Medium,Low,Medium,Yes,-0.51172,0.0,-1.94029,0.0,No
+22,As-is,Meetings,Low,Medium,Medium,No,-1.38611,0.0,0.51539,0.0,No
+23,Carbon tax/distance,Conference,Medium,High,Medium,No,1.03834,0.0,0.51539,0.0,No
+24,Carbon tax/flight,Workshop,Low,Medium,High,Yes,0.85948,0.0,0.51539,0.0,No
+25,Carbon tax/distance,Conference,Low,High,Low,No,1.03834,0.0,0.51539,0.0,No
+26,Carbon tax/distance,Workshop,High,Low,Low,Yes,1.03834,0.0,0.51539,0.0,No
+27,Cap distance,Conference,High,High,Medium,No,-0.51172,0.0,0.51539,0.0,No
+28,Cap distance,Conference,Medium,Low,Low,Yes,-0.51172,0.0,0.51539,0.0,No
+29,Carbon tax/distance,Conference,Low,Medium,Medium,Yes,1.03834,0.0,0.51539,0.0,No
+30,As-is,Meetings,High,Low,Medium,Yes,-1.38611,0.0,-1.94029,0.0,No
+31,As-is,Workshop,High,Medium,Low,No,-1.38611,0.0,0.51539,0.0,No
+32,Carbon tax/distance,Meetings,Medium,High,High,Yes,1.03834,0.0,0.51539,0.0,No
+33,As-is,Workshop,High,Low,High,No,-1.38611,0.0,-1.94029,0.0,No
+34,Cap distance,Workshop,Medium,High,Medium,No,-0.51172,0.0,0.51539,0.0,No
+35,As-is,Conference,Low,Medium,High,Yes,-1.38611,0.0,0.51539,0.0,No
+36,Cap distance,Workshop,Low,High,Low,No,-0.51172,0.0,0.51539,0.0,No
+37,Carbon tax/distance,Meetings,High,Medium,High,Yes,1.03834,0.0,0.51539,0.0,No
+38,As-is,Conference,High,Medium,Medium,Yes,-1.38611,0.0,0.51539,0.0,No
+39,As-is,Meetings,Medium,Medium,Medium,Yes,-1.38611,0.0,0.51539,0.0,No
+40,Cap distance,Workshop,Low,Medium,Medium,Yes,-0.51172,0.0,0.51539,0.0,No
+41,As-is,Meetings,Low,Medium,Low,Yes,-1.38611,0.0,0.51539,0.0,No
+42,As-is,Meetings,High,Low,High,No,-1.38611,0.0,-1.94029,0.0,No
+43,Carbon tax/flight,Conference,High,Low,Medium,Yes,0.85948,0.0,0.51539,0.0,No
+44,Carbon tax/flight,Meetings,Medium,High,High,No,0.85948,0.0,0.51539,0.0,No
+45,Carbon tax/flight,Conference,High,High,High,No,0.85948,0.0,0.51539,0.0,No
+46,As-is,Conference,Low,High,Low,Yes,-1.38611,0.0,0.51539,0.0,No
+47,Carbon tax/distance,Workshop,High,Low,Medium,No,1.03834,0.0,-1.94029,0.0,No
+48,As-is,Conference,Medium,High,Medium,Yes,-1.38611,0.0,0.51539,0.0,No
+49,As-is,Workshop,Medium,Medium,High,No,-1.38611,0.0,-1.94029,0.0,No
+50,Carbon tax/distance,Conference,High,High,Medium,Yes,1.03834,0.0,0.51539,0.0,No
+51,Carbon tax/flight,Conference,Low,High,High,Yes,0.85948,0.0,0.51539,0.0,No
+52,Carbon tax/flight,Meetings,High,Medium,High,No,0.85948,0.0,-1.94029,0.0,No
+53,Cap distance,Meetings,Medium,Low,High,Yes,-0.51172,0.0,-1.94029,0.0,No
+54,Carbon tax/distance,Workshop,High,Medium,High,Yes,1.03834,0.0,0.51539,0.0,No
+55,As-is,Meetings,High,Medium,Low,No,-1.38611,0.0,0.51539,0.0,No
+56,Carbon tax/distance,Conference,High,Medium,Medium,No,1.03834,0.0,0.51539,0.0,No
+57,As-is,Meetings,Medium,High,Low,No,-1.38611,0.0,0.51539,0.0,No
+58,Cap distance,Meetings,High,Low,Low,No,-0.51172,0.0,-1.94029,0.0,No
+59,As-is,Workshop,Low,High,Medium,Yes,-1.38611,0.0,0.51539,0.0,No
+60,Cap distance,Conference,Low,Low,High,Yes,-0.51172,0.0,0.51539,0.0,No
+61,Carbon tax/flight,Meetings,Low,Low,Medium,No,0.85948,0.0,-1.94029,0.0,No
+62,Cap distance,Meetings,Medium,High,High,No,-0.51172,0.0,0.51539,0.0,No
+63,Carbon tax/distance,Meetings,Medium,Low,Low,No,1.03834,0.0,-1.94029,0.0,No
+64,As-is,Conference,Low,Low,High,No,-1.38611,0.0,-1.94029,0.0,No
+65,Cap distance,Conference,Low,Medium,Low,Yes,-0.51172,0.0,0.51539,0.0,No
+66,Carbon tax/distance,Meetings,Medium,Medium,High,No,1.03834,0.0,0.51539,0.0,No
+67,Carbon tax/distance,Conference,Low,Low,Low,Yes,1.03834,0.0,0.51539,0.0,No
+68,Cap distance,Conference,Medium,Medium,Medium,Yes,-0.51172,0.0,0.51539,0.0,No
+69,Carbon tax/distance,Conference,Medium,Low,Medium,Yes,1.03834,0.0,0.51539,0.0,No
+70,Cap distance,Meetings,Medium,Medium,Low,Yes,-0.51172,0.0,0.51539,0.0,No
+71,As-is,Meetings,Low,Low,High,Yes,-1.38611,0.0,0.51539,0.0,No
+72,Carbon tax/distance,Meetings,High,High,Low,Yes,1.03834,0.0,0.51539,0.0,No
+73,Carbon tax/flight,Meetings,Medium,Low,High,Yes,0.85948,0.0,-1.94029,0.0,No
+74,Cap distance,Meetings,High,Medium,High,No,-0.51172,0.0,-1.94029,0.0,No
+75,Carbon tax/distance,Workshop,Low,Low,Medium,Yes,1.03834,0.0,0.51539,0.0,No
+76,Carbon tax/distance,Conference,High,Medium,Low,Yes,1.03834,0.0,0.51539,0.0,No
+77,Carbon tax/distance,Meetings,Medium,Medium,Medium,Yes,1.03834,0.0,0.51539,0.0,No
+78,Carbon tax/distance,Meetings,Low,Medium,Low,Yes,1.03834,0.0,0.51539,0.0,No
+79,Carbon tax/distance,Conference,Medium,High,Low,Yes,1.03834,0.0,0.51539,0.0,No
+80,Cap distance,Workshop,High,Medium,High,No,-0.51172,0.0,-1.94029,0.0,No
+81,Carbon tax/flight,Workshop,Low,High,Low,No,0.85948,0.0,0.51539,0.0,No
+82,Carbon tax/distance,Conference,High,Low,High,Yes,1.03834,0.0,-1.94029,0.0,No
+83,Cap distance,Workshop,Medium,High,High,No,-0.51172,0.0,0.51539,0.0,No
+84,Carbon tax/distance,Meetings,Low,Low,High,Yes,1.03834,0.0,0.51539,0.0,No
+85,As-is,Conference,High,Low,Low,Yes,-1.38611,0.0,0.51539,0.0,No
+86,Carbon tax/distance,Meetings,High,Medium,Low,No,1.03834,0.0,0.51539,0.0,No
+87,Cap distance,Workshop,Low,Medium,High,Yes,-0.51172,0.0,0.51539,0.0,No
+88,As-is,Workshop,High,Low,Medium,Yes,-1.38611,0.0,-1.94029,0.0,No
+89,Carbon tax/distance,Meetings,High,Low,High,No,1.03834,0.0,-1.94029,0.0,No
+90,Cap distance,Meetings,High,Medium,Medium,No,-0.51172,0.0,0.51539,0.0,No
+91,Carbon tax/distance,Conference,Medium,Low,High,No,1.03834,0.0,-1.94029,0.0,No
+92,Carbon tax/flight,Meetings,Low,Medium,Low,No,0.85948,0.0,0.51539,0.0,No
+93,Carbon tax/flight,Conference,Low,Medium,High,No,0.85948,0.0,0.51539,0.0,No
+94,Cap distance,Conference,Medium,Medium,High,Yes,-0.51172,0.0,0.51539,0.0,No
+95,Carbon tax/flight,Conference,Medium,High,Low,No,0.85948,0.0,0.51539,0.0,No
+96,Carbon tax/flight,Meetings,Medium,Medium,Medium,No,0.85948,0.0,0.51539,0.0,No
+97,Carbon tax/flight,Conference,High,Medium,Low,No,0.85948,0.0,0.51539,0.0,No
+98,Cap distance,Meetings,Low,High,Low,No,-0.51172,0.0,0.51539,0.0,No
+99,Carbon tax/flight,Workshop,Low,Low,Low,Yes,0.85948,0.0,0.51539,0.0,No
+100,As-is,Workshop,High,High,Medium,No,-1.38611,0.0,0.51539,0.0,No
+101,Cap distance,Meetings,Medium,High,Medium,No,-0.51172,0.0,0.51539,0.0,No
+102,As-is,Workshop,Medium,Low,Low,Yes,-1.38611,0.0,0.51539,0.0,No
+103,As-is,Meetings,High,High,Low,Yes,-1.38611,0.0,0.51539,0.0,No
+104,Carbon tax/distance,Meetings,Medium,High,Low,No,1.03834,0.0,0.51539,0.0,No
+105,Carbon tax/flight,Workshop,Medium,Low,Medium,Yes,0.85948,0.0,-1.94029,0.0,No
+106,As-is,Conference,High,High,Low,No,-1.38611,0.0,0.51539,0.0,No
+107,As-is,Meetings,Low,High,High,Yes,-1.38611,0.0,0.51539,0.0,No
+108,Carbon tax/distance,Conference,Medium,Medium,Low,No,1.03834,0.0,0.51539,0.0,No
+109,Carbon tax/flight,Conference,High,Low,High,No,0.85948,0.0,-1.94029,0.0,No
+110,Cap distance,Meetings,Medium,Low,Medium,Yes,-0.51172,0.0,0.51539,0.0,No
+111,Cap distance,Meetings,Low,Low,Low,Yes,-0.51172,0.0,0.51539,0.0,No
+112,Carbon tax/distance,Meetings,High,Low,Low,Yes,1.03834,0.0,0.51539,0.0,No
+113,Carbon tax/distance,Workshop,High,High,Low,No,1.03834,0.0,0.51539,0.0,No
+114,Carbon tax/flight,Meetings,High,Low,Low,Yes,0.85948,0.0,0.51539,0.0,No
+115,Carbon tax/flight,Workshop,Medium,High,Medium,No,0.85948,0.0,0.51539,0.0,No
+116,Cap distance,Workshop,High,High,High,Yes,-0.51172,0.0,0.51539,0.0,No
+117,Carbon tax/flight,Conference,Medium,Low,Low,Yes,0.85948,0.0,0.51539,0.0,No
+118,Cap distance,Workshop,Low,Low,Medium,No,-0.51172,0.0,-1.94029,0.0,No
+119,Carbon tax/flight,Meetings,Low,Medium,High,Yes,0.85948,0.0,0.51539,0.0,No
+120,Carbon tax/flight,Workshop,High,Medium,Medium,No,0.85948,0.0,-1.94029,0.0,No
+121,Carbon tax/distance,Workshop,Low,Low,High,No,1.03834,0.0,-1.94029,0.0,No
+122,Carbon tax/distance,Conference,Low,High,High,Yes,1.03834,0.0,0.51539,0.0,No
+123,Carbon tax/flight,Workshop,Medium,Medium,Low,No,0.85948,0.0,0.51539,0.0,No
+124,Cap distance,Conference,Medium,Low,Medium,No,-0.51172,0.0,-1.94029,0.0,No
+125,Carbon tax/distance,Meetings,High,High,Medium,No,1.03834,0.0,0.51539,0.0,No
+126,Cap distance,Workshop,Medium,Medium,Low,Yes,-0.51172,0.0,0.51539,0.0,No
+127,As-is,Workshop,Medium,High,Low,No,-1.38611,0.0,0.51539,0.0,No
+128,Carbon tax/distance,Conference,High,High,High,No,1.03834,0.0,0.51539,0.0,No
+129,Carbon tax/flight,Workshop,High,High,Medium,Yes,0.85948,0.0,0.51539,0.0,No
+130,Carbon tax/flight,Meetings,High,High,Low,No,0.85948,0.0,0.51539,0.0,No
+131,Cap distance,Conference,Low,Low,Low,No,-0.51172,0.0,0.51539,0.0,No
+132,As-is,Conference,Low,Low,Medium,No,-1.38611,0.0,0.51539,0.0,No
+133,Carbon tax/flight,Conference,High,High,Low,Yes,0.85948,0.0,0.51539,0.0,No
+134,Carbon tax/flight,Conference,High,High,Medium,Yes,0.85948,0.0,0.51539,0.0,No
+135,Carbon tax/flight,Meetings,Low,Low,High,No,0.85948,0.0,-1.94029,0.0,No
+136,Carbon tax/distance,Meetings,Low,High,High,No,1.03834,0.0,0.51539,0.0,No
+137,Cap distance,Workshop,Medium,Low,High,Yes,-0.51172,0.0,-1.94029,0.0,No
+138,Carbon tax/distance,Workshop,Low,Medium,Low,No,1.03834,0.0,0.51539,0.0,No
+139,Carbon tax/distance,Workshop,Medium,Medium,Medium,No,1.03834,0.0,0.51539,0.0,No
+140,As-is,Conference,High,High,High,Yes,-1.38611,0.0,0.51539,0.0,No
+141,As-is,Meetings,Medium,Medium,High,No,-1.38611,0.0,0.51539,0.0,No
+142,As-is,Meetings,Low,Medium,High,No,-1.38611,0.0,0.51539,0.0,No
+143,Carbon tax/distance,Workshop,Low,High,Low,Yes,1.03834,0.0,0.51539,0.0,No
+144,Carbon tax/flight,Conference,Low,High,Low,No,0.85948,0.0,0.51539,0.0,No
+145,Carbon tax/flight,Conference,Medium,High,Medium,No,0.85948,0.0,0.51539,0.0,No
+146,Cap distance,Conference,Low,High,Medium,Yes,-0.51172,0.0,0.51539,0.0,No
+147,As-is,Workshop,Low,Low,High,Yes,-1.38611,0.0,0.51539,0.0,No
+148,Carbon tax/distance,Workshop,Medium,High,Medium,Yes,1.03834,0.0,0.51539,0.0,No
+149,As-is,Conference,Medium,High,High,No,-1.38611,0.0,0.51539,0.0,No
+150,As-is,Workshop,Medium,Medium,Medium,Yes,-1.38611,0.0,0.51539,0.0,No
+151,Carbon tax/flight,Meetings,Medium,Low,Low,No,0.85948,0.0,-1.94029,0.0,No
+152,Carbon tax/distance,Workshop,High,Medium,Medium,Yes,1.03834,0.0,0.51539,0.0,No
+153,Carbon tax/flight,Conference,High,Medium,Medium,No,0.85948,0.0,0.51539,0.0,No
+154,As-is,Workshop,Low,Medium,Low,Yes,-1.38611,0.0,0.51539,0.0,No
+155,As-is,Meetings,High,Medium,High,Yes,-1.38611,0.0,0.51539,0.0,No
+156,Carbon tax/flight,Workshop,High,Low,Low,No,0.85948,0.0,-1.94029,0.0,No
+157,Carbon tax/distance,Meetings,High,Low,Medium,Yes,1.03834,0.0,-1.94029,0.0,No
+158,Carbon tax/flight,Meetings,Medium,High,Medium,Yes,0.85948,0.0,0.51539,0.0,No
+159,As-is,Conference,Medium,Medium,Low,Yes,-1.38611,0.0,0.51539,0.0,No
+160,Carbon tax/flight,Meetings,High,Medium,Medium,Yes,0.85948,0.0,0.51539,0.0,No
+161,As-is,Meetings,Medium,High,High,Yes,-1.38611,0.0,0.51539,0.0,No
+162,As-is,Conference,High,Medium,High,No,-1.38611,0.0,0.51539,0.0,No
+163,Cap distance,Meetings,Low,Medium,Medium,Yes,-0.51172,0.0,0.51539,0.0,No
+164,Carbon tax/flight,Workshop,Low,High,Medium,No,0.85948,0.0,0.51539,0.0,No
+165,As-is,Workshop,Low,High,High,No,-1.38611,0.0,0.51539,0.0,No
+166,Carbon tax/flight,Meetings,Low,High,Low,Yes,0.85948,0.0,0.51539,0.0,No
+167,Carbon tax/distance,Workshop,Medium,High,Low,No,1.03834,0.0,0.51539,0.0,No
+168,As-is,Workshop,Low,Low,High,No,-1.38611,0.0,-1.94029,0.0,No
+169,Carbon tax/flight,Meetings,Low,Medium,Medium,Yes,0.85948,0.0,0.51539,0.0,No
+170,Carbon tax/distance,Meetings,Medium,Low,High,Yes,1.03834,0.0,-1.94029,0.0,No
+171,Carbon tax/flight,Meetings,High,Medium,Medium,No,0.85948,0.0,0.51539,0.0,No
+172,Carbon tax/distance,Conference,Medium,Medium,High,Yes,1.03834,0.0,0.51539,0.0,No
+173,Cap distance,Conference,High,High,Medium,Yes,-0.51172,0.0,0.51539,0.0,No
+174,Carbon tax/distance,Workshop,High,Medium,Low,No,1.03834,0.0,0.51539,0.0,No
+175,As-is,Conference,Medium,High,High,Yes,-1.38611,0.0,0.51539,0.0,No
+176,Carbon tax/distance,Conference,Low,Low,Low,No,1.03834,0.0,0.51539,0.0,No
+177,Carbon tax/flight,Meetings,Low,High,Low,No,0.85948,0.0,0.51539,0.0,No
+178,Cap distance,Meetings,Medium,Low,Low,No,-0.51172,0.0,-1.94029,0.0,No
+179,Carbon tax/distance,Conference,Medium,Low,Medium,No,1.03834,0.0,-1.94029,0.0,No
+180,Carbon tax/flight,Meetings,Medium,High,Medium,No,0.85948,0.0,0.51539,0.0,No
+181,Cap distance,Workshop,Medium,Medium,High,Yes,-0.51172,0.0,0.51539,0.0,No
+182,Carbon tax/flight,Workshop,High,Medium,Low,Yes,0.85948,0.0,0.51539,0.0,No
+183,As-is,Conference,High,Medium,High,Yes,-1.38611,0.0,0.51539,0.0,No
+184,As-is,Workshop,High,Low,Low,Yes,-1.38611,0.0,0.51539,0.0,No
+185,Cap distance,Meetings,High,Low,High,Yes,-0.51172,0.0,-1.94029,0.0,No
+186,As-is,Conference,Medium,Medium,Low,No,-1.38611,0.0,0.51539,0.0,No
+187,Carbon tax/distance,Workshop,High,High,High,Yes,1.03834,0.0,0.51539,0.0,No
+188,As-is,Meetings,Medium,Low,High,No,-1.38611,0.0,-1.94029,0.0,No
+189,As-is,Workshop,Low,High,Low,Yes,-1.38611,0.0,0.51539,0.0,No
+190,Carbon tax/distance,Meetings,Medium,Low,Medium,No,1.03834,0.0,-1.94029,0.0,No
+191,As-is,Conference,Medium,High,Medium,No,-1.38611,0.0,0.51539,0.0,No
+192,As-is,Conference,High,Low,Medium,No,-1.38611,0.0,-1.94029,0.0,No
+193,Cap distance,Meetings,High,Low,Medium,No,-0.51172,0.0,-1.94029,0.0,No
+194,As-is,Conference,Low,High,Low,No,-1.38611,0.0,0.51539,0.0,No
+195,Carbon tax/distance,Workshop,Low,High,Medium,Yes,1.03834,0.0,0.51539,0.0,No
+196,As-is,Workshop,Medium,High,Medium,Yes,-1.38611,0.0,0.51539,0.0,No
+197,Carbon tax/distance,Meetings,Low,Low,Low,No,1.03834,0.0,0.51539,0.0,No
+198,Carbon tax/flight,Conference,High,Low,Low,No,0.85948,0.0,-1.94029,0.0,No
+199,Carbon tax/flight,Workshop,Medium,High,Low,Yes,0.85948,0.0,0.51539,0.0,No
+200,Carbon tax/flight,Meetings,Medium,High,High,Yes,0.85948,0.0,0.51539,0.0,No
+201,As-is,Conference,High,Medium,Medium,No,-1.38611,0.0,0.51539,0.0,No
+202,Cap distance,Workshop,Low,High,High,Yes,-0.51172,0.0,0.51539,0.0,No
+203,Carbon tax/flight,Meetings,High,Medium,High,Yes,0.85948,0.0,0.51539,0.0,No
+204,Carbon tax/distance,Workshop,Low,Medium,Low,Yes,1.03834,0.0,0.51539,0.0,No
+205,Carbon tax/flight,Workshop,Medium,Low,High,No,0.85948,0.0,-1.94029,0.0,No
+206,Carbon tax/distance,Conference,Medium,Low,High,Yes,1.03834,0.0,0.51539,0.0,No
+207,Carbon tax/distance,Workshop,Medium,Medium,Medium,Yes,1.03834,0.0,0.51539,0.0,No
+208,Carbon tax/flight,Meetings,Low,Low,Medium,Yes,0.85948,0.0,0.51539,0.0,No
+209,Carbon tax/distance,Meetings,Medium,Low,Low,Yes,1.03834,0.0,0.51539,0.0,No
+210,Cap distance,Meetings,Medium,High,High,Yes,-0.51172,0.0,0.51539,0.0,No
+211,Cap distance,Meetings,Low,High,High,Yes,-0.51172,0.0,0.51539,0.0,No
+212,Carbon tax/flight,Workshop,Low,Low,High,No,0.85948,0.0,-1.94029,0.0,No
+213,As-is,Workshop,Low,Medium,High,No,-1.38611,0.0,0.51539,0.0,No
+214,As-is,Meetings,Low,Medium,Medium,Yes,-1.38611,0.0,0.51539,0.0,No
+215,Carbon tax/flight,Meetings,High,Low,Low,No,0.85948,0.0,-1.94029,0.0,No
+216,Carbon tax/distance,Meetings,Medium,Medium,High,Yes,1.03834,0.0,0.51539,0.0,No
+217,Carbon tax/flight,Conference,Low,Low,High,Yes,0.85948,0.0,0.51539,0.0,No
+218,Carbon tax/flight,Meetings,High,Low,Medium,No,0.85948,0.0,-1.94029,0.0,No
+219,Carbon tax/distance,Workshop,High,Low,Low,No,1.03834,0.0,-1.94029,0.0,No
+220,Carbon tax/distance,Meetings,Low,Medium,High,Yes,1.03834,0.0,0.51539,0.0,No
+221,Carbon tax/distance,Conference,Low,Medium,Medium,No,1.03834,0.0,0.51539,0.0,No
+222,Cap distance,Meetings,Medium,Medium,Low,No,-0.51172,0.0,0.51539,0.0,No
+223,As-is,Workshop,High,Medium,Medium,Yes,-1.38611,0.0,0.51539,0.0,No
+224,Carbon tax/flight,Conference,Medium,Medium,Low,No,0.85948,0.0,0.51539,0.0,No
+225,As-is,Conference,High,Low,High,Yes,-1.38611,0.0,-1.94029,0.0,No
+226,As-is,Conference,Medium,Low,Low,No,-1.38611,0.0,0.51539,0.0,No
+227,Cap distance,Workshop,High,High,High,No,-0.51172,0.0,0.51539,0.0,No
+228,Cap distance,Conference,High,Medium,Low,Yes,-0.51172,0.0,0.51539,0.0,No
+229,Cap distance,Meetings,High,Medium,High,Yes,-0.51172,0.0,0.51539,0.0,No
+230,Carbon tax/flight,Workshop,Low,High,Low,Yes,0.85948,0.0,0.51539,0.0,No
+231,Carbon tax/flight,Workshop,Medium,High,Medium,Yes,0.85948,0.0,0.51539,0.0,No
+232,Cap distance,Workshop,High,Low,High,Yes,-0.51172,0.0,-1.94029,0.0,No
+233,Carbon tax/distance,Meetings,Low,Medium,Medium,No,1.03834,0.0,0.51539,0.0,No
+234,Carbon tax/distance,Conference,Low,Medium,High,No,1.03834,0.0,0.51539,0.0,No
+235,Carbon tax/flight,Conference,Low,High,High,No,0.85948,0.0,0.51539,0.0,No
+236,Cap distance,Meetings,Low,Low,Medium,Yes,-0.51172,0.0,0.51539,0.0,No
+237,Cap distance,Conference,Medium,High,Low,Yes,-0.51172,0.0,0.51539,0.0,No
+238,Carbon tax/flight,Workshop,Low,Medium,Medium,Yes,0.85948,0.0,0.51539,0.0,No
+239,Carbon tax/flight,Meetings,Medium,Medium,Low,No,0.85948,0.0,0.51539,0.0,No
+240,Carbon tax/flight,Conference,High,Low,Medium,No,0.85948,0.0,-1.94029,0.0,No
+241,Cap distance,Meetings,Low,High,Medium,No,-0.51172,0.0,0.51539,0.0,No
+242,Carbon tax/distance,Workshop,High,Low,Medium,Yes,1.03834,0.0,-1.94029,0.0,No
+243,Cap distance,Conference,Low,High,High,No,-0.51172,0.0,0.51539,0.0,No
+244,As-is,Meetings,High,Medium,Low,Yes,-1.38611,0.0,0.51539,0.0,No
+245,Carbon tax/distance,Workshop,High,High,Medium,No,1.03834,0.0,0.51539,0.0,No
+246,Carbon tax/distance,Conference,Low,Medium,High,Yes,1.03834,0.0,0.51539,0.0,No
+247,As-is,Workshop,High,High,Low,No,-1.38611,0.0,0.51539,0.0,No
+248,Carbon tax/distance,Workshop,Medium,Medium,Low,Yes,1.03834,0.0,0.51539,0.0,No
+249,Cap distance,Workshop,Medium,Medium,Medium,No,-0.51172,0.0,0.51539,0.0,No
+250,Cap distance,Conference,Medium,Low,High,No,-0.51172,0.0,-1.94029,0.0,No
+251,Cap distance,Workshop,Low,Medium,Low,No,-0.51172,0.0,0.51539,0.0,No
+252,As-is,Meetings,Medium,High,Low,Yes,-1.38611,0.0,0.51539,0.0,No
+253,As-is,Conference,Low,Medium,Medium,Yes,-1.38611,0.0,0.51539,0.0,No
+254,Cap distance,Workshop,Low,Low,Medium,Yes,-0.51172,0.0,0.51539,0.0,No
+255,As-is,Meetings,High,High,Low,No,-1.38611,0.0,0.51539,0.0,No
+256,Carbon tax/flight,Meetings,Low,Medium,Low,Yes,0.85948,0.0,0.51539,0.0,No
+257,As-is,Conference,Low,High,High,Yes,-1.38611,0.0,0.51539,0.0,No
+258,Carbon tax/distance,Workshop,Medium,High,Medium,No,1.03834,0.0,0.51539,0.0,No
+259,Carbon tax/flight,Meetings,Medium,Medium,Medium,Yes,0.85948,0.0,0.51539,0.0,No
+260,Carbon tax/distance,Workshop,Low,High,Low,No,1.03834,0.0,0.51539,0.0,No
+261,As-is,Workshop,Medium,Low,High,No,-1.38611,0.0,-1.94029,0.0,No
+262,Carbon tax/flight,Conference,Low,Medium,High,Yes,0.85948,0.0,0.51539,0.0,No
+263,Cap distance,Conference,High,High,Low,Yes,-0.51172,0.0,0.51539,0.0,No
+264,Cap distance,Workshop,High,Low,Medium,No,-0.51172,0.0,-1.94029,0.0,No
+265,Cap distance,Meetings,Medium,Medium,High,Yes,-0.51172,0.0,0.51539,0.0,No
+266,Carbon tax/distance,Meetings,High,High,High,No,1.03834,0.0,0.51539,0.0,No
+267,Carbon tax/distance,Workshop,High,Medium,Medium,No,1.03834,0.0,-1.94029,0.0,No
+268,As-is,Conference,Low,Medium,Low,No,-1.38611,0.0,0.51539,0.0,No
+269,Cap distance,Meetings,Medium,Low,Medium,No,-0.51172,0.0,-1.94029,0.0,No
+270,Carbon tax/distance,Conference,Low,Low,Medium,No,1.03834,0.0,0.51539,0.0,No
+271,Carbon tax/flight,Meetings,Low,High,Medium,No,0.85948,0.0,0.51539,0.0,No
+272,Carbon tax/flight,Conference,High,Low,High,Yes,0.85948,0.0,-1.94029,0.0,No
+273,Carbon tax/flight,Conference,Low,Low,Medium,No,0.85948,0.0,0.51539,0.0,No
+274,Carbon tax/distance,Conference,High,Medium,High,No,1.03834,0.0,0.51539,0.0,No
+275,As-is,Workshop,High,High,Medium,Yes,-1.38611,0.0,0.51539,0.0,No
+276,Cap distance,Meetings,Low,Low,Low,No,-0.51172,0.0,0.51539,0.0,No
+277,Carbon tax/flight,Conference,Medium,Low,Low,No,0.85948,0.0,0.51539,0.0,No
+278,Carbon tax/flight,Meetings,High,Medium,Low,No,0.85948,0.0,0.51539,0.0,No
+279,Carbon tax/distance,Conference,Medium,High,High,No,1.03834,0.0,0.51539,0.0,No
+280,As-is,Meetings,Low,Low,High,No,-1.38611,0.0,-1.94029,0.0,No
+281,Carbon tax/flight,Meetings,High,High,High,Yes,0.85948,0.0,0.51539,0.0,No
+282,Cap distance,Workshop,Medium,Low,Low,Yes,-0.51172,0.0,0.51539,0.0,No
+283,As-is,Conference,Medium,Medium,Medium,No,-1.38611,0.0,0.51539,0.0,No
+284,Carbon tax/flight,Workshop,High,Medium,Medium,Yes,0.85948,0.0,0.51539,0.0,No
+285,Carbon tax/flight,Meetings,Medium,High,Low,No,0.85948,0.0,0.51539,0.0,No
+286,Carbon tax/distance,Meetings,Low,Medium,Low,No,1.03834,0.0,0.51539,0.0,No
+287,Carbon tax/distance,Meetings,Medium,Medium,Medium,No,1.03834,0.0,0.51539,0.0,No
+288,Carbon tax/flight,Workshop,High,High,Low,No,0.85948,0.0,0.51539,0.0,No
+289,Carbon tax/distance,Meetings,Low,High,Medium,No,1.03834,0.0,0.51539,0.0,No
+290,Carbon tax/distance,Conference,High,Low,High,No,1.03834,0.0,-1.94029,0.0,No
+291,Cap distance,Conference,High,Low,High,No,-0.51172,0.0,-1.94029,0.0,No
+292,Carbon tax/flight,Conference,Medium,High,High,No,0.85948,0.0,0.51539,0.0,No
+293,Carbon tax/distance,Workshop,Medium,High,High,Yes,1.03834,0.0,0.51539,0.0,No
+294,As-is,Conference,Medium,Low,Medium,Yes,-1.38611,0.0,0.51539,0.0,No
+295,Carbon tax/flight,Conference,High,Medium,High,No,0.85948,0.0,0.51539,0.0,No
+296,As-is,Meetings,High,Medium,Medium,Yes,-1.38611,0.0,0.51539,0.0,No
+297,Carbon tax/distance,Meetings,High,Low,High,Yes,1.03834,0.0,-1.94029,0.0,No
+298,As-is,Conference,High,High,High,No,-1.38611,0.0,0.51539,0.0,No
+299,Cap distance,Workshop,Medium,Medium,Low,No,-0.51172,0.0,0.51539,0.0,No
+300,Carbon tax/distance,Workshop,Low,Low,Low,Yes,1.03834,0.0,0.51539,0.0,No
+301,As-is,Meetings,Medium,High,Medium,Yes,-1.38611,0.0,0.51539,0.0,No
+302,Carbon tax/distance,Workshop,Medium,Low,Medium,Yes,1.03834,0.0,-1.94029,0.0,No
+303,As-is,Conference,Low,Low,Low,Yes,-1.38611,0.0,0.51539,0.0,No
+304,As-is,Meetings,Low,High,Low,Yes,-1.38611,0.0,0.51539,0.0,No
+305,As-is,Meetings,Medium,Medium,Low,Yes,-1.38611,0.0,0.51539,0.0,No
+306,Carbon tax/flight,Meetings,Medium,Low,Medium,Yes,0.85948,0.0,0.51539,0.0,No
+307,Carbon tax/distance,Meetings,Low,Low,Medium,Yes,1.03834,0.0,0.51539,0.0,No
+308,Carbon tax/flight,Meetings,Medium,Low,Low,Yes,0.85948,0.0,0.51539,0.0,No
+309,Cap distance,Conference,Low,Medium,High,No,-0.51172,0.0,0.51539,0.0,No
+310,Carbon tax/flight,Meetings,Low,Low,Low,Yes,0.85948,0.0,0.51539,0.0,No
+311,Cap distance,Meetings,High,High,High,No,-0.51172,0.0,0.51539,0.0,No
+312,Cap distance,Workshop,High,Medium,Medium,No,-0.51172,0.0,-1.94029,0.0,No
+313,Cap distance,Meetings,Medium,Medium,Medium,No,-0.51172,0.0,0.51539,0.0,No
+314,Cap distance,Meetings,Low,Medium,Low,No,-0.51172,0.0,0.51539,0.0,No
+315,Carbon tax/distance,Meetings,High,Low,Medium,No,1.03834,0.0,-1.94029,0.0,No
+316,Cap distance,Meetings,Low,Medium,Medium,No,-0.51172,0.0,0.51539,0.0,No
+317,Carbon tax/distance,Meetings,High,Low,Low,No,1.03834,0.0,-1.94029,0.0,No
+318,As-is,Workshop,High,Medium,Low,Yes,-1.38611,0.0,0.51539,0.0,No
+319,Carbon tax/flight,Conference,Low,Medium,Medium,No,0.85948,0.0,0.51539,0.0,No
+320,Carbon tax/flight,Workshop,High,Low,Medium,Yes,0.85948,0.0,-1.94029,0.0,No
+321,Carbon tax/flight,Workshop,High,Low,Low,Yes,0.85948,0.0,0.51539,0.0,No
+322,Carbon tax/distance,Meetings,Medium,Medium,Low,No,1.03834,0.0,0.51539,0.0,No
+323,Carbon tax/distance,Conference,Low,High,High,No,1.03834,0.0,0.51539,0.0,No
+324,As-is,Workshop,Medium,High,Low,Yes,-1.38611,0.0,0.51539,0.0,No
+325,Carbon tax/flight,Workshop,Medium,Medium,Low,Yes,0.85948,0.0,0.51539,0.0,No
+326,Cap distance,Workshop,High,Medium,High,Yes,-0.51172,0.0,0.51539,0.0,No
+327,Cap distance,Workshop,Medium,High,High,Yes,-0.51172,0.0,0.51539,0.0,No
+328,As-is,Conference,Low,High,Medium,No,-1.38611,0.0,0.51539,0.0,No
+329,Carbon tax/flight,Workshop,High,High,Medium,No,0.85948,0.0,0.51539,0.0,No
+330,As-is,Conference,High,Low,Low,No,-1.38611,0.0,-1.94029,0.0,No
+331,Carbon tax/distance,Meetings,Low,High,High,Yes,1.03834,0.0,0.51539,0.0,No
+332,Cap distance,Workshop,Low,High,Medium,No,-0.51172,0.0,0.51539,0.0,No
+333,Carbon tax/distance,Conference,Low,Low,High,Yes,1.03834,0.0,0.51539,0.0,No
+334,Cap distance,Conference,Medium,Medium,High,No,-0.51172,0.0,0.51539,0.0,No
+335,As-is,Meetings,High,Low,Low,Yes,-1.38611,0.0,0.51539,0.0,No
+336,Carbon tax/distance,Workshop,Medium,Low,Low,Yes,1.03834,0.0,0.51539,0.0,No
+337,As-is,Meetings,Low,High,Medium,Yes,-1.38611,0.0,0.51539,0.0,No
+338,As-is,Conference,Low,Low,Medium,Yes,-1.38611,0.0,0.51539,0.0,No
+339,Carbon tax/distance,Workshop,Low,Medium,Medium,Yes,1.03834,0.0,0.51539,0.0,No
+340,As-is,Conference,High,Low,Medium,Yes,-1.38611,0.0,0.51539,0.0,No
+341,Carbon tax/distance,Workshop,Low,Medium,High,No,1.03834,0.0,0.51539,0.0,No
+342,Carbon tax/flight,Conference,Medium,High,Medium,Yes,0.85948,0.0,0.51539,0.0,No
+343,Carbon tax/distance,Meetings,Low,Medium,Medium,Yes,1.03834,0.0,0.51539,0.0,No
+344,Carbon tax/flight,Conference,Low,High,Low,Yes,0.85948,0.0,0.51539,0.0,No
+345,As-is,Meetings,Medium,High,High,No,-1.38611,0.0,0.51539,0.0,No
+346,Cap distance,Workshop,Low,High,High,No,-0.51172,0.0,0.51539,0.0,No
+347,Carbon tax/flight,Conference,High,Medium,Medium,Yes,0.85948,0.0,0.51539,0.0,No
+348,As-is,Meetings,High,Medium,High,No,-1.38611,0.0,-1.94029,0.0,No
+349,Carbon tax/distance,Workshop,High,Low,High,Yes,1.03834,0.0,-1.94029,0.0,No
+350,As-is,Conference,Low,Medium,Medium,No,-1.38611,0.0,0.51539,0.0,No
+351,Cap distance,Meetings,Low,High,Medium,Yes,-0.51172,0.0,0.51539,0.0,No
+352,Carbon tax/distance,Meetings,High,Medium,Medium,No,1.03834,0.0,0.51539,0.0,No
+353,Carbon tax/flight,Meetings,Medium,Low,Medium,No,0.85948,0.0,-1.94029,0.0,No
+354,As-is,Meetings,Low,Low,Medium,No,-1.38611,0.0,-1.94029,0.0,No
+355,Cap distance,Workshop,High,High,Low,Yes,-0.51172,0.0,0.51539,0.0,No
+356,Carbon tax/distance,Workshop,Medium,High,Low,Yes,1.03834,0.0,0.51539,0.0,No
+357,Carbon tax/distance,Workshop,High,High,High,No,1.03834,0.0,0.51539,0.0,No
+358,Carbon tax/flight,Conference,Low,Low,High,No,0.85948,0.0,-1.94029,0.0,No
+359,Cap distance,Conference,Medium,Medium,Low,Yes,-0.51172,0.0,0.51539,0.0,No
+360,Carbon tax/distance,Conference,Medium,Medium,High,No,1.03834,0.0,0.51539,0.0,No
+361,Carbon tax/flight,Workshop,Low,High,Medium,Yes,0.85948,0.0,0.51539,0.0,No
+362,Carbon tax/flight,Workshop,Low,Low,High,Yes,0.85948,0.0,0.51539,0.0,No
+363,Cap distance,Conference,Medium,Low,High,Yes,-0.51172,0.0,0.51539,0.0,No
+364,Cap distance,Conference,High,Medium,High,No,-0.51172,0.0,0.51539,0.0,No
+365,Carbon tax/flight,Meetings,Low,Low,Low,No,0.85948,0.0,0.51539,0.0,No
+366,Carbon tax/distance,Workshop,High,Medium,Low,Yes,1.03834,0.0,0.51539,0.0,No
+367,Carbon tax/flight,Workshop,Low,Medium,Low,Yes,0.85948,0.0,0.51539,0.0,No
+368,Carbon tax/flight,Workshop,Medium,Medium,Medium,Yes,0.85948,0.0,0.51539,0.0,No
+369,Cap distance,Workshop,Medium,Medium,High,No,-0.51172,0.0,-1.94029,0.0,No
+370,Cap distance,Meetings,Medium,Medium,Medium,Yes,-0.51172,0.0,0.51539,0.0,No
+371,Carbon tax/distance,Conference,High,High,Low,Yes,1.03834,0.0,0.51539,0.0,No
+372,Cap distance,Meetings,Low,Medium,Low,Yes,-0.51172,0.0,0.51539,0.0,No
+373,Carbon tax/distance,Meetings,High,High,Medium,Yes,1.03834,0.0,0.51539,0.0,No
+374,Carbon tax/flight,Conference,Medium,Medium,Low,Yes,0.85948,0.0,0.51539,0.0,No
+375,As-is,Workshop,High,Low,Low,No,-1.38611,0.0,-1.94029,0.0,No
+376,Cap distance,Conference,Medium,High,High,No,-0.51172,0.0,0.51539,0.0,No
+377,As-is,Meetings,Medium,Low,High,Yes,-1.38611,0.0,-1.94029,0.0,No
+378,Cap distance,Workshop,High,Low,High,No,-0.51172,0.0,-1.94029,0.0,No
+379,Carbon tax/flight,Meetings,High,High,Medium,No,0.85948,0.0,0.51539,0.0,No
+380,Cap distance,Workshop,Low,Medium,Low,Yes,-0.51172,0.0,0.51539,0.0,No
+381,Cap distance,Conference,High,High,High,Yes,-0.51172,0.0,0.51539,0.0,No
+382,Carbon tax/distance,Meetings,Low,Low,Low,Yes,1.03834,0.0,0.51539,0.0,No
+383,As-is,Workshop,Low,High,Low,No,-1.38611,0.0,0.51539,0.0,No
+384,Cap distance,Meetings,High,Low,Medium,Yes,-0.51172,0.0,-1.94029,0.0,No
+385,Carbon tax/distance,Workshop,Medium,Medium,Low,No,1.03834,0.0,0.51539,0.0,No
+386,Carbon tax/flight,Conference,Medium,Low,High,Yes,0.85948,0.0,0.51539,0.0,No
+387,Carbon tax/distance,Meetings,Medium,Low,Medium,Yes,1.03834,0.0,0.51539,0.0,No
+388,As-is,Conference,Medium,Medium,High,Yes,-1.38611,0.0,0.51539,0.0,No
+389,As-is,Workshop,Medium,High,Medium,No,-1.38611,0.0,0.51539,0.0,No
+390,Carbon tax/distance,Workshop,Medium,Low,High,No,1.03834,0.0,-1.94029,0.0,No
+391,Cap distance,Workshop,High,Medium,Low,No,-0.51172,0.0,0.51539,0.0,No
+392,Cap distance,Conference,Low,Low,Medium,No,-0.51172,0.0,0.51539,0.0,No
+393,Carbon tax/flight,Workshop,Low,Medium,Medium,No,0.85948,0.0,0.51539,0.0,No
+394,Carbon tax/distance,Workshop,High,High,Medium,Yes,1.03834,0.0,0.51539,0.0,No
+395,Cap distance,Workshop,Low,Low,High,Yes,-0.51172,0.0,0.51539,0.0,No
+396,Carbon tax/flight,Workshop,High,High,Low,Yes,0.85948,0.0,0.51539,0.0,No
+397,As-is,Meetings,High,High,High,Yes,-1.38611,0.0,0.51539,0.0,No
+398,Cap distance,Workshop,Medium,Medium,Medium,Yes,-0.51172,0.0,0.51539,0.0,No
+399,Carbon tax/flight,Conference,Low,Medium,Low,No,0.85948,0.0,0.51539,0.0,No
+400,Carbon tax/flight,Conference,Medium,Medium,Medium,No,0.85948,0.0,0.51539,0.0,No
+401,As-is,Workshop,Low,Medium,High,Yes,-1.38611,0.0,0.51539,0.0,No
+402,As-is,Conference,Medium,High,Low,No,-1.38611,0.0,0.51539,0.0,No
+403,Carbon tax/distance,Workshop,Low,High,High,Yes,1.03834,0.0,0.51539,0.0,No
+404,As-is,Workshop,Medium,Low,Medium,Yes,-1.38611,0.0,-1.94029,0.0,No
+405,Carbon tax/flight,Workshop,High,Low,High,No,0.85948,0.0,-1.94029,0.0,No
+406,Carbon tax/flight,Meetings,Low,High,High,Yes,0.85948,0.0,0.51539,0.0,No
+407,Carbon tax/distance,Meetings,Medium,High,Medium,No,1.03834,0.0,0.51539,0.0,No
+408,Carbon tax/flight,Workshop,Medium,Low,Low,Yes,0.85948,0.0,0.51539,0.0,No
+409,As-is,Conference,High,Medium,Low,No,-1.38611,0.0,0.51539,0.0,No
+410,As-is,Workshop,Low,Low,Low,Yes,-1.38611,0.0,0.51539,0.0,No
+411,Carbon tax/distance,Meetings,Low,High,Low,No,1.03834,0.0,0.51539,0.0,No
+412,Carbon tax/flight,Workshop,High,Medium,Low,No,0.85948,0.0,0.51539,0.0,No
+413,As-is,Conference,Medium,Low,Low,Yes,-1.38611,0.0,0.51539,0.0,No
+414,As-is,Conference,High,Low,High,No,-1.38611,0.0,-1.94029,0.0,No
+415,Carbon tax/flight,Meetings,High,Low,Medium,Yes,0.85948,0.0,-1.94029,0.0,No
+416,Carbon tax/flight,Workshop,Medium,High,Low,No,0.85948,0.0,0.51539,0.0,No
+417,Cap distance,Workshop,Medium,High,Low,No,-0.51172,0.0,0.51539,0.0,No
+418,Carbon tax/distance,Conference,High,Medium,High,Yes,1.03834,0.0,0.51539,0.0,No
+419,Cap distance,Meetings,High,High,Medium,No,-0.51172,0.0,0.51539,0.0,No
+420,As-is,Workshop,High,Medium,Medium,No,-1.38611,0.0,-1.94029,0.0,No
+421,Carbon tax/distance,Conference,Medium,High,High,Yes,1.03834,0.0,0.51539,0.0,No
+422,As-is,Meetings,Medium,Low,Medium,Yes,-1.38611,0.0,0.51539,0.0,No
+423,Cap distance,Workshop,High,High,Medium,No,-0.51172,0.0,0.51539,0.0,No
+424,As-is,Meetings,Low,Low,Low,Yes,-1.38611,0.0,0.51539,0.0,No
+425,Carbon tax/flight,Workshop,Medium,Medium,High,No,0.85948,0.0,-1.94029,0.0,No
+426,As-is,Conference,Low,Low,High,Yes,-1.38611,0.0,0.51539,0.0,No
+427,Cap distance,Conference,Low,Medium,Low,No,-0.51172,0.0,0.51539,0.0,No
+428,Cap distance,Conference,Medium,Medium,Medium,No,-0.51172,0.0,0.51539,0.0,No
+429,As-is,Meetings,High,Low,Low,No,-1.38611,0.0,-1.94029,0.0,No
+430,Cap distance,Workshop,Low,High,Medium,Yes,-0.51172,0.0,0.51539,0.0,No
+431,Carbon tax/distance,Workshop,Low,Low,Low,No,1.03834,0.0,0.51539,0.0,No
+432,Carbon tax/distance,Conference,Low,High,Medium,No,1.03834,0.0,0.51539,0.0,No
+433,Carbon tax/distance,Workshop,Medium,Low,Medium,No,1.03834,0.0,-1.94029,0.0,No
+434,Cap distance,Conference,High,Low,Low,Yes,-0.51172,0.0,0.51539,0.0,No
+435,Carbon tax/flight,Conference,Low,High,Medium,No,0.85948,0.0,0.51539,0.0,No
+436,Carbon tax/flight,Meetings,High,Low,High,Yes,0.85948,0.0,-1.94029,0.0,No
+437,Cap distance,Meetings,Low,High,High,No,-0.51172,0.0,0.51539,0.0,No
+438,Cap distance,Conference,Low,High,Low,Yes,-0.51172,0.0,0.51539,0.0,No
+439,As-is,Workshop,Medium,Low,High,Yes,-1.38611,0.0,-1.94029,0.0,No
+440,As-is,Workshop,Medium,Medium,Low,Yes,-1.38611,0.0,0.51539,0.0,No
+441,As-is,Conference,Low,High,High,No,-1.38611,0.0,0.51539,0.0,No
+442,Cap distance,Workshop,High,Low,Medium,Yes,-0.51172,0.0,-1.94029,0.0,No
+443,Carbon tax/distance,Conference,Low,Low,Medium,Yes,1.03834,0.0,0.51539,0.0,No
+444,As-is,Workshop,Low,Medium,Medium,Yes,-1.38611,0.0,0.51539,0.0,No
+445,Carbon tax/distance,Conference,Medium,Low,Low,No,1.03834,0.0,0.51539,0.0,No
+446,Cap distance,Meetings,Medium,Medium,High,No,-0.51172,0.0,0.51539,0.0,No
+447,As-is,Workshop,Medium,High,High,No,-1.38611,0.0,0.51539,0.0,No
+448,As-is,Conference,Medium,Medium,Medium,Yes,-1.38611,0.0,0.51539,0.0,No
+449,Carbon tax/flight,Meetings,Medium,High,Low,Yes,0.85948,0.0,0.51539,0.0,No
+450,Carbon tax/flight,Conference,Low,Low,Medium,Yes,0.85948,0.0,0.51539,0.0,No
+451,As-is,Conference,Low,Medium,Low,Yes,-1.38611,0.0,0.51539,0.0,No
+452,As-is,Workshop,High,Medium,High,No,-1.38611,0.0,-1.94029,0.0,No
+453,Cap distance,Workshop,Medium,Low,Low,No,-0.51172,0.0,-1.94029,0.0,No
+454,Carbon tax/flight,Meetings,High,Medium,Low,Yes,0.85948,0.0,0.51539,0.0,No
+455,Cap distance,Conference,Low,Low,High,No,-0.51172,0.0,-1.94029,0.0,No
+456,Carbon tax/flight,Meetings,Low,High,Medium,Yes,0.85948,0.0,0.51539,0.0,No
+457,Carbon tax/flight,Meetings,High,High,High,No,0.85948,0.0,0.51539,0.0,No
+458,Cap distance,Workshop,Low,Medium,Medium,No,-0.51172,0.0,0.51539,0.0,No
+459,Cap distance,Conference,Medium,Low,Low,No,-0.51172,0.0,0.51539,0.0,No
+460,Carbon tax/flight,Conference,Medium,High,High,Yes,0.85948,0.0,0.51539,0.0,No
+461,As-is,Workshop,Low,Low,Medium,No,-1.38611,0.0,-1.94029,0.0,No
+462,As-is,Conference,Low,High,Medium,Yes,-1.38611,0.0,0.51539,0.0,No
+463,As-is,Workshop,High,High,High,Yes,-1.38611,0.0,0.51539,0.0,No
+464,Cap distance,Meetings,Low,Low,High,Yes,-0.51172,0.0,0.51539,0.0,No
+465,Carbon tax/flight,Workshop,Medium,High,High,Yes,0.85948,0.0,0.51539,0.0,No
+466,As-is,Meetings,Medium,High,Medium,No,-1.38611,0.0,0.51539,0.0,No
+467,As-is,Meetings,High,Medium,Medium,No,-1.38611,0.0,0.51539,0.0,No
+468,Carbon tax/flight,Conference,High,Medium,High,Yes,0.85948,0.0,0.51539,0.0,No
+469,Carbon tax/flight,Workshop,High,Medium,High,Yes,0.85948,0.0,0.51539,0.0,No
+470,Carbon tax/distance,Conference,Low,Low,High,No,1.03834,0.0,-1.94029,0.0,No
+471,Cap distance,Meetings,High,High,Low,Yes,-0.51172,0.0,0.51539,0.0,No
+472,Carbon tax/distance,Meetings,Medium,High,High,No,1.03834,0.0,0.51539,0.0,No
+473,Cap distance,Conference,Medium,High,Medium,Yes,-0.51172,0.0,0.51539,0.0,No
+474,As-is,Meetings,Low,High,Medium,No,-1.38611,0.0,0.51539,0.0,No
+475,Carbon tax/distance,Meetings,High,Medium,High,No,1.03834,0.0,-1.94029,0.0,No
+476,As-is,Meetings,Low,High,Low,No,-1.38611,0.0,0.51539,0.0,No
+477,Cap distance,Conference,High,Medium,Medium,Yes,-0.51172,0.0,0.51539,0.0,No
+478,As-is,Conference,Medium,Low,Medium,No,-1.38611,0.0,-1.94029,0.0,No
+479,Carbon tax/flight,Workshop,Low,High,High,Yes,0.85948,0.0,0.51539,0.0,No
+480,Carbon tax/distance,Workshop,Low,Medium,Medium,No,1.03834,0.0,0.51539,0.0,No
+481,As-is,Conference,Low,Low,Low,No,-1.38611,0.0,0.51539,0.0,No
+482,Cap distance,Meetings,High,Medium,Low,No,-0.51172,0.0,0.51539,0.0,No
+483,Carbon tax/distance,Meetings,Low,Low,Medium,No,1.03834,0.0,-1.94029,0.0,No
+484,Carbon tax/distance,Workshop,Medium,Medium,High,Yes,1.03834,0.0,0.51539,0.0,No
+485,Carbon tax/distance,Meetings,High,High,High,Yes,1.03834,0.0,0.51539,0.0,No
+486,Carbon tax/distance,Conference,High,Low,Medium,No,1.03834,0.0,-1.94029,0.0,No
+487,Carbon tax/flight,Meetings,Low,Medium,Medium,No,0.85948,0.0,0.51539,0.0,No
+488,Cap distance,Conference,High,High,Low,No,-0.51172,0.0,0.51539,0.0,No
+489,Carbon tax/flight,Conference,Medium,Medium,High,No,0.85948,0.0,0.51539,0.0,No
+490,Cap distance,Conference,Low,Medium,High,Yes,-0.51172,0.0,0.51539,0.0,No
+491,Carbon tax/flight,Workshop,Low,Low,Medium,Yes,0.85948,0.0,0.51539,0.0,No
+492,As-is,Meetings,High,High,Medium,Yes,-1.38611,0.0,0.51539,0.0,No
+493,Cap distance,Workshop,High,Low,Low,Yes,-0.51172,0.0,0.51539,0.0,No
+494,Carbon tax/distance,Conference,Medium,Medium,Medium,No,1.03834,0.0,0.51539,0.0,No
+495,Cap distance,Meetings,Medium,High,Low,No,-0.51172,0.0,0.51539,0.0,No
+496,Carbon tax/distance,Conference,Low,Medium,Low,No,1.03834,0.0,0.51539,0.0,No
+497,As-is,Conference,High,High,Medium,No,-1.38611,0.0,0.51539,0.0,No
+498,Cap distance,Meetings,Medium,Low,Low,Yes,-0.51172,0.0,0.51539,0.0,No
+499,Cap distance,Meetings,High,Low,High,No,-0.51172,0.0,-1.94029,0.0,No
+500,Carbon tax/flight,Conference,Medium,Low,Medium,Yes,0.85948,0.0,0.51539,0.0,No
+501,Cap distance,Workshop,Low,Low,Low,No,-0.51172,0.0,0.51539,0.0,No
+502,Carbon tax/flight,Meetings,Medium,Medium,High,Yes,0.85948,0.0,0.51539,0.0,No
+503,Carbon tax/flight,Conference,Low,Low,Low,Yes,0.85948,0.0,0.51539,0.0,No
+504,Cap distance,Workshop,Medium,Low,Medium,No,-0.51172,0.0,-1.94029,0.0,No
+505,Carbon tax/distance,Meetings,Medium,Medium,Low,Yes,1.03834,0.0,0.51539,0.0,No
+506,Carbon tax/flight,Workshop,Medium,Low,Low,No,0.85948,0.0,-1.94029,0.0,No
+507,Cap distance,Meetings,High,Medium,Low,Yes,-0.51172,0.0,0.51539,0.0,No
+508,Cap distance,Conference,Medium,Medium,Low,No,-0.51172,0.0,0.51539,0.0,No
+509,As-is,Meetings,Low,Low,Medium,Yes,-1.38611,0.0,0.51539,0.0,No
+510,Carbon tax/flight,Workshop,Low,Medium,High,No,0.85948,0.0,0.51539,0.0,No
+511,Cap distance,Workshop,High,High,Low,No,-0.51172,0.0,0.51539,0.0,No
+512,Cap distance,Meetings,Medium,High,Low,Yes,-0.51172,0.0,0.51539,0.0,No
+513,As-is,Workshop,Low,Medium,Low,No,-1.38611,0.0,0.51539,0.0,No
+514,As-is,Workshop,Medium,Medium,Medium,No,-1.38611,0.0,0.51539,0.0,No
+515,Cap distance,Conference,Medium,High,High,Yes,-0.51172,0.0,0.51539,0.0,No
+516,As-is,Meetings,High,Low,Medium,No,-1.38611,0.0,-1.94029,0.0,No
+517,Cap distance,Workshop,Low,High,Low,Yes,-0.51172,0.0,0.51539,0.0,No
+518,Carbon tax/distance,Conference,High,High,Low,No,1.03834,0.0,0.51539,0.0,No
+519,Carbon tax/flight,Workshop,High,Low,High,Yes,0.85948,0.0,-1.94029,0.0,No
+520,Cap distance,Conference,High,Medium,High,Yes,-0.51172,0.0,0.51539,0.0,No
+521,Cap distance,Workshop,Medium,High,Medium,Yes,-0.51172,0.0,0.51539,0.0,No
+522,As-is,Workshop,Low,High,High,Yes,-1.38611,0.0,0.51539,0.0,No
+523,As-is,Conference,High,High,Medium,Yes,-1.38611,0.0,0.51539,0.0,No
+524,Carbon tax/distance,Workshop,Low,Low,Medium,No,1.03834,0.0,-1.94029,0.0,No
+525,Carbon tax/flight,Meetings,Medium,Medium,High,No,0.85948,0.0,0.51539,0.0,No
+526,As-is,Workshop,Medium,Medium,High,Yes,-1.38611,0.0,0.51539,0.0,No
+527,Carbon tax/flight,Meetings,High,High,Medium,Yes,0.85948,0.0,0.51539,0.0,No
+528,As-is,Meetings,Medium,Low,Low,No,-1.38611,0.0,-1.94029,0.0,No
+529,Carbon tax/distance,Workshop,Low,Medium,High,Yes,1.03834,0.0,0.51539,0.0,No
+530,As-is,Conference,Medium,Low,High,No,-1.38611,0.0,-1.94029,0.0,No
+531,As-is,Conference,Medium,Medium,High,No,-1.38611,0.0,0.51539,0.0,No
+532,Carbon tax/distance,Workshop,Low,Low,High,Yes,1.03834,0.0,0.51539,0.0,No
+533,Cap distance,Conference,Low,Low,Medium,Yes,-0.51172,0.0,0.51539,0.0,No
+534,Cap distance,Meetings,Medium,Low,High,No,-0.51172,0.0,-1.94029,0.0,No
+535,As-is,Meetings,Medium,Medium,Low,No,-1.38611,0.0,0.51539,0.0,No
+536,Carbon tax/flight,Workshop,High,High,High,No,0.85948,0.0,0.51539,0.0,No
+537,Cap distance,Workshop,High,Medium,Medium,Yes,-0.51172,0.0,0.51539,0.0,No
+538,Cap distance,Conference,Low,Medium,Medium,Yes,-0.51172,0.0,0.51539,0.0,No
+539,Carbon tax/flight,Workshop,High,Low,Medium,No,0.85948,0.0,-1.94029,0.0,No
+540,Carbon tax/distance,Conference,Medium,High,Medium,Yes,1.03834,0.0,0.51539,0.0,No
+541,Carbon tax/distance,Conference,High,Medium,Medium,Yes,1.03834,0.0,0.51539,0.0,No
+542,Carbon tax/flight,Conference,Low,Medium,Medium,Yes,0.85948,0.0,0.51539,0.0,No
+543,Carbon tax/flight,Workshop,Medium,Medium,Medium,No,0.85948,0.0,0.51539,0.0,No
+544,As-is,Conference,High,Medium,Low,Yes,-1.38611,0.0,0.51539,0.0,No
+545,As-is,Workshop,Low,High,Medium,No,-1.38611,0.0,0.51539,0.0,No
+546,Carbon tax/flight,Workshop,Low,Medium,Low,No,0.85948,0.0,0.51539,0.0,No
+547,As-is,Conference,Medium,High,Low,Yes,-1.38611,0.0,0.51539,0.0,No
+548,Cap distance,Meetings,High,Low,Low,Yes,-0.51172,0.0,0.51539,0.0,No
+549,Carbon tax/flight,Meetings,Low,High,High,No,0.85948,0.0,0.51539,0.0,No
+550,Carbon tax/distance,Meetings,Medium,High,Medium,Yes,1.03834,0.0,0.51539,0.0,No
+551,As-is,Workshop,Low,Low,Low,No,-1.38611,0.0,0.51539,0.0,No
+552,Carbon tax/distance,Meetings,Low,High,Medium,Yes,1.03834,0.0,0.51539,0.0,No
+553,Cap distance,Conference,High,Low,High,Yes,-0.51172,0.0,-1.94029,0.0,No
+554,As-is,Workshop,Medium,Low,Low,No,-1.38611,0.0,-1.94029,0.0,No
+555,Carbon tax/distance,Workshop,Low,High,High,No,1.03834,0.0,0.51539,0.0,No
+556,Carbon tax/distance,Workshop,Medium,High,High,No,1.03834,0.0,0.51539,0.0,No
+557,Carbon tax/distance,Meetings,Low,High,Low,Yes,1.03834,0.0,0.51539,0.0,No
+558,As-is,Workshop,Medium,Low,Medium,No,-1.38611,0.0,-1.94029,0.0,No
+559,Carbon tax/distance,Conference,Medium,Medium,Low,Yes,1.03834,0.0,0.51539,0.0,No
+560,Carbon tax/flight,Meetings,Medium,Low,High,No,0.85948,0.0,-1.94029,0.0,No
+561,Cap distance,Meetings,High,High,Medium,Yes,-0.51172,0.0,0.51539,0.0,No
+562,Carbon tax/distance,Meetings,High,High,Low,No,1.03834,0.0,0.51539,0.0,No
+563,Carbon tax/distance,Workshop,Medium,Low,High,Yes,1.03834,0.0,-1.94029,0.0,No
+564,Carbon tax/flight,Conference,Medium,Low,High,No,0.85948,0.0,-1.94029,0.0,No
+565,As-is,Meetings,Low,Medium,Low,No,-1.38611,0.0,0.51539,0.0,No
+566,As-is,Meetings,Medium,Medium,Medium,No,-1.38611,0.0,0.51539,0.0,No
+567,Cap distance,Conference,High,High,High,No,-0.51172,0.0,0.51539,0.0,No
+568,As-is,Meetings,High,Low,High,Yes,-1.38611,0.0,-1.94029,0.0,No
+569,Carbon tax/flight,Workshop,Medium,Medium,High,Yes,0.85948,0.0,0.51539,0.0,No
+570,Cap distance,Workshop,High,Medium,Low,Yes,-0.51172,0.0,0.51539,0.0,No
+571,Cap distance,Meetings,Low,Medium,High,No,-0.51172,0.0,0.51539,0.0,No
+572,Carbon tax/flight,Conference,Low,Medium,Low,Yes,0.85948,0.0,0.51539,0.0,No
+573,Cap distance,Conference,High,Low,Medium,No,-0.51172,0.0,-1.94029,0.0,No
+574,Carbon tax/distance,Workshop,High,Medium,High,No,1.03834,0.0,-1.94029,0.0,No
+575,Cap distance,Workshop,Low,Low,High,No,-0.51172,0.0,-1.94029,0.0,No
+576,Carbon tax/distance,Meetings,High,Medium,Medium,Yes,1.03834,0.0,0.51539,0.0,No
+577,As-is,Meetings,High,High,High,No,-1.38611,0.0,0.51539,0.0,No
+578,Carbon tax/distance,Conference,Low,High,Medium,Yes,1.03834,0.0,0.51539,0.0,No
+579,Carbon tax/flight,Conference,Medium,Medium,Medium,Yes,0.85948,0.0,0.51539,0.0,No
+580,Carbon tax/distance,Conference,High,Low,Low,Yes,1.03834,0.0,0.51539,0.0,No
+581,Carbon tax/flight,Meetings,High,Low,High,No,0.85948,0.0,-1.94029,0.0,No
+582,Carbon tax/distance,Workshop,Medium,Medium,High,No,1.03834,0.0,-1.94029,0.0,No
+583,As-is,Workshop,Medium,Medium,Low,No,-1.38611,0.0,0.51539,0.0,No
+584,Carbon tax/flight,Conference,Medium,High,Low,Yes,0.85948,0.0,0.51539,0.0,No
+585,Cap distance,Meetings,High,Medium,Medium,Yes,-0.51172,0.0,0.51539,0.0,No
+586,As-is,Workshop,Low,Medium,Medium,No,-1.38611,0.0,0.51539,0.0,No
+587,Cap distance,Meetings,Medium,High,Medium,Yes,-0.51172,0.0,0.51539,0.0,No
+588,As-is,Meetings,Low,High,High,No,-1.38611,0.0,0.51539,0.0,No
+589,Carbon tax/flight,Conference,Low,High,Medium,Yes,0.85948,0.0,0.51539,0.0,No
+590,Carbon tax/flight,Workshop,Low,Low,Low,No,0.85948,0.0,0.51539,0.0,No
+591,Carbon tax/flight,Conference,High,Medium,Low,Yes,0.85948,0.0,0.51539,0.0,No
+592,Carbon tax/flight,Workshop,Medium,Low,Medium,No,0.85948,0.0,-1.94029,0.0,No
+593,Cap distance,Meetings,Low,High,Low,Yes,-0.51172,0.0,0.51539,0.0,No
+594,Cap distance,Workshop,Medium,High,Low,Yes,-0.51172,0.0,0.51539,0.0,No
+595,Carbon tax/distance,Conference,Medium,Low,Low,Yes,1.03834,0.0,0.51539,0.0,No
+596,Carbon tax/distance,Conference,High,High,High,Yes,1.03834,0.0,0.51539,0.0,No
+597,Cap distance,Conference,Low,High,High,Yes,-0.51172,0.0,0.51539,0.0,No
+598,As-is,Conference,High,High,Low,Yes,-1.38611,0.0,0.51539,0.0,No
+599,As-is,Workshop,High,Medium,High,Yes,-1.38611,0.0,0.51539,0.0,No
+600,Carbon tax/flight,Conference,High,High,High,Yes,0.85948,0.0,0.51539,0.0,No
+601,Carbon tax/flight,Meetings,Low,Medium,High,No,0.85948,0.0,0.51539,0.0,No
+602,As-is,Workshop,Medium,High,High,Yes,-1.38611,0.0,0.51539,0.0,No
+603,Carbon tax/distance,Meetings,Low,Low,High,No,1.03834,0.0,-1.94029,0.0,No
+604,Carbon tax/distance,Conference,High,High,Medium,No,1.03834,0.0,0.51539,0.0,No
+605,As-is,Workshop,Low,Low,Medium,Yes,-1.38611,0.0,0.51539,0.0,No
+606,Carbon tax/distance,Meetings,Low,Medium,High,No,1.03834,0.0,0.51539,0.0,No
+607,Carbon tax/distance,Meetings,High,Medium,Low,Yes,1.03834,0.0,0.51539,0.0,No
+608,Carbon tax/flight,Workshop,Low,High,High,No,0.85948,0.0,0.51539,0.0,No
+609,Cap distance,Conference,High,Low,Low,No,-0.51172,0.0,-1.94029,0.0,No
+610,Carbon tax/flight,Conference,High,High,Medium,No,0.85948,0.0,0.51539,0.0,No
+611,Cap distance,Conference,High,Medium,Low,No,-0.51172,0.0,0.51539,0.0,No
+612,Cap distance,Workshop,Medium,Low,High,No,-0.51172,0.0,-1.94029,0.0,No
+613,Cap distance,Conference,Medium,High,Low,No,-0.51172,0.0,0.51539,0.0,No
+614,Carbon tax/flight,Meetings,Low,Low,High,Yes,0.85948,0.0,0.51539,0.0,No
+615,Cap distance,Conference,Low,High,Medium,No,-0.51172,0.0,0.51539,0.0,No
+616,As-is,Meetings,Medium,Medium,High,Yes,-1.38611,0.0,0.51539,0.0,No
+617,Cap distance,Meetings,High,High,Low,No,-0.51172,0.0,0.51539,0.0,No
+618,Carbon tax/distance,Conference,High,Low,Medium,Yes,1.03834,0.0,0.51539,0.0,No
+619,Carbon tax/distance,Meetings,Medium,High,Low,Yes,1.03834,0.0,0.51539,0.0,No
+620,Carbon tax/flight,Conference,High,Low,Low,Yes,0.85948,0.0,0.51539,0.0,No
+621,Carbon tax/distance,Conference,Medium,Medium,Medium,Yes,1.03834,0.0,0.51539,0.0,No
+622,Carbon tax/distance,Workshop,High,High,Low,Yes,1.03834,0.0,0.51539,0.0,No
+623,As-is,Workshop,High,Low,High,Yes,-1.38611,0.0,-1.94029,0.0,No
+624,Carbon tax/distance,Conference,High,Medium,Low,No,1.03834,0.0,0.51539,0.0,No
+625,As-is,Workshop,High,High,High,No,-1.38611,0.0,0.51539,0.0,No
+626,Carbon tax/flight,Meetings,High,High,Low,Yes,0.85948,0.0,0.51539,0.0,No
+627,Cap distance,Workshop,High,High,Medium,Yes,-0.51172,0.0,0.51539,0.0,No
+628,As-is,Meetings,Medium,Low,Medium,No,-1.38611,0.0,-1.94029,0.0,No
+629,As-is,Conference,Low,Medium,High,No,-1.38611,0.0,0.51539,0.0,No
+630,Carbon tax/distance,Conference,Medium,High,Low,No,1.03834,0.0,0.51539,0.0,No
+631,As-is,Meetings,Low,Low,Low,No,-1.38611,0.0,0.51539,0.0,No
+632,Carbon tax/flight,Workshop,Medium,Low,High,Yes,0.85948,0.0,-1.94029,0.0,No
+633,Carbon tax/flight,Workshop,High,Medium,High,No,0.85948,0.0,-1.94029,0.0,No
+634,Cap distance,Meetings,Low,Low,High,No,-0.51172,0.0,-1.94029,0.0,No
+635,Carbon tax/distance,Conference,Low,Medium,Low,Yes,1.03834,0.0,0.51539,0.0,No
+636,Cap distance,Conference,Medium,Low,Medium,Yes,-0.51172,0.0,0.51539,0.0,No
+637,Carbon tax/distance,Meetings,Medium,Low,High,No,1.03834,0.0,-1.94029,0.0,No
+638,Cap distance,Conference,Low,Low,Low,Yes,-0.51172,0.0,0.51539,0.0,No
+639,Cap distance,Conference,High,Medium,Medium,No,-0.51172,0.0,0.51539,0.0,No
+640,Carbon tax/distance,Workshop,High,Low,High,No,1.03834,0.0,-1.94029,0.0,No
+641,Carbon tax/flight,Conference,High,High,Low,No,0.85948,0.0,0.51539,0.0,No
+642,Cap distance,Workshop,Low,Medium,High,No,-0.51172,0.0,0.51539,0.0,No
+643,Cap distance,Conference,Low,High,Low,No,-0.51172,0.0,0.51539,0.0,No
+644,Cap distance,Conference,Medium,High,Medium,No,-0.51172,0.0,0.51539,0.0,No
+645,As-is,Workshop,High,Low,Medium,No,-1.38611,0.0,-1.94029,0.0,No
+646,Carbon tax/flight,Workshop,Medium,High,High,No,0.85948,0.0,0.51539,0.0,No
+647,As-is,Meetings,Low,Medium,High,Yes,-1.38611,0.0,0.51539,0.0,No

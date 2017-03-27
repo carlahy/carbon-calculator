@@ -1,13 +1,14 @@
 # carbon-calculator
 
-This should include all the technical details that would enable a student to continue your project next year, 
-and be able to amend or extend your code. For example, Where is the code?, What do you do to compile and install it?	
+This should include all the technical details that would enable a student to continue your project next year,
+and be able to amend or extend your code. For example, Where is the code?, What do you do to compile and install it?
 
 The Carbon Calculator tool is a web application for sustainable decision making under uncertainty.
 It implements the RADAR modelling language and decision analysis tool.
 
 ### Requirements:
 * [Node.js](https://nodejs.org/en/)
+* [MongoDB](https://www.mongodb.com/)
 * [RADAR](http://www0.cs.ucl.ac.uk/staff/S.Busari/RADAR/)
 
 ### How to run:
@@ -23,7 +24,7 @@ The front-end is written in [AngularJs](https://angularjs.org/).
 
 ### Back-end:
 
-The back-end is in Node.js with an [Express](http://expressjs.com/) server 
+The back-end is in Node.js with an [Express](http://expressjs.com/) server
 
 ### RADAR:
 

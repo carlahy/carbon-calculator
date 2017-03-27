@@ -6,6 +6,7 @@
 
   <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
   <link rel="stylesheet" type="text/css" href="css/style.css">
+
 </head>
 
 <body ng-app="carbonCalc" ng-controller="mainController">
@@ -21,20 +22,23 @@
 
     <!--- ========= Toggle Form/Code ========= -->
     <div class="btn-group" role="group">
-      <button type="button" class="btn btn-secondary" id="btnForm" ng-click="switchToForm()">Form View</button>
-      <button type="button" class="btn btn-secondary" id="btnCode" ng-click="switchToCode()">Code View</button>
+      <button type="button" class="btn btn-secondary" id="btn-form" ng-click="switchToForm()">Form View</button>
+      <button type="button" class="btn btn-secondary" id="btn-code" ng-click="switchToCode()">Code View</button>
     </div>
 
     <div class="row">
+
       <!--- ========= Form View ========= -->
       <div class="col-sm-8 formView">
         <form name="formView" autocomplete="off">
           <div class="row-align">
-            <input type="file" id="form_to_upload" accept=".json">
-            <input type="button" value="Upload Form" ng-click="uploadForm(event)">
-            <input type="text" name="" value="" ng-model="modelId">
-            <input type="button" value="Database" ng-click="uploadWithID()">
+            <input type="file" id="form-to-upload" accept=".json">
+            <button type="button"  class="btn btn-default" ng-click="uploadForm(event)">Upload File</button>
             <!-- <input type="button" value="" ng-click="codeToForm()"> -->
+          </div>
+          <div class="row-align">
+            <input type="text" id="id-to-upload" value="Model id" ng-model="modelId">
+            <button type="button" class="btn btn-default" ng-click="uploadWithId()">Upload With Id</button>
           </div>
           <!-- Model Name  -->
           <h3>Model Name</h3>
@@ -43,17 +47,19 @@
           <!-- Objectives -->
           <h3>Objectives</h3>
           <span class="glyphicon glyphicon-plus" id="btn-objectives"></span>
-          <div class="table-responsive" id="objectives">
-            <table class="table-bordered">
-              <thead>
-                <th>Mode</th>
-                <th>Name</th>
-                <th>Statistic</th>
-                <th>Expression</th>
-                <th></th>
+          <div class="table table-responsive" id="objectives">
+            <table class="table table-bordered">
+              <thead >
+                <tr id="center">
+                  <th>Mode</th>
+                  <th>Name</th>
+                  <th>Statistic</th>
+                  <th>Expression</th>
+                  <th></th>
+                </tr>
               </thead>
-              <tbody>
-                <tr  ng-repeat="o in objectives">
+              <tbody ui-sortable ng-model="objectives">
+                <tr ng-repeat="o in objectives">
                   <td><select ng-model="o.mode" ng-options="option for option in mode" required></select></td>
                   <td>
                     <input type="text" ng-model="o.name" required>
@@ -63,7 +69,9 @@
                     <input type="text" ng-model="o.expression" ng-blur="addExpression(o.expression)"
                       ng-keydown="$event.which === 13 && addExpression(o.expression)" required>
                   </td>
-                  <td><span class="glyphicon glyphicon-remove objective" ng-click="deleteObj(o)"></span></td>
+                  <td class="bold wrap">
+                    <span class="glyphicon glyphicon-remove objective" ng-click="deleteObj(o)"></span>
+                  </td>
                 </tr>
                 <!-- Add new objective -->
                 <tr>
@@ -87,7 +95,7 @@
           <h3>Variables</h3>
           <span class="glyphicon glyphicon-plus" id="btn-variables"></span>
           <div id="variables">
-            <table class="table-bordered">
+            <table class="table table-bordered">
               <thead ng-if="variables.length > 0">
                 <tr>
                   <th>Variable</th>
@@ -95,13 +103,13 @@
                   <th></th>
                 </tr>
               </thead>
-              <tbody>
+              <tbody ui-sortable ng-model="variables">
                 <tr ng-repeat="v in variables">
-                  <td>{{v.name}}</td>
+                  <td class="bold wrap">{{v.name}}</td>
                   <td ng-repeat="vo in varoptions">
                     <input type="radio" ng-model="v.type" value="{{vo}}" ng-change="assignVariable(v,vo)">
                   </td>
-                  <td>
+                  <td class="bold wrap">
                     <span class="glyphicon glyphicon-remove" ng-click="deleteVariable(v)"></span>
                   </td>
                 </tr>
@@ -113,21 +121,21 @@
           <h3>Parameters</h3>
           <span class="glyphicon glyphicon-plus" id="btn-parameters"></span>
           <div id="parameters">
-            <table class="table-bordered">
+            <table class="table table-bordered">
               <thead ng-if="parameters.length > 0">
                 <th>Parameter</th>
-                <th>Probability Distribution</th>
                 <th>Value</th>
+                <th></th>
               </thead>
-              <tbody>
+              <tbody ui-sortable ng-model="parameters">
                 <tr ng-repeat="p in parameters">
-                  <th>{{p.name}}</th>
+                  <td class="bold wrap">{{p.name}}</td>
                   <td>
                     <select class="distribution" ng-model="p.distribution" ng-options="option for option in distributions" required></select>
                     <input class="distribution"type="text" ng-model="p.value" ng-blur="saveParameter(p,p.value)"
                     ng-keydown="$event.which === 13 && saveParameter(p,p.value)" ng-required="p">
                   </td>
-                  <td>
+                  <td class="bold wrap">
                     <span class="glyphicon glyphicon-remove" ng-click="deleteParameter(p)"></span>
                   </td>
                 </tr>
@@ -139,15 +147,22 @@
           <h3>Equations</h3>
           <span class="glyphicon glyphicon-plus" id="btn-equations"></span>
           <div class="" id="equations">
-            <table class="table-bordered">
-              <tbody>
+            <table class="table table-bordered">
+              <thead ng-if="equations.length > 0">
+                <tr>
+                  <th>Equation</th>
+                  <th>Expression</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody ui-sortable ng-model="equations">
                 <tr ng-repeat="e in equations">
-                  <th>{{e.name}}</th>
+                  <td class="bold wrap">{{e.name}}</td>
                   <td>
                     <input type="text" ng-model="e.value" ng-blur="saveEquation(e,e.value)"
-                      ng-keydown="$event.which === 13 && saveEquation(e,e.value)" ng-require="e">
+                      ng-keydown="$event.which === 13 && saveEquation(e,e.value)" ng-required="e">
                   </td>
-                  <td>
+                  <td class="bold wrap">
                     <span class="glyphicon glyphicon-remove" ng-click="deleteEquation(e)"></span>
                   </td>
                 </tr>
@@ -163,7 +178,7 @@
             <!-- Variables unassigned to specific decision -->
             <div ng-if="unassignedDecisions.length > 0">
               <p>Assign to a decision:</p>
-              <table class="table-bordered">
+              <table class="table table-bordered">
                 <tbody>
                   <tr>
                     <th>Variable</th>
@@ -175,7 +190,7 @@
                   </tr>
 
                   <tr ng-repeat="v in unassignedDecisions">
-                    <th>{{v.name}}</th>
+                    <td class="bold wrap">{{v.name}}</td>
                     <td ng-repeat="d in decisions">
                       <input class="radio" type="radio" ng-model="v.decision" value="{{d.name}}" ng-change="assignDecision(v)">
                     </td>
@@ -185,22 +200,24 @@
               <br></br>
             </div>
 
-            <table class="table-bordered" ng-repeat-start="d in decisions">
+            <table class="table table-bordered" ng-repeat-start="d in decisions">
               <thead class="thead-default">
                 <tr class="thead-default">
                   <th>Decision: <input type="text" class="initial" placeholder="Decision name" ng-model="d.name" ng-change="reassignDecision(d,d.name)" required></td>
                   <th ng-repeat="v in d.variables">{{v.name}}</td>
-                  <th><span class="glyphicon glyphicon-remove" ng-click="deleteDecision(d)"></span></td>
+                  <td class="bold wrap">
+                    <span class="glyphicon glyphicon-remove" ng-click="deleteDecision(d)"></span>
+                  </td>
                 </tr>
               </thead>
-              <tbody>
+              <tbody ui-sortable ng-model="d.options">
                 <tr ng-repeat="o in d.options">
                   <td>{{o}}</td>
                   <td ng-repeat="v in d.variables">
-                    <input type="text" ng-model="v.options[o]" ng-blur="saveOptionExpression(v,o)"
+                    <input type="text" class="option" ng-model="v.options[o]" ng-blur="saveOptionExpression(v,o)"
                       ng-keydown="$event.which === 13 && saveOptionExpression(v,o)">
                   </td>
-                  <td>
+                  <td class="bold wrap">
                     <span class="glyphicon glyphicon-remove" ng-click="deleteOption(d,o)"></span>
                   </td>
                 </tr>
@@ -256,12 +273,12 @@
 
       <div class="col-sm-8 codeView">
         <form class="" name="codeView">
-          <h3>Upload Model</h3>
           <div class="row-align">
             <input type="file" id="fileinput" name="model_upload" accept=".rdr">
-            <input type="button" value="Upload" ng-click="uploadCode(event)">
-            <input type="button" value="Upload Form" ng-click="formToCode()">
+            <button type="button" class="btn btn-default" ng-click="uploadCode(event)">Upload</button>
+            <button type="button" class="btn btn-default" ng-click="formToCode()">Upload Form</button>
           </div>
+
           <div id="editor" ng-model="uploadedModel"></div>
         </form>
 
@@ -310,7 +327,7 @@ Cost = decision("Architecture choice"){
     <div class="row">
       <div class="col-sm-6">
         <!-- TODO: remove?? pareto?? -->
-        <div id="model_graph"></div>
+        <!-- <div id="model_graph"></div> -->
 
         <!-- Decision options to filter -->
         <div class="model_filter">
@@ -330,9 +347,18 @@ Cost = decision("Architecture choice"){
 
         <br></br>
         <!-- Matrix results -->
-        <div id="model_result" class="model_result"></div>
-        <br>
-        <br>
+        <span class="glyphicon glyphicon-plus" id="btn-result"></span>
+        <div id="model-result" class="model-result">
+
+        </div>
+        <br></br>
+
+        <!-- Compare solutions -->
+        <div >
+          <table id="model-compare">
+
+          </table>
+        </div>
       </div>
 
     </div>
@@ -347,9 +373,10 @@ Cost = decision("Architecture choice"){
     </div>
   </footer> -->
 
-
-  <script type="text/javascript" src="scripts/libs/angular.min.js"></script>
   <script type="text/javascript" src="scripts/libs/jquery-3.1.1.min.js"></script>
+  <script type="text/javascript" src="scripts/libs/jquery-ui.min.js"></script>
+  <script type="text/javascript" src="scripts/libs/angular.min.js"></script>
+  <script type="text/javascript" src="scripts/libs/sortable.js"></script>
   <script type="text/javascript" src="scripts/libs/d3.min.js"></script>
   <script type="text/javascript" src="scripts/libs/bootstrap.min.js"></script>
   <script type="text/javascript" src="scripts/app.js"></script>

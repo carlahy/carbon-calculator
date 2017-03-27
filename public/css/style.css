@@ -2,8 +2,25 @@ h1 {
 	text-align: center;
 }
 
+ #id-to-upload,#form-to-upload {
+	width: 30%;
+}
+
 th {
 	text-align: center;
+}
+
+.thead-inverse{
+	text-align: left;
+}
+
+tr {
+	cursor: move;
+}
+td.bold.wrap {
+	font-weight: bold;
+	width: 1%;
+	white-space: nowrap;
 }
 
 tr input[type=text] {
@@ -18,12 +35,16 @@ input[type=text].ng-invalid {
 	border: 1px #ff6666 solid;
 }
 
+input[type=text].ng-empty.option {
+	border: 1px #f49e42 solid;
+}
+
 input[type=radio] {
 	margin-left: 45%;
 }
 
 select.distribution {
-	width: 35%;
+	width: 30%;
 }
 
 input[type=text].distribution {
@@ -48,6 +69,7 @@ label input[type='checkbox'] {
 #editor {
 	min-height: 200px;
 	border: 1px solid lightgrey;
+	margin-top: 5%;
 }
 
 .btn-group {
@@ -59,7 +81,7 @@ label input[type='checkbox'] {
 }
 
 .row-align {
-	padding: 0 0 5% 0;
+	padding: 0 0 1% 0;
 }
 
 .inlinediv {
@@ -80,14 +102,14 @@ label input[type='checkbox'] {
 }
 
 table {
-	min-width:75%;
+	min-width:85%;
 }
 
 select {
 	max-width: 100px;
 }
 
-.model_result th {
+#modelResult th {
 	text-align: left;
 
 }

@@ -1,0 +1,31 @@
+Optimisation           Analysis         
+---------------------- 
+                
+Objective:             MaxENBSales
+     
+Objective:             MinENBEmissions
+ 
+SolutionSpace:         3
+               
+Design Sapce:          3
+               
+Shortlisted:           3
+               
+Nbr. Variables:        18
+              
+Nbr. Parameters:       4
+               
+Nbr. Decisions:        1
+               
+Total Runtime(s):      0
+               
+ID Policy type ENBSales ENBEmissions Optimal
+ 
+1  none        0        146          Yes
+     
+2  rewarding   250      153          Yes
+     
+3  penalising  -100     143          Yes
+     
+
+

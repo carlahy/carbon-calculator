@@ -1,4 +1,4 @@
-var app = angular.module('carbonCalc', []);
+var app = angular.module('carbonCalc', ['ui.sortable']);
 
 // Encompass on click, on blur, on enter into single directive
 // Takes function to run
@@ -19,7 +19,7 @@ app.controller('mainController', function($scope,$http) {
   $scope.viewType = 'formView' ;
 
   // Keep track of variable names used to avoid duplicates
-  var varnames = [];
+  $scope.varnames = [];
 
   // ngModels for input fields
   $scope.input = {
@@ -34,8 +34,8 @@ app.controller('mainController', function($scope,$http) {
 
   $scope.addModelName = function(name) {
     if(name) {
-      if(!includes(varnames,name)) {
-          varnames.push(name);
+      if(!includes($scope.varnames,name)) {
+          $scope.varnames.push(name);
       } else {
         // TODO: Warning, duplicate
       }
@@ -53,14 +53,14 @@ app.controller('mainController', function($scope,$http) {
   $scope.addObj = function() {
     var o = $scope.input.objective;
     if(o.name) {
-      if(!includes(varnames,name)) {
+      if(!includes($scope.varnames,name)) {
         $scope.objectives.push({
           mode: o.mode,
           name: o.name,
           statistic: o.statistic,
           expression: o.expression
         });
-        varnames.push(o.name);
+        $scope.varnames.push(o.name);
         if(o.expression) {
           var vars = getVars(o.expression);
           addNewVariables(vars);
@@ -77,8 +77,8 @@ app.controller('mainController', function($scope,$http) {
     var index = $scope.objectives.indexOf(o);
     $scope.objectives.splice(index,1);
     // Remove from variables
-    index = varnames.indexOf(o.name);
-    varnames.splice(index,1);
+    index = $scope.varnames.indexOf(o.name);
+    $scope.varnames.splice(index,1);
     return;
   };
 
@@ -146,8 +146,8 @@ app.controller('mainController', function($scope,$http) {
     // Remove variable from variable list
     var index = $scope.variables.indexOf(v);
     $scope.variables.splice(index,1);
-    index = varnames.indexOf(v.name);
-    varnames.splice(index,1);
+    index = $scope.varnames.indexOf(v.name);
+    $scope.varnames.splice(index,1);
 
     // If assigned to a type, then remove from type list
     if(v.type == 'Parameter') {
@@ -173,9 +173,10 @@ app.controller('mainController', function($scope,$http) {
   function addNewVariables(vars){
     for(v in vars) {
       v = vars[v];
-      if(!includes(varnames,v)) {
+      console.log('varnames ',$scope.varnames);
+      if(!includes($scope.varnames,v)) {
         // Add variable to list
-        varnames.push(v);
+        $scope.varnames.push(v);
         $scope.variables.push({
           name:v
         });
@@ -199,8 +200,8 @@ app.controller('mainController', function($scope,$http) {
   $scope.deleteParameter = function(p) {
     var index = $scope.parameters.indexOf(p);
     $scope.parameters.splice(index,1);
-    index = varnames.indexOf(p.name);
-    varnames.splice(index,1);
+    index = $scope.varnames.indexOf(p.name);
+    $scope.varnames.splice(index,1);
   };
 
 ///////////// Equations /////////////
@@ -218,8 +219,8 @@ app.controller('mainController', function($scope,$http) {
   $scope.deleteEquation = function(e) {
     var index = $scope.equations.indexOf(e);
     $scope.equations.splice(index,1);
-    index = varnames.indexOf(e.name);
-    varnames.splice(index,1);
+    index = $scope.varnames.indexOf(e.name);
+    $scope.varnames.splice(index,1);
   };
 
   ///////////// Decisions /////////////
@@ -314,7 +315,7 @@ app.controller('mainController', function($scope,$http) {
   // Database ID
   // $scope.modelId = null;
 
-  $scope.uploadWithID = function() {
+  $scope.uploadWithId = function() {
     if($scope.modelId) {
       $http({
         method: 'GET',
@@ -323,7 +324,6 @@ app.controller('mainController', function($scope,$http) {
       }).then(function successCallback(res){
         console.log('Success getting model with id');
         content = JSON.parse(res.data.model);
-
         for(s in saveScope) {
           $scope[saveScope[s]] = content[saveScope[s]];
         }
@@ -388,6 +388,11 @@ app.controller('mainController', function($scope,$http) {
     return;
   }
 
+  $scope.switchToForm = function () {
+    $scope.viewType = 'formView';
+    return;
+  }
+
   $scope.formToCode = function() {
     var content = formatModel();
     var editor = ace.edit('editor');
@@ -415,16 +420,17 @@ app.controller('mainController', function($scope,$http) {
   ///////////////// Form Upload and Restore /////////////////
 
   // All of the $scope variables needed to save and restore a form view
-  var saveScope = ['modelName', 'objectives', 'variables', 'parameters', 'equations', 'decisions'];
+  var saveScope = ['varnames', 'modelName', 'objectives', 'variables', 'parameters', 'equations', 'decisions'];
 
   $scope.uploadForm = function(event) {
-    var input = document.getElementById('form_to_upload');
+    var input = document.getElementById('form-to-upload');
     var file = input.files[0];
     var reader = new FileReader();
 
     reader.onload = function(event) {
       var content = event.target.result;
       content = JSON.parse(content);
+
       for(s in saveScope) {
         $scope[saveScope[s]] = content[saveScope[s]];
       }
@@ -448,6 +454,7 @@ app.controller('mainController', function($scope,$http) {
       content = JSON.stringify(content);
       type = 'application/json';
       ext = '.json';
+      console.log(content);
 
     } else { // Code View
       content = ace.edit('editor').getValue();
@@ -472,11 +479,11 @@ app.controller('mainController', function($scope,$http) {
   // Save state of $scope variables
   function getState(variables) {
     content = {};
-
     for(v in variables) {
       var name = saveScope[v]
       content[name] = $scope[name];
     }
+    console.log('content ',content);
     return content;
   }
 
@@ -545,17 +552,18 @@ app.controller('mainController', function($scope,$http) {
         // $scope.filterable.push.apply($scope.filterable, output.objectives);
         var csv = d3.csvParse(output.body);
         $scope.csvcolumns = csv.columns;
-        $('#model_result').empty().append(formatTable(csv));
+        // $('#model-result').empty().append(formatTable(csv));
+        formatTable(csv);
 
       } else if(output.type == 'error'){
         $scope.filterable = [];
-        $('#model_result').empty().append(formatError(output.body));
+        $('#model-result').empty().append(formatError(output.body));
 
       } else if(output.type == 'success'){
         $scope.submitSuccess = true;
       }
     }, function errorCallback(res){
-      $('#model_result').empty().append(formatError('Error in model response'));
+      $('#model-result').empty().append(formatError('Error in model response'));
     });
     $scope.submitSuccess = false;
     return content;
@@ -622,7 +630,7 @@ app.controller('mainController', function($scope,$http) {
     data.columns = $scope.csvcolumns;
 
     // Update table in view
-    $('#model_result').empty().append(formatTable(data));
+    $('#model-result').empty().append(formatTable(data));
 
     // TODO: Update graph in view
     // formatGraph(data);

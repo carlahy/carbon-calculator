@@ -42,23 +42,28 @@ app.set('port', (process.env.PORT || 5000))
     model.id = model._id;
     result.id = model.id;
     model.save(function (err) {
+      if(err) return res.status(404).send(err);
       result.model = model;
       res.send(result)
     });
   })
 
   .get('/models', function(req,res){
-    var result = {};
     Model.findById(req.query.id, function(err, model) {
-      result.model = model.body;
-      res.send(result);
+      if(err) return res.status(404).send(err);
+      res.send(model.body);
     });
   })
 
   .put('/models', function(req,res){
     Model.findById(req.body.id, function(err, model) {
+      if(err) return res.status(404).send(err);
       model.body = req.body.model;
       model.save( function ( err, model ){
+        if(err) {
+          res.send(err);
+          return;
+        }
         res.send(model.id);
       });
     });
@@ -72,17 +77,17 @@ app.set('port', (process.env.PORT || 5000))
     // Save model to file
     var modelName = modelData.modelName.split(' ').join('');
     var fileName = modelName + '.rdr';
-    var filePath = __dirname+'/models/'+fileName;
+    var filePath = __dirname+'/radar-models/'+fileName;
 
     fs.writeFileSync(filePath, model);
 
     // Always parse model
-    var radar = spawnSync('java', ['-classpath', cp, 'radar.userinterface.RADAR_CMD', '--model', filePath, '--output', outputFolder, '--parse','--debug','--pareto']);
+    var radar = spawnSync('java', ['-classpath', cp, 'radar.userinterface.RADAR_CMD', '--model', filePath, '--output', outputFolder, '--parse','--debug']);
 
     if(radar.stderr != '') {
       result.body = radar.stderr.toString().trim();
       result.type = 'error';
-      console.log('Parsing error >> ', result.body);
+      console.log('Error during parse ', result.body);
       res.send(result);
       return;
     } else {
@@ -99,10 +104,10 @@ app.set('port', (process.env.PORT || 5000))
     if (modelData.command == 'solve'){
       // Start RADAR child process
       var radar = spawnSync('java', ['-classpath', cp, 'radar.userinterface.RADAR_CMD', '--model', filePath, '--output', outputFolder, '--solve', '--debug']);
-      console.log(radar);
+
       // RADAR unsuccessfully solved model, send error
       if(radar.stderr != '') {
-        console.log('Solving error');
+        console.log('Error during solve');
         result.body = radar.stderr.toString().trim();
         result.type = 'error';
         res.send(result);
@@ -112,7 +117,7 @@ app.set('port', (process.env.PORT || 5000))
       // RADAR successfully solved model
       else {
         // Read RADAR csv output
-        console.log('Solving success');
+        console.log('Successfully solved model');
         try {
           var resfilepath = outputFolder+'/'+modelName+'/ICSE/AnalysisResult/10000/'+modelName+'.csv';
           var pyoptions = {

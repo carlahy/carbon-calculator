@@ -1,6 +1,6 @@
 $(document).ready(function() {
 
-  // Init Ace editor
+  // Initialise Ace editor
   var editor = ace.edit("editor");
   editor.setTheme("ace/theme/tomorrow");
   editor.getSession().setMode("ace/mode/java");
@@ -14,12 +14,12 @@ $(document).ready(function() {
   // Toggle build and upload views
   $('.codeView').hide();
 
-  $('#btnForm').click(function() {
+  $('#btn-form').click(function() {
     $('.codeView').hide();
     $('.formView').show();
   });
 
-  $('#btnCode').click(function (){
+  $('#btn-code').click(function (){
     $('.formView').hide();
     $('.codeView').show();
   });
@@ -46,13 +46,38 @@ $(document).ready(function() {
     $("#variables").toggle(200);
   });
 
+  $("#btn-variables").click(function(){
+    $("#variables").toggle(200);
+  });
+
+  $("#btn-result").click(function(){
+    $("#table-result table tr:gt(5)").hide();
+  });
+
+  $('.row-filter').click(function() {
+
+  })
+
+  // Filter result table rows
+  $('#model-result tr').filter(':has(:checkbox:checked)').each(function() {
+      console.log('hello');
+        // this = tr
+        $tr = $(this);
+        console.log($tr);
+        //get row values
+        $('#model-compare').append(this);
+    });
+
+  $('input:checkbox').change(function(){
+    console.log('world');
+  });
+
 });
 
 /*
 The following are helper functions for the angular
-controller located in app.js
+controller in app.js
 */
-
 
 function includes(arr,obj) {
     return (arr.indexOf(obj) != -1);
@@ -137,23 +162,42 @@ function formatGraph(csv) {
 // Format CSV file to HTML table
 function formatTable(csv) {
 
-  var table = '<table class="table">';
-  // Column names
-  table += '<thead class="thead-inverse"><tr>';
-  for(c in csv.columns) {
-    table += '<th>'+csv.columns[c]+'</th>';
-  }
-  table += '</tr></thead><tbody>';
+  $('#model-result').empty();
 
-  csv = csv.splice(0,csv.length)
-  for(r in csv){
-    table += '<tr>';
-    for(c in csv[r]) {
-      table += '<td>'+csv[r][c]+'</td>';
-    }
-    table += '</tr>';
-  }
-  table += '</tbody></table>';
+  var table = d3.select('#model-result').append('table').attr('class','table').attr('id','table-result');
+  var thead = table.append('thead').attr('class','thead-inverse');
+  var tbody = table.append('tbody');
+
+  var columns = csv.columns;
+
+  thead.append('tr').selectAll('th')
+    .data(columns)
+    .enter()
+      .append('th')
+      .text(function (d) { return d });
+
+  csv = csv.splice(0,csv.length);
+
+  var rows = tbody.selectAll('tr')
+    .data(csv)
+    .enter()
+      .append('tr');
+
+  var cells = rows.selectAll('td')
+    .data(function(row){
+      return columns.map(function(column) {
+        return {column:column, value:row[column]}
+      })
+    })
+    .enter()
+      .append('td')
+      .text(function (d) { return d.value});
+
+  $('#model-result tr').each(function() {
+    $(this).children('td').first()
+      .prepend('<input type="checkbox" class="result-compare"/>');
+  });
+
   return table;
 }
 

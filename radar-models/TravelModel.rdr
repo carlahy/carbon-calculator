@@ -1,0 +1,101 @@
+Model TravelModel;
+
+//Objectives
+
+Objective Max CarbonReduction = EV(NBEmissions);
+Objective Min LossFromReduction = Pr(NBEmissions < 0.1);
+
+Objective Max Reputation = EV(NBReputation);
+Objective Min LossFromReputation = Pr(NBReputation < 0.05);
+
+NBEmissions = CurrentEmissions - NewEmissions;
+NBReputation = ValueOfTravel - ValueNoTravel;
+
+//Parameters
+
+CapNbrFlights = 5;
+CapKilometers = 5000;
+
+NbrParticipants = 12;
+
+DistanceSH = triangular(500,700,4000);	
+DistanceLH = triangular(4000,5000,10000);
+
+CO2SH = 0.232605;
+CO2LH = 0.19709 ;
+
+CurrentNbrSH = 25;
+CurrentNbrLH = 4;
+CurrentNbrFlights = deterministic(29);
+
+//Modelling Distance
+
+CurrentDistSH	  = DistanceSH * CurrentNbrSH;
+CurrentDistLH 	  = DistanceLH * CurrentNbrLH;
+
+NewDistanceSH = DistanceSH * NbrSH;
+NewDistanceLH = DistanceH * NbrLH;
+
+//Modelling Emissions
+
+CurrentEmissions = CurrentDistSH * CO2SH + CurrentDistLH * CO2LH;
+
+NewEmissionsSH= NewDistanceSH * CO2SH;
+NewEmissionsLH= NewDistanceLH * CO2LH;
+NewEmissions	   = NewEmissionsSH + NewEmissionsLH;
+
+//Decisions
+
+NewNbrFlights = decision("Policy type") {
+	"As-is": 		normalCI(0.9,1.1);
+	"Cap distance": 	normalCI(0.75, 1);
+	"Carbon tax/flight": 	normalCI(0.6, 0.9);
+	"Carbon tax/distance":	normalCI(0.5, 0.8); 
+}
+
+ProportionSH = CurrentNbrSH / CurrentNbrFlights;
+ProportionLH = 1 - PropSH;
+
+NbrSH = NewNbrFlights * (ProportionSH * ImpactSH);
+NbrLH = NewNbrFlights - NbrSH;
+
+ImpactSH = decision("Policy type") {
+	"As-is": 		normalCI(0.9,1.1);
+	"Cap distance": 	normalCI(0.95,1.05);
+	"Cap number flights": 	normalCI(0.8,1);
+	"Carbon tax/flight": 	normalCI(0.8,1);
+	"Carbon tax/distance":normalCI(0.9,1.1);
+}
+
+ValueOfTravel = ValueEventSize + ValueEventFrequency + ValueEventRelevance + ValuePreviousAttendance + ValueIsPresenting;
+
+ValueNoTravel = normalCI(0,1);
+
+ValueEventSize = decision("Event details") {
+	"Conference": normalCI(0.6,0.9);
+	"Meetings": normalCI(0.5,0.8);
+	"Workshop": normalCI(0.4,0.7);
+}
+
+ValueEventFrequency = decision("Event frequency") {
+	"Low": normalCI(0.7,0.9);
+	"Medium": normalCI(0.5,0.7);
+	"High": normalCI(0.4,0.7);
+}
+
+ValueEventRelevance = decision("Event relevance") {
+	"High": normalCI(0.7,0.9);
+	"Medium": normalCI(0.6,0.7);
+	"Low": normalCI(0.2,0.4);
+}
+
+ValuePreviousAttendance = decision("Previous attendance") {
+	"Low": normalCI(0.6,0.9);
+	"Medium": normalCI(0.5,0.7);
+	"High": normalCI(0.4,0.6);
+}
+
+ValueIsPresenting = decision("Is presenting") {
+	"Yes": normalCI(0.8,1);
+	"No": normal(0.5,0.8);
+}
