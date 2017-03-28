@@ -5,7 +5,6 @@ const spawnSync  = require('child_process').spawnSync;
 const exec       = require('child_process').exec;
 const fs         = require('fs');
 const PythonShell= require('python-shell')
-const assert     = require('assert');
 const mongoose   = require('mongoose');
 
 /////////// Database ///////////
@@ -14,8 +13,8 @@ const mongoose   = require('mongoose');
 mongoose.connect('mongodb://localhost/carbondb');
 // Create a schema
 var Schema = new mongoose.Schema({
-  id: String,
-  body: JSON
+  content:  String,
+  type: String
   // updated_at: { type: Date, default: Date.now },
 });
 
@@ -27,9 +26,11 @@ var cp = "/Library/Java/JavaVirtualMachines/jdk1.8.0_65.jdk/Contents/Home/jre/li
 var outputFolder = __dirname + '/radar-output';
 
 app.set('port', (process.env.PORT || 5000))
-  // .set('view engine', 'ejs')
+
   .use(bodyParser.json())
+
   .use(bodyParser.urlencoded({ extended: false }))
+
   .use(express.static(__dirname + '/public'))
 
   .get('/', function(req, res) {
@@ -39,12 +40,18 @@ app.set('port', (process.env.PORT || 5000))
   .get('/models', function(req,res){
     Model.findById(req.query.id, function(err, model) {
       if(err) return res.status(404).send(err);
-      res.send({model:model.body});
+      res.send({
+        model: model.content,
+        type: model.type
+      });
     });
   })
 
   .post('/models', function (req, res) {
-    var model = new Model({body:req.body.model});
+    var model = new Model({
+      content: req.body.content,
+      type: req.body.type
+    });
     model.save(function (err) {
       if(err) return res.status(404).send(err);
       res.send({
@@ -57,101 +64,112 @@ app.set('port', (process.env.PORT || 5000))
   .put('/models', function(req,res){
     Model.findById(req.body.id, function(err, model) {
       if(err) return res.status(404).send(err);
-      model.body = req.body.model;
+      console.log(model);
+      model.content = req.body.content;
+      model.type = req.body.type;
       model.save( function ( err, model ){
         if(err) return res.status(400).send(err);
-        res.send({id:model._id});
+        res.send({
+          id:model._id,
+          type:model.type
+        });
       });
     });
   })
 
-  .post('/submit', function(req,res){
-    var modelData = req.body;
-    var model = modelData.modelBody;
-    var result = {};
+  .post('/parse', function(req,res){
 
-    // Save model to file
-    var modelName = modelData.modelName.split(' ').join('');
+    var modelName = req.body.modelName.split(' ').join('');
     var fileName = modelName + '.rdr';
     var filePath = __dirname+'/radar-models/'+fileName;
 
-    fs.writeFileSync(filePath, model);
+    fs.writeFileSync(filePath, req.body.modelContent);
 
-    // Always parse model
     var radar = spawnSync('java', ['-classpath', cp, 'radar.userinterface.RADAR_CMD', '--model', filePath, '--output', outputFolder, '--parse','--debug']);
 
     if(radar.stderr != '') {
-      result.body = radar.stderr.toString().trim();
-      result.type = 'error';
-      console.log('Error during parse ', result.body);
-      res.send(result);
-      return;
+      return res.send({
+        message: radar.stderr.toString().trim(),
+        success: false
+      });
     } else {
-      result.body = 'Model was parsed successfully';
-      result.type = 'success';
       console.log('Parsed successfully');
-      if(modelData.command == 'parse') {
-        res.send(result);
-        return;
-      }
+      return res.send({
+        message: 'Model was parsed successfully',
+        success: true
+      });
+    }
+  })
+
+  .post('/solve', function(req,res){
+
+    // Save model to file
+    var modelName = req.body.modelName.split(' ').join('');
+    var fileName = modelName + '.rdr';
+    var filePath = __dirname+'/radar-models/'+fileName;
+
+    fs.writeFileSync(filePath, req.body.modelContent);
+
+    // Start RADAR child process
+    var radar = spawnSync('java', ['-classpath', cp, 'radar.userinterface.RADAR_CMD', '--model', filePath, '--output', outputFolder, '--solve', '--debug']);
+
+    // RADAR unsuccessfully solved model, send error
+    if(radar.stderr != '') {
+      console.log('Error during solve');
+      return res.send({
+        message:radar.stderr.toString().trim(),
+        success: false
+      });
     }
 
-    // If command is solve
-    if (modelData.command == 'solve'){
-      // Start RADAR child process
-      var radar = spawnSync('java', ['-classpath', cp, 'radar.userinterface.RADAR_CMD', '--model', filePath, '--output', outputFolder, '--solve', '--debug']);
+    // RADAR successfully solved model
+    else {
+      // Read RADAR csv output
+      console.log('Successfully solved model');
+      try {
+        var resfilepath = outputFolder+'/'+modelName+'/ICSE/AnalysisResult/10000/'+modelName+'.csv';
 
-      // RADAR unsuccessfully solved model, send error
-      if(radar.stderr != '') {
-        console.log('Error during solve');
-        result.body = radar.stderr.toString().trim();
-        result.type = 'error';
-        res.send(result);
-        return;
-      }
-
-      // RADAR successfully solved model
-      else {
-        // Read RADAR csv output
-        console.log('Successfully solved model');
-        try {
-          var resfilepath = outputFolder+'/'+modelName+'/ICSE/AnalysisResult/10000/'+modelName+'.csv';
-          var pyoptions = {
-              mode: 'json',
-              args: [resfilepath]
-          }
-
-          // Process RADAR output in python
-          PythonShell.run('processing.py', pyoptions, function(err, pyres){
-            if(err){
-              result.body = err.toString().trim();
-              result.type = 'error';
-              console.log('Pyshell error >> ',err);
-              res.send(result);
-            } else {
-              result.body = fs.readFileSync(resfilepath, 'utf8');
-              result.decisions = pyres[0];
-              result.objectives = pyres[1];
-              result.type = 'csvresult';
-              res.send(result);
-            }
-            return;
-          });
-
-          console.log('Successfully ran python shell');
-          return;
-
-        } catch (err) {
-          // Error reading radar output
-          console.log('Unsuccessfully ran python shell');
-          result.body = err;
-          result.type = 'error';
-          res.send(result);
-          return;
+        var pyoptions = {
+            mode: 'json',
+            args: [resfilepath]
         }
+
+        // Process RADAR output in python
+        PythonShell.run('processing.py', pyoptions, function(err, pyres){
+          if(err){
+            console.log('Pyshell error >> ',err);
+            return res.send({
+              message:err.toString().trim(),
+              success: false
+            });
+          } else {
+            var graphPath = outputFolder+'/'+modelName+'/ICSE/AnalysisResult/10000/graph/'+modelName;
+
+            return res.send({
+              matrix: fs.readFileSync(resfilepath, 'utf8'),
+              dgraph: fs.readFileSync(graphPath+'dgraph.dot','utf8'),
+              vgraph: fs.readFileSync(graphPath+'vgraph.dot','utf8'),
+              decisions: pyres[0],
+              // objectives: pyres[1],
+              success: true
+            });
+          }
+        });
+
+        console.log('Successfully ran python shell');
+        return;
+
+      } catch (err) {
+        // Error reading radar output
+        console.log('Unsuccessfully ran python shell');
+        return res.send({
+          message: err,
+          success: false
+        });
       }
     }
-    res.send(result);
+
+    fs.close();
     return;
   });
 

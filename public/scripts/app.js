@@ -1,6 +1,6 @@
 var app = angular.module('carbonCalc', ['ui.sortable']);
 
-app.controller('mainController', function(dbService,$scope,$http) {
+app.controller('mainController', function(Service,$scope,$http) {
 
   $scope.results = {
     template:'./views/results.html'
@@ -298,14 +298,14 @@ app.controller('mainController', function(dbService,$scope,$http) {
   ///////////// Database /////////////
 
   // Database ID
-  $scope.modelId = dbService.id;
+  $scope.modelId = Service.id;
 
   $scope.uploadWithId = function() {
     if($scope.modelId) {
-      dbService.getModel($scope.modelId).then(function(){
-        if(dbService.success) {
-          var content = dbService.model;
-          if (dbService.type == 'form') {
+      Service.getModel($scope.modelId).then(function(){
+        if(Service.success) {
+          var content = Service.model;
+          if (Service.type == 'form') {
             content = JSON.parse(content);
             for(s in saveScope) {
               $scope[saveScope[s]] = content[saveScope[s]];
@@ -338,9 +338,9 @@ app.controller('mainController', function(dbService,$scope,$http) {
     if($scope.modelId) {
       // Model already exists in database, update it
       params.id = $scope.modelId;
-      dbService.updateModel(params).then(function(){
-        $scope.modelId = dbService.id;
-        if(!dbService.success){
+      Service.updateModel(params).then(function(){
+        $scope.modelId = Service.id;
+        if(!Service.success){
           displayError("Could update model");
         } else {
           $scope.idSuccess = true;
@@ -349,9 +349,9 @@ app.controller('mainController', function(dbService,$scope,$http) {
     } else {
       // Create new entry in database
 
-      dbService.createModel(params).then(function(){
-        $scope.modelId = dbService.id;
-        if(!dbService.success){
+      Service.createModel(params).then(function(){
+        $scope.modelId = Service.id;
+        if(!Service.success){
           displayError("Could not retrieve id");
         } else {
           $scope.idSuccess = true;
@@ -478,28 +478,75 @@ app.controller('mainController', function(dbService,$scope,$http) {
 
   $scope.filterable = [];
   $scope.filterSelect = [];
-  $scope.csvresult = '';
+  $scope.matrix = '';
 
   $scope.submitOnInvalid = false;
   $scope.submitSuccess = false;
 
   // Send model to RADAR (server)
-  $scope.submitModel = function(isValid, cmdType) {
+  $scope.parseModel = function(isValid) {
     if(!isValid) {
         $scope.submitOnInvalid = true;
         return;
     }
 
-    var data = {};
+    var params = getParams();
+
+    Service.parseModel(params).then(function() {
+      if(Service.success) {
+        console.log('success');
+        $scope.submitSuccess = true;
+      } else {
+        $scope.filterable = [];
+        $scope.submitSuccess = false;
+        $('#model-result').empty().append(formatError(result.message));
+      }
+      return;
+    });
+    return;
+  }
+
+  $scope.solveModel = function(isValid) {
+    if(!isValid) {
+        $scope.submitOnInvalid = true;
+        return;
+    }
+
+    var params = getParams();
+
+    Service.solveModel(params).then(function(){
+      if(Service.success) {
+        $scope.matrix = Service.res.matrix;
+        $scope.dgraph = Service.res.dgraph;
+        $scope.vgraph = Service.res.vgraph;
+        $scope.filterable = Service.res.decisions;
+
+        var csv = d3.csvParse($scope.matrix);
+        $scope.matrixcols = csv.columns;
+
+        formatTable(csv);
+        formatDGraph($scope.dgraph);
+        formatVGraph($scope.vgraph);
+
+      } else {
+        $scope.filterable = [];
+        $scope.submitSuccess = false;
+        $('#model-result').empty().append(formatError(Service.message));
+      }
+    });
+
+    return;
+  }
+
+  function getParams() {
+
     var content = '';
 
     if($scope.view.type == 'formView') {
-      // Format model data to send
       content = formatModel();
-      data = {
+      params = {
         modelName: $scope.modelName,
-        modelBody: content,
-        command: cmdType
+        modelContent: content,
       };
     } else if($scope.view.type == 'codeView') {
       content = ace.edit('editor').getValue();
@@ -512,44 +559,12 @@ app.controller('mainController', function(dbService,$scope,$http) {
           break;
         }
       }
-      data = {
+      params = {
         modelName: $scope.modelName,
-        modelBody: content,
-        command: cmdType
+        modelContent: content,
       };
     }
-    // Send to server
-    $http({
-      method: 'POST',
-      url:'/submit',
-      data:data
-    }).then(function successCallback(res){
-      var output = res.data;
-
-      if(output.type == 'csvresult') {
-
-        $scope.submitSuccess = true;
-
-        $scope.csvresult = output.body;
-        $scope.filterable = output.decisions;
-        // $scope.filterable.push.apply($scope.filterable, output.objectives);
-        var csv = d3.csvParse(output.body);
-        $scope.csvcolumns = csv.columns;
-        // $('#model-result').empty().append(formatTable(csv));
-        formatTable(csv);
-
-      } else if(output.type == 'error'){
-        $scope.filterable = [];
-        $('#model-result').empty().append(formatError(output.body));
-
-      } else if(output.type == 'success'){
-        $scope.submitSuccess = true;
-      }
-    }, function errorCallback(res){
-      $('#model-result').empty().append(formatError('Error in model response'));
-    });
-    $scope.submitSuccess = false;
-    return content;
+    return params;
   }
 
   function formatModel(){
@@ -600,7 +615,7 @@ app.controller('mainController', function(dbService,$scope,$http) {
 
   $scope.filterOutput = function() {
     // Update table
-    var data = d3.csvParse($scope.csvresult).filter(function(row) {
+    var data = d3.csvParse($scope.matrix).filter(function(row) {
       for(s in $scope.filterSelect) {
         if($scope.filterSelect[s] != null && row[s] != $scope.filterSelect[s]) {
           return false;
@@ -609,13 +624,10 @@ app.controller('mainController', function(dbService,$scope,$http) {
       return true;
     });
     // Push columns back into filtered data
-    data.columns = $scope.csvcolumns;
+    data.columns = $scope.matrixcols;
 
     // Update table in view
     $('#model-result').empty().append(formatTable(data));
-
-    // TODO: Update graph in view
-    // formatGraph(data);
   };
 
 });

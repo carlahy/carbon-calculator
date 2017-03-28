@@ -103,51 +103,6 @@ function displayError(mess) {
   return console.log(mess);
 }
 
-function formatGraph(csv) {
-
-  // Set the dimensions of the canvas / graph
-  var margin = {top: 30, right: 20, bottom: 30, left: 50},
-    width = 600 - margin.left - margin.right,
-    height = 270 - margin.top - margin.bottom;
-
-  // Adds the svg canvas
-  var svg = d3.select("#model_graph")
-    .append("svg")
-        .attr("width", width + margin.left + margin.right)
-        .attr("height", height + margin.top + margin.bottom)
-    .append("g")
-        .attr("transform",
-              "translate(" + margin.left + "," + margin.top + ")");
-
-
-    // Get the data
-    var data = d3.csvParse(csv, function(row){
-
-      console.log(row);
-
-      // Add the scatterplot
-      // svg.selectAll("dot")
-      //     .data(data)
-      //   .enter().append("circle")
-      //     .attr("r", 3.5)
-      //     .attr("cx", function(d) { return x(d.date); })
-      //     .attr("cy", function(d) { return y(d.close); });
-      //
-      // // Add the X Axis
-      // svg.append("g")
-      //     .attr("class", "x axis")
-      //     .attr("transform", "translate(0," + height + ")")
-      //     .call(xAxis);
-      //
-      // // Add the Y Axis
-      // svg.append("g")
-      //     .attr("class", "y axis")
-      //     .call(yAxis);
-
-    });
-
-}
-
 // Format CSV file to HTML table
 function formatTable(csv) {
 
@@ -188,6 +143,14 @@ function formatTable(csv) {
   });
 
   return table;
+}
+
+function formatDGraph(dgraph) {
+  return $('#dgraph').append(Viz(dgraph, { format: "png-image-element" }));
+}
+
+function formatVGraph(vgraph) {
+  return $('#vgraph').append(Viz(vgraph, { format: "png-image-element" }));
 }
 
 // Format error into HTML

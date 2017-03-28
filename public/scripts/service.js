@@ -1,6 +1,6 @@
 angular
   .module('carbonCalc')
-  .factory('dbService', function ($http, $q) {
+  .factory('Service', function ($http, $q) {
     'use strict';
 
     var service = {};
@@ -18,7 +18,6 @@ angular
     };
 
     service.createModel = function(params) {
-      console.log(typeof(params.content));
       return $http.post('/models',{
         content: params.content,
         type: params.type
@@ -42,6 +41,20 @@ angular
     service.deleteModel = function() {
 
     };
+
+    service.parseModel = function(params) {
+      return $http.post('/parse', params).then(handleSuccess,handleError);
+    };
+
+    service.solveModel = function(params) {
+      return $http.post('/solve',params).then(function success(res){
+        service.res = res.data;
+        handleSuccess();
+      }, function error(res){
+        service.message = res.message;
+        handleError();
+      });
+    }
 
     return service;
 

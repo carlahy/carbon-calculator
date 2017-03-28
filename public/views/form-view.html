@@ -211,8 +211,8 @@
     <br></br>
       <button type="button" class="btn btn-default" ng-click="saveModel()">Save</button>
       <a id="download-btn"><button type="button" class="btn btn-default" ng-click="downloadModel()">Download</button></a>
-      <button type="button" class="btn btn-default" ng-click="submitModel(formView.$valid,'parse')">Parse</button>
-      <button type="button" class="btn btn-default" ng-click="submitModel(formView.$valid,'solve')">Solve</button>
+      <button type="button" class="btn btn-default" ng-click="parseModel(formView.$valid)">Parse</button>
+      <button type="button" class="btn btn-default" ng-click="solveModel(formView.$valid)">Solve</button>
       <button type="button" class="btn btn-default" ng-click="saveModel()">Get Shareable Id</button>
       <div id="submitButton" class="alert alert-warning alert-dismissable" ng-show="submitOnInvalid" dismiss-on-timeout="5000">
         <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
@@ -234,6 +234,9 @@
 <!--- ========= How To Form ========= -->
 
 <div class="col-sm-4 formView">
+  <div id="vgraph">
+
+  </div>
   <!-- <h3>How To</h3>
 
   <p>Cost Benefit Analysis Example</p>
