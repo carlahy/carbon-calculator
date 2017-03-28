@@ -1,9 +1,27 @@
+svg {
+  overflow: hidden;
+}
+.node rect {
+  stroke: #333;
+  stroke-width: 1.5px;
+  fill: #fff;
+}
+.edgeLabel rect {
+  fill: #fff;
+}
+.edgePath {
+  stroke: #333;
+  stroke-width: 1.5px;
+  fill: none;
+}
+
 h1 {
 	text-align: center;
 }
 
  #id-to-upload,#form-to-upload {
 	width: 30%;
+	margin-right: 7%;
 }
 
 th {

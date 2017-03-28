@@ -12,19 +12,28 @@ angular
         params: {id:_id}
       }).then(function success(res){
         handleSuccess();
-        service.model = JSON.parse(res.data.model);
+        service.model = res.data.model;
+        service.type = res.data.type;
       }, handleError);
     };
 
-    service.createModel = function(_model) {
-      return $http.post('/models',{model:_model}).then(function success(res){
+    service.createModel = function(params) {
+      console.log(typeof(params.content));
+      return $http.post('/models',{
+        content: params.content,
+        type: params.type
+      }).then(function success(res){
         handleSuccess();
         service.id = res.data.id;
       }, handleError);
     };
 
-    service.updateModel = function(_id,_model) {
-      return $http.put('/models',{id:_id,model:_model}).then(function success(res){
+    service.updateModel = function(params) {
+      return $http.put('/models',{
+        id: params.id,
+        content: params.content,
+        type: params.type
+      }).then(function success(res){
         service.id = res.data.id;
         handleSuccess();
       }, handleError);

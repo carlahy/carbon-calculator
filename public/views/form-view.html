@@ -8,7 +8,7 @@
       <!-- <input type="button" value="" ng-click="codeToForm()"> -->
     </div>
     <div class="row-align">
-      <input type="text" id="id-to-upload" value="Model id" ng-model="modelId">
+      <input type="text" id="id-to-upload" value="Model id" ng-model="$parent.modelId">
       <button type="button" class="btn btn-default" ng-click="uploadWithId()">Upload With Id</button>
     </div>
     <!-- Model Name  -->
@@ -207,26 +207,26 @@
     </div>
 
 
-  <!--- ========= Form Handler ========= -->
+    <!--- ========= Form Handler ========= -->
+    <br></br>
+      <button type="button" class="btn btn-default" ng-click="saveModel()">Save</button>
+      <a id="download-btn"><button type="button" class="btn btn-default" ng-click="downloadModel()">Download</button></a>
+      <button type="button" class="btn btn-default" ng-click="submitModel(formView.$valid,'parse')">Parse</button>
+      <button type="button" class="btn btn-default" ng-click="submitModel(formView.$valid,'solve')">Solve</button>
+      <button type="button" class="btn btn-default" ng-click="saveModel()">Get Shareable Id</button>
+      <div id="submitButton" class="alert alert-warning alert-dismissable" ng-show="submitOnInvalid" dismiss-on-timeout="5000">
+        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+        <strong>Invalid form: </strong> Please fill in missing value(s).
+      </div>
+      <div id="successParse" class="alert alert-success alert-dismissable" ng-show="submitSuccess" dismiss-on-timeout="5000">
+        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+        Model parsed successfully.
+      </div>
+      <div id="shareableId" class="alert alert-success alert-dismissable" ng-show="idSuccess" dismiss-on-timeout="5000">
+        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+        Shareable id is {{modelId}}
+      </div>
 
-  <br></br>
-    <!-- <button type="button" class="btn btn-default" ng-click="submitModel(codeView.$valid,'parse')">Save</button> -->
-    <a class="downloadModel"><button type="button" class="btn btn-default">Download</button></a>
-    <button type="button" class="btn btn-default" ng-click="submitModel(formView.$valid,'parse')">Parse</button>
-    <button type="button" class="btn btn-default" ng-click="submitModel(formView.$valid,'solve')">Solve</button>
-    <button type="button" class="btn btn-default" ng-click="getShareableId()">Get Shareable Id</button>
-    <div id="submitButton" class="alert alert-warning alert-dismissable" ng-show="submitOnInvalid" dismiss-on-timeout="5000">
-      <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-      <strong>Invalid form: </strong> Please fill in missing value(s).
-    </div>
-    <div id="successParse" class="alert alert-success alert-dismissable" ng-show="submitSuccess" dismiss-on-timeout="5000">
-      <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-      Model parsed successfully.
-    </div>
-    <div id="shareableId" class="alert alert-success alert-dismissable" ng-show="idSuccess" dismiss-on-timeout="5000">
-      <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-      Shareable id is {{modelId}}
-    </div>
   </form>
 
 </div>
@@ -234,9 +234,9 @@
 <!--- ========= How To Form ========= -->
 
 <div class="col-sm-4 formView">
-  <h3>How To</h3>
+  <!-- <h3>How To</h3>
 
   <p>Cost Benefit Analysis Example</p>
-  <img src="images/CBAform.png" alt="CBA form example" id="howToForm">
+  <img src="images/CBAform.png" alt="CBA form example" id="howToForm"> -->
 
 </div>

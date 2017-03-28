@@ -1,29 +1,14 @@
 var app = angular.module('carbonCalc', ['ui.sortable']);
 
-
-
-// Encompass on click, on blur, on enter into single directive
-// Takes function to run
-app.directive('onSaveInput', function(myFunction,myArgs){
-  return {
-    require: 'ngModel',
-    scope: {
-      ngBlur:'&myFunction',
-      ngKeydown:'&myFunction'
-    },
-    // TODO:???
-  }
-});
-
 app.controller('mainController', function(dbService,$scope,$http) {
 
   $scope.results = {
-    url:'./views/results.html'
+    template:'./views/results.html'
   }
   // Form view or Code view, init as Form
   $scope.view = {
     type: 'formView',
-    url: './views/form-view.html'
+    template: './views/form-view.html'
   };
 
   // Keep track of variable names used to avoid duplicates
@@ -44,8 +29,6 @@ app.controller('mainController', function(dbService,$scope,$http) {
     if(name) {
       if(!includes($scope.varnames,name)) {
           $scope.varnames.push(name);
-      } else {
-        // TODO: Warning, duplicate
       }
     }
   };
@@ -53,7 +36,7 @@ app.controller('mainController', function(dbService,$scope,$http) {
 ///////////// Objectives /////////////
 
   $scope.mode = ['Min','Max']
-  $scope.statistics = ["EV", "Pr","percentile"]
+  $scope.statistics = ['EV', 'Pr','percentile']
   $scope.objectives = [];
   // Objectives[objective]
   // objective = {name,mode,statistic,expression}
@@ -73,8 +56,6 @@ app.controller('mainController', function(dbService,$scope,$http) {
           var vars = getVars(o.expression);
           addNewVariables(vars);
         }
-      } else {
-        // TODO: Warning, duplicate names
       }
     }
     $scope.input.objective = {};
@@ -100,7 +81,6 @@ app.controller('mainController', function(dbService,$scope,$http) {
 
 ///////////// Variables /////////////
 
-  // The uninitialised variables that are yet to be defined as parameters, equations, decisions
   $scope.variables = [];
   $scope.varoptions = ['Parameter','Equation','Decision'];
 
@@ -181,7 +161,6 @@ app.controller('mainController', function(dbService,$scope,$http) {
   function addNewVariables(vars){
     for(v in vars) {
       v = vars[v];
-      console.log('varnames ',$scope.varnames);
       if(!includes($scope.varnames,v)) {
         // Add variable to list
         $scope.varnames.push(v);
@@ -242,7 +221,6 @@ app.controller('mainController', function(dbService,$scope,$http) {
 
   $scope.addDecision = function(d) {
     if(d) {
-      // If decision does not already exist
       if(indexOfAttribute($scope.decisions,'name',d) == -1) {
         $scope.decisions.push({
           name:d,
@@ -251,7 +229,6 @@ app.controller('mainController', function(dbService,$scope,$http) {
         });
       }
     }
-    // Reset new decision input
     $scope.input.decision = '';
     return;
   }
@@ -328,50 +305,61 @@ app.controller('mainController', function(dbService,$scope,$http) {
       dbService.getModel($scope.modelId).then(function(){
         if(dbService.success) {
           var content = dbService.model;
-          for(s in saveScope) {
-            $scope[saveScope[s]] = content[saveScope[s]];
+          if (dbService.type == 'form') {
+            content = JSON.parse(content);
+            for(s in saveScope) {
+              $scope[saveScope[s]] = content[saveScope[s]];
+            }
+          } else {
+            var editor = ace.edit('editor');
+            editor.setValue(content);
           }
         } else {
           displayError("Could not upload with id");
         }
         return;
       });
-    } else {
-      console.log('No model ID specified');
     }
     return;
   };
 
-  // Show model id to user
   $scope.idSuccess = false;
 
-  $scope.getShareableId = function() {
-
-    var content = JSON.stringify(getState(saveScope));
+  $scope.saveModel = function() {
+    var params = {};
+    if($scope.view.type == 'formView') {
+      params.content = JSON.stringify(getState(saveScope));
+      params.type = 'form';
+    } else {
+      params.content = ace.edit('editor').getValue();
+      params.type = 'code';
+    }
 
     if($scope.modelId) {
       // Model already exists in database, update it
-      dbService.updateModel($scope.modelId, content).then(function(){
-        if(dbService.success) {
-          $scope.modelId = dbService.id;
-          $scope.idSuccess = true;
+      params.id = $scope.modelId;
+      dbService.updateModel(params).then(function(){
+        $scope.modelId = dbService.id;
+        if(!dbService.success){
+          displayError("Could update model");
         } else {
-          $scope.idSuccess = false;
-          displayError("Could not retrieve id");
+          $scope.idSuccess = true;
         }
       });
     } else {
       // Create new entry in database
-      dbService.createModel(content).then(function(){
-        if(dbService.success){
-          $scope.modelId = dbService.id;
-          $scope.idSuccess = true;
-        } else {
-          $scope.idSuccess = false;
+
+      dbService.createModel(params).then(function(){
+        $scope.modelId = dbService.id;
+        if(!dbService.success){
           displayError("Could not retrieve id");
+        } else {
+          $scope.idSuccess = true;
         }
       });
     }
+
+
   };
 
   ///////////// Code View /////////////
@@ -380,7 +368,7 @@ app.controller('mainController', function(dbService,$scope,$http) {
   $scope.switchToCode = function() {
     $scope.view = {
       type: 'codeView',
-      url: './views/code-view.html'
+      template: './views/code-view.html'
     }
     return;
   }
@@ -440,10 +428,9 @@ app.controller('mainController', function(dbService,$scope,$http) {
 
   ///////////// Download Model /////////////
 
-  $('.downloadModel').click(function() {
-    // Get <a> tag
-    var dlbtn = this.getElementsByTagName("button")[0].parentElement;
+  $scope.downloadModel = function(){
 
+    var dlbtn = document.getElementById("download-btn");
     var content;
     var type;
     var ext;
@@ -454,9 +441,8 @@ app.controller('mainController', function(dbService,$scope,$http) {
       content = JSON.stringify(content);
       type = 'application/json';
       ext = '.json';
-      console.log(content);
 
-    } else { // Code View
+    } else {
       content = ace.edit('editor').getValue();
       type = 'text/plain';
       ext = '.rdr';
@@ -474,7 +460,7 @@ app.controller('mainController', function(dbService,$scope,$http) {
     dlbtn.href = URL.createObjectURL(file);
     dlbtn.download = fileName;
 
-  });
+  };
 
   // Save state of $scope variables
   function getState(variables) {
@@ -503,9 +489,7 @@ app.controller('mainController', function(dbService,$scope,$http) {
         $scope.submitOnInvalid = true;
         return;
     }
-    // Reset validation
-    $scope.submitOnInvalid = false;
-    $scope.submitSuccess = false;
+
     var data = {};
     var content = '';
 
@@ -609,7 +593,6 @@ app.controller('mainController', function(dbService,$scope,$http) {
         result += '}\n\n';
       }
     }
-    console.log(result);
     return result;
   }
 
