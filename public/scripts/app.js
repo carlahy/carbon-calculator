@@ -1,4 +1,21 @@
-var app = angular.module('carbonCalc', ['ui.sortable']);
+var app = angular.module('carbonCalc', ['ui.sortable','ngRoute']);
+
+app.config(function($routeProvider,$locationProvider) {
+  $routeProvider
+    .when('/Form', {
+      templateUrl: 'form-view.html',
+      controller: 'mainController',
+    })
+    .when('/Code', {
+      templateUrl: 'code-view.html',
+      controller: 'mainController'
+    });
+    $locationProvider.html5Mode({
+    enabled: true,
+    requireBase: false
+  });
+
+});
 
 // Encompass on click, on blur, on enter into single directive
 // Takes function to run
@@ -13,8 +30,12 @@ app.directive('onSaveInput', function(myFunction,myArgs){
   }
 });
 
-app.controller('mainController', function($scope,$http) {
+app.controller('mainController', function($route,$location, $routeParams,dbService,$scope,$http) {
+        this.$route = $route;
+        this.$location = $location;
+        this.$routeParams = $routeParams;
 
+        $scope.template = './views/form-view.html'
   // Form view or Code view, init as Form
   $scope.viewType = 'formView' ;
 
@@ -313,25 +334,21 @@ app.controller('mainController', function($scope,$http) {
   ///////////// Database /////////////
 
   // Database ID
-  // $scope.modelId = null;
+  $scope.modelId = dbService.id;
 
   $scope.uploadWithId = function() {
     if($scope.modelId) {
-      $http({
-        method: 'GET',
-        url:'/models',
-        params: {id:$scope.modelId}
-      }).then(function successCallback(res){
-        console.log('Success getting model with id');
-        content = JSON.parse(res.data.model);
-        for(s in saveScope) {
-          $scope[saveScope[s]] = content[saveScope[s]];
+      dbService.getModel($scope.modelId).then(function(){
+        if(dbService.success) {
+          var content = dbService.model;
+          for(s in saveScope) {
+            $scope[saveScope[s]] = content[saveScope[s]];
+          }
+        } else {
+          displayError("Could not upload with id");
         }
-
-      }, function errorCallback(res){
-        console.log('Error getting model with id');
+        return;
       });
-
     } else {
       console.log('No model ID specified');
     }
@@ -341,43 +358,33 @@ app.controller('mainController', function($scope,$http) {
   // Show model id to user
   $scope.idSuccess = false;
 
-  $scope.shareModel = function() {
-    // Get unique db id of model
-    content = JSON.stringify(getState(saveScope));
+  $scope.getShareableId = function() {
+
+    var content = JSON.stringify(getState(saveScope));
 
     if($scope.modelId) {
       // Model already exists in database, update it
-      $http({
-        method: 'PUT',
-        url: '/models',
-        data: {id:$scope.modelId, model:content}
-      }).then(function successCallback(res){
-        $scope.modelId = res.data;
-        $scope.idSuccess = true;
-
-        console.log('Model id is ', $scope.modelId);
-      }, function errorCallback(res){
-        console.log('Error updating model in db');
+      dbService.updateModel($scope.modelId, content).then(function(){
+        if(dbService.success) {
+          $scope.modelId = dbService.id;
+          $scope.idSuccess = true;
+        } else {
+          $scope.idSuccess = false;
+          displayError("Could not retrieve id");
+        }
       });
-
-
     } else {
       // Create new entry in database
-      console.log('Creating new entry in db');
-
-      $http({
-        method: 'POST',
-        url: '/models',
-        data: {model: content}
-      }).then(function successCallback(res){
-        $scope.modelId = res.data.id;
-        $scope.idSuccess = true;
-        console.log('Model id is ', $scope.modelId);
-      }, function errorCallback(res){
-        console.log('Error saving model to DB');
+      dbService.createModel(content).then(function(){
+        if(dbService.success){
+          $scope.modelId = dbService.id;
+          $scope.idSuccess = true;
+        } else {
+          $scope.idSuccess = false;
+          displayError("Could not retrieve id");
+        }
       });
     }
-    $scope.idSuccess = false;
   };
 
   ///////////// Code View /////////////
@@ -483,7 +490,6 @@ app.controller('mainController', function($scope,$http) {
       var name = saveScope[v]
       content[name] = $scope[name];
     }
-    console.log('content ',content);
     return content;
   }
 

@@ -27,31 +27,30 @@ var cp = "/Library/Java/JavaVirtualMachines/jdk1.8.0_65.jdk/Contents/Home/jre/li
 var outputFolder = __dirname + '/radar-output';
 
 app.set('port', (process.env.PORT || 5000))
-  .set('view engine', 'ejs')
+  // .set('view engine', 'ejs')
   .use(bodyParser.json())
   .use(bodyParser.urlencoded({ extended: false }))
   .use(express.static(__dirname + '/public'))
 
   .get('/', function(req, res) {
-    res.render('index');
-  })
-
-  .post('/models', function (req, res) {
-    var result = {};
-    var model = new Model( {body:req.body.model} );
-    model.id = model._id;
-    result.id = model.id;
-    model.save(function (err) {
-      if(err) return res.status(404).send(err);
-      result.model = model;
-      res.send(result)
-    });
+    res.sendfile('./public/views/index.html');
   })
 
   .get('/models', function(req,res){
     Model.findById(req.query.id, function(err, model) {
       if(err) return res.status(404).send(err);
-      res.send(model.body);
+      res.send({model:model.body});
+    });
+  })
+
+  .post('/models', function (req, res) {
+    var model = new Model({body:req.body.model});
+    model.save(function (err) {
+      if(err) return res.status(404).send(err);
+      res.send({
+        id: model._id,
+        model: model
+      });
     });
   })
 
@@ -60,11 +59,8 @@ app.set('port', (process.env.PORT || 5000))
       if(err) return res.status(404).send(err);
       model.body = req.body.model;
       model.save( function ( err, model ){
-        if(err) {
-          res.send(err);
-          return;
-        }
-        res.send(model.id);
+        if(err) return res.status(400).send(err);
+        res.send({id:model._id});
       });
     });
   })

@@ -113,6 +113,9 @@ function getVars(eq) {
 
 /////////////////// Formatting ///////////////////
 
+function displayError(mess) {
+  return console.log(mess);
+}
 
 function formatGraph(csv) {
 
