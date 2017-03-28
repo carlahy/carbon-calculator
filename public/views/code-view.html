@@ -1,1 +1,65 @@
-hello world
+<!--- ========= Code View ========= -->
+
+<div class="col-sm-8 codeView">
+  <form class="" name="codeView">
+    <div class="row-align">
+      <input type="file" id="fileinput" name="model_upload" accept=".rdr">
+      <button type="button" class="btn btn-default" ng-click="uploadCode(event)">Upload</button>
+      <button type="button" class="btn btn-default" ng-click="formToCode()">Upload Form</button>
+    </div>
+
+    <div id="editor" ng-model="uploadedModel"></div>
+  </form>
+
+<!--- ========= Code Handler ========= -->
+  <br></br>
+  <!-- <button type="button" class="btn btn-default" ng-click="submitModel(codeView.$valid,'parse')">Save</button> -->
+  <a class="downloadModel"><button type="button" class="btn btn-default">Download</button></a>
+  <button type="button" class="btn btn-default" ng-click="submitModel(codeView.$valid,'parse')">Parse</button>
+  <button type="button" class="btn btn-default" ng-click="submitModel(codeView.$valid,'solve')">Solve</button>
+  <div id="successParse" class="alert alert-success alert-dismissable" ng-show="submitSuccess" dismiss-on-timeout="5000">
+    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+    Model parsed successfully.
+  </div>
+</div>
+
+<!--- ========= How To Code ========= -->
+
+<div class="col-sm-4 codeView">
+  <h3>How To</h3>
+
+  <p>Cost Benefit Analysis Example</p>
+
+  <pre>
+Model CBA;
+
+Objective Max ENB = EV(NB);
+Objective Min LP = Pr(NB < 0);
+NB = Benefit - Cost;
+
+Benefit = decision("Architecture choice"){
+"As-is": normalCI(0.9, 1.1);
+"Refactoring" : normalCI(1, 9);
+}
+
+Cost = decision("Architecture choice"){
+"As-is" : normalCI(0, 0);
+"Refactoring" : normalCI(1, 5);
+}
+  </pre>
+</div>
+
+</div>
+
+<script type="text/javascript">
+// Initialise Ace editor
+  var editor = ace.edit("editor");
+  editor.setTheme("ace/theme/tomorrow");
+  editor.getSession().setMode("ace/mode/java");
+  editor.setOptions({
+        autoScrollEditorIntoView: true,
+        maxLines: Infinity
+    });
+  editor.renderer.setScrollMargin(10, 10, 10, 10);
+  editor.$blockScrolling = Infinity;
+</script>

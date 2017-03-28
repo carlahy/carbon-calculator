@@ -1,0 +1,36 @@
+<!--- ========= RADAR Result ========= -->
+<div class="col-sm-6">
+  <!-- TODO: remove?? pareto?? -->
+  <!-- <div id="model_graph"></div> -->
+
+  <!-- Decision options to filter -->
+  <div class="model_filter">
+    <table class="table table-bordered">
+      <tr>
+        <td ng-repeat="f in filterable">{{f.name}}</td>
+      </tr>
+      <tr>
+        <td ng-repeat="f in filterable">
+          <select ng-model="filterSelect[f.name]" ng-options="value for value in f.values" ng-change="filterOutput()">
+            <option value=""></option>
+          </select>
+      </td>
+      </tr>
+    </table>
+  </div>
+
+  <br></br>
+  <!-- Matrix results -->
+  <span class="glyphicon glyphicon-plus" id="btn-result"></span>
+  <div id="model-result" class="model-result">
+
+  </div>
+  <br></br>
+
+  <!-- Compare solutions -->
+  <div >
+    <table id="model-compare">
+
+    </table>
+  </div>
+</div>

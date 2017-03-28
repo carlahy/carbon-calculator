@@ -1,16 +1,5 @@
 $(document).ready(function() {
 
-  // Initialise Ace editor
-  var editor = ace.edit("editor");
-  editor.setTheme("ace/theme/tomorrow");
-  editor.getSession().setMode("ace/mode/java");
-  editor.setOptions({
-        autoScrollEditorIntoView: true,
-        maxLines: Infinity
-    });
-  editor.renderer.setScrollMargin(10, 10, 10, 10);
-  editor.$blockScrolling = Infinity;
-
   // Toggle build and upload views
   $('.codeView').hide();
 
@@ -22,6 +11,7 @@ $(document).ready(function() {
   $('#btn-code').click(function (){
     $('.formView').hide();
     $('.codeView').show();
+
   });
 
   /////////// Toggle Views ///////////
@@ -67,10 +57,6 @@ $(document).ready(function() {
         //get row values
         $('#model-compare').append(this);
     });
-
-  $('input:checkbox').change(function(){
-    console.log('world');
-  });
 
 });
 

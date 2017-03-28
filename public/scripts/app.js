@@ -1,21 +1,6 @@
-var app = angular.module('carbonCalc', ['ui.sortable','ngRoute']);
+var app = angular.module('carbonCalc', ['ui.sortable']);
 
-app.config(function($routeProvider,$locationProvider) {
-  $routeProvider
-    .when('/Form', {
-      templateUrl: 'form-view.html',
-      controller: 'mainController',
-    })
-    .when('/Code', {
-      templateUrl: 'code-view.html',
-      controller: 'mainController'
-    });
-    $locationProvider.html5Mode({
-    enabled: true,
-    requireBase: false
-  });
 
-});
 
 // Encompass on click, on blur, on enter into single directive
 // Takes function to run
@@ -30,14 +15,16 @@ app.directive('onSaveInput', function(myFunction,myArgs){
   }
 });
 
-app.controller('mainController', function($route,$location, $routeParams,dbService,$scope,$http) {
-        this.$route = $route;
-        this.$location = $location;
-        this.$routeParams = $routeParams;
+app.controller('mainController', function(dbService,$scope,$http) {
 
-        $scope.template = './views/form-view.html'
+  $scope.results = {
+    url:'./views/results.html'
+  }
   // Form view or Code view, init as Form
-  $scope.viewType = 'formView' ;
+  $scope.view = {
+    type: 'formView',
+    url: './views/form-view.html'
+  };
 
   // Keep track of variable names used to avoid duplicates
   $scope.varnames = [];
@@ -391,12 +378,18 @@ app.controller('mainController', function($route,$location, $routeParams,dbServi
 
   // Upload the 'Form view' data to editor
   $scope.switchToCode = function() {
-    $scope.viewType = 'codeView';
+    $scope.view = {
+      type: 'codeView',
+      url: './views/code-view.html'
+    }
     return;
   }
 
   $scope.switchToForm = function () {
-    $scope.viewType = 'formView';
+    $scope.view = {
+      type: 'formView',
+      template: './views/form-view.html'
+    }
     return;
   }
 
@@ -455,7 +448,7 @@ app.controller('mainController', function($route,$location, $routeParams,dbServi
     var type;
     var ext;
 
-    if($scope.viewType == 'formView') {
+    if($scope.view.type == 'formView') {
 
       content = getState(saveScope);
       content = JSON.stringify(content);
@@ -516,7 +509,7 @@ app.controller('mainController', function($route,$location, $routeParams,dbServi
     var data = {};
     var content = '';
 
-    if($scope.viewType == 'formView') {
+    if($scope.view.type == 'formView') {
       // Format model data to send
       content = formatModel();
       data = {
@@ -524,7 +517,7 @@ app.controller('mainController', function($route,$location, $routeParams,dbServi
         modelBody: content,
         command: cmdType
       };
-    } else if($scope.viewType == 'codeView') {
+    } else if($scope.view.type == 'codeView') {
       content = ace.edit('editor').getValue();
       // Seach for model name
       var lines = content.split('\n');
