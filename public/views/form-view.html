@@ -7,10 +7,12 @@
       <button type="button"  class="btn btn-default" ng-click="uploadForm(event)">Upload File</button>
       <!-- <input type="button" value="" ng-click="codeToForm()"> -->
     </div>
+
     <div class="row-align">
       <input type="text" id="id-to-upload" value="Model id" ng-model="$parent.modelId">
       <button type="button" class="btn btn-default" ng-click="uploadWithId()">Upload With Id</button>
     </div>
+
     <!-- Model Name  -->
     <h3>Model Name</h3>
     <input type="text" ng-model="modelName" ng-blur="addModelName(modelName)" required></li>
@@ -60,7 +62,6 @@
             </td>
             <td><span class="glyphicon glyphicon-plus objective" ng-click="addObj()"></span></td>
           </tr>
-
         </tbody>
       </table>
     </div>
@@ -160,8 +161,7 @@
     </div>
 
     <div class="" id="decisions">
-
-      <!-- Variables unassigned to specific decision -->
+      <!-- Undeclared variables -->
       <div ng-if="unassignedDecisions.length > 0">
         <p>Assign to a decision:</p>
         <table class="table table-bordered">
@@ -207,7 +207,6 @@
               <span class="glyphicon glyphicon-remove" ng-click="deleteOption(d,o)"></span>
             </td>
           </tr>
-
           <tr>
             <td>
               <input type="text" placeholder="New option" ng-model="input.option" ng-blur="addOption(d,input.option)"
@@ -229,17 +228,15 @@
       <button type="button" class="btn btn-default" ng-click="parseModel(formView.$valid)">Parse</button>
       <button type="button" class="btn btn-default" ng-click="solveModel(formView.$valid)">Solve</button>
       <button type="button" class="btn btn-default" ng-click="saveModel()">Get Shareable Id</button>
-      <div id="submitButton" class="alert alert-warning alert-dismissable" ng-show="submitOnInvalid" dismiss-on-timeout="5000">
+
+      <div class="alert alert-warning alert-dismissable" ng-show="dialog.warning" ng-hide="!dialog.warning" dismiss-on-timeout="5000">
         <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-        <strong>Invalid form: </strong> Please fill in missing value(s).
+        {{dialog.message}}
       </div>
-      <div id="successParse" class="alert alert-success alert-dismissable" ng-show="submitSuccess" dismiss-on-timeout="5000">
+
+      <div class="alert alert-success alert-dismissable" ng-show="dialog.success" ng-hide="!dialog.success" dismiss-on-timeout="5000">
         <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-        Model parsed successfully.
-      </div>
-      <div id="shareableId" class="alert alert-success alert-dismissable" ng-show="idSuccess" dismiss-on-timeout="5000">
-        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-        Shareable id is {{modelId}}
+        {{dialog.message}}
       </div>
 
   </form>

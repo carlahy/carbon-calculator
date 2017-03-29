@@ -11,14 +11,13 @@ app.controller('mainController', function(Service,$scope,$http) {
   }
   // Form view or Code view, init as Form
   $scope.view = {
-    type: 'codeView',
-    template: './views/code-view.html'
+    type: 'formView',
+    template: './views/form-view.html'
   };
 
   // Keep track of variable names used to avoid duplicates
   $scope.varnames = [];
 
-  // ngModels for input fields
   $scope.input = {
     objective:{},
     decision:'',
@@ -35,6 +34,7 @@ app.controller('mainController', function(Service,$scope,$http) {
           $scope.varnames.push(name);
       }
     }
+    return;
   };
 
 ///////////// Objectives /////////////
@@ -327,8 +327,6 @@ app.controller('mainController', function(Service,$scope,$http) {
     return;
   };
 
-  $scope.idSuccess = false;
-
   $scope.saveModel = function() {
     var params = {};
     if($scope.view.type == 'formView') {
@@ -345,9 +343,13 @@ app.controller('mainController', function(Service,$scope,$http) {
       Service.updateModel(params).then(function(){
         $scope.modelId = Service.id;
         if(!Service.success){
-          displayError("Could update model");
+          $scope.dialog.success = false;
+          $scope.dialog.warning = true;
+          $scope.dialog.message = 'Could not get shareable id';
         } else {
-          $scope.idSuccess = true;
+          $scope.dialog.success = true;
+          $scope.dialog.warning = false;
+          $scope.dialog.message = 'Shareable id is ' + $scope.modelId;
         }
       });
     } else {
@@ -356,9 +358,13 @@ app.controller('mainController', function(Service,$scope,$http) {
       Service.createModel(params).then(function(){
         $scope.modelId = Service.id;
         if(!Service.success){
-          displayError("Could not retrieve id");
+          $scope.dialog.success = false;
+          $scope.dialog.warning = true;
+          $scope.dialog.message = 'Could not get shareable id';
         } else {
-          $scope.idSuccess = true;
+          $scope.dialog.success = true;
+          $scope.dialog.warning = false;
+          $scope.dialog.message = 'Shareable id is ' + $scope.modelId;
         }
       });
     }
@@ -484,26 +490,29 @@ app.controller('mainController', function(Service,$scope,$http) {
   $scope.filterSelect = [];
   $scope.matrix = '';
 
-  $scope.submitOnInvalid = false;
-  $scope.submitSuccess = false;
+  $scope.dialog = {};
 
   // Send model to RADAR (server)
   $scope.parseModel = function(isValid) {
     if(!isValid) {
-        $scope.submitOnInvalid = true;
-        return;
+      $scope.dialog.success = false;
+      $scope.dialog.warning = true;
+      $scope.dialog.message = 'Model is not valid!';
+      return;
     }
 
     var params = getParams();
 
     Service.parseModel(params).then(function() {
       if(Service.success) {
-        console.log('success');
-        $scope.submitSuccess = true;
+        $scope.dialog.success = true;
+        $scope.dialog.warning = false;
+        $scope.dialog.message = Service.message;
       } else {
         $scope.filterable = [];
-        $scope.submitSuccess = false;
-        $('#model-result').empty().append(formatError(result.message));
+        $scope.dialog.success = false;
+        $scope.dialog.warning = true;
+        $scope.dialog.message = 'Model could not be parsed: \n'+ Service.message;
       }
       return;
     });
@@ -512,8 +521,10 @@ app.controller('mainController', function(Service,$scope,$http) {
 
   $scope.solveModel = function(isValid) {
     if(!isValid) {
-        $scope.submitOnInvalid = true;
-        return;
+      $scope.dialog.success = false;
+      $scope.dialog.warning = true;
+      $scope.dialog.message = 'Model is not valid!';
+      return;
     }
 
     var params = getParams();
@@ -528,18 +539,22 @@ app.controller('mainController', function(Service,$scope,$http) {
         $scope.csv = d3.csvParse($scope.matrix);
         $scope.csvcols = ['Choose'].concat($scope.csv.columns);
 
+        $scope.dialog.success = true;
+        $scope.dialog.warning = false;
+        $scope.dialog.message = 'Model was successfully solved';
+
         formatDGraph($scope.dgraph);
         formatVGraph($scope.vgraph);
 
       } else {
         $scope.filterable = [];
-        $scope.submitSuccess = false;
-        $('#model-result').empty().append(formatError(Service.message));
+        $scope.dialog.success = false;
+        $scope.dialog.warning = true;
+        $scope.dialog.message = 'There was an error solving the model: ' + Service.message;
       }
     });
-
     return;
-  }
+  };
 
   function getParams() {
 
@@ -574,8 +589,7 @@ app.controller('mainController', function(Service,$scope,$http) {
   $scope.isChecked = {};
 
   $scope.checkRow = function(row,index) {
-    console.log($scope.isChecked);
-    console.log(row);
+
     if($scope.isChecked[index]) {
       $scope.toCompare.push(row);
     } else {
@@ -583,6 +597,10 @@ app.controller('mainController', function(Service,$scope,$http) {
       $scope.toCompare.splice(index,1);
     }
     return;
+  };
+
+  $scope.export = function() {
+    console.log('export');
   }
 
   function formatModel(){

@@ -43,7 +43,10 @@ angular
     };
 
     service.parseModel = function(params) {
-      return $http.post('/parse', params).then(handleSuccess,handleError);
+      return $http.post('/parse', params).then(function success(res){
+        service.success = res.data.success;
+        service.message = res.data.message;
+      },handleError);
     };
 
     service.solveModel = function(params) {

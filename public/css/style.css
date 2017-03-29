@@ -15,10 +15,6 @@ th {
 	text-align: center;
 }
 
-.thead-inverse{
-	text-align: left;
-}
-
 tr {
 	cursor: move;
 }
@@ -96,15 +92,11 @@ label input[type='checkbox'] {
 
 h3.inline,span.inline {
   display: inline;
-  margin-left: 7px;
+  margin: 0 7px 0 7px;
 }
 
 div.padding {
-  margin: 20px 0 10px 0;
-}
-
-btn.compare {
-  margin: 10px 0 20px 0;
+  margin: 20px 0 20px 0;
 }
 
 .row {

@@ -1,10 +1,13 @@
 <!--- ========= RADAR Result ========= -->
 <div class="col-sm-6">
-  <!-- TODO: remove?? pareto?? -->
-  <!-- <div id="model_graph"></div> -->
 
-  <!-- Decision options to filter -->
-  <div class="model_filter">
+  <!-- Filter Decisions -->
+  <div class="padding">
+    <h3 class="inline">Filter Results</h3>
+    <span class="glyphicon glyphicon-plus inline" ng-click="toggle('#model-filter')"></span>
+  </div>
+
+  <div id="model-filter">
     <table class="table table-bordered">
       <tr>
         <td ng-repeat="f in filterable">{{f.name}}</td>
@@ -18,19 +21,17 @@
       </tr>
     </table>
   </div>
-
   <br></br>
+
   <!-- Matrix results -->
 
   <div class="padding">
     <h3 class="inline">Impact Matrix</h3>
     <span class="glyphicon glyphicon-plus inline" ng-click="toggle('#model-result')"></span>
+    <span class="glyphicon glyphicon-export inline" ng-click="export()"></span>
   </div>
 
   <div id="model-result">
-
-    <button class="btn btn-default compare" ng-click="compareRows()">Compare Rows</button>
-
     <table id="table-result" class="table">
       <thead class="thead-inverse">
         <th ng-repeat="c in csvcols" style="text-align:left">{{c}}</th>
@@ -42,29 +43,35 @@
         </tr>
       </tbody>
     </table>
-
   </div>
-
   <br></br>
 
   <!-- Compare solutions -->
 
   <div class="padding">
     <h3 class="inline">Compare Matrix</h3>
-    <span class="glyphicon glyphicon-plus inline" ng-click="toggle('#model-compare')"></span>
+    <span class="glyphicon glyphicon-plus inline" ng-click="toggle('#table-compare')"></span>
+    <span class="glyphicon glyphicon-export inline" ng-click="export()"></span>
   </div>
 
+  <!-- <button class="btn btn-default compare" ng-click="pairwiseCompare()">Pair-Wise Compare</button> -->
+
   <div>
-    <table class="table" id="model-compare">
+    <table id="table-compare" class="table">
       <thead class="thead-inverse">
-        <th ng-repeat="c in csvcols">{{c}}</th>
+        <th ng-repeat="c in csvcols" style="text-align:left">{{c}}</th>
       </thead>
       <tbody>
         <tr ng-repeat="r in toCompare">
+          <td><input type="checkbox" ng-change="checkRow(r,$index)" ng-model="isChecked[$index]" class="result-compare"/></td>
           <td ng-repeat="d in r">{{d}}</td>
         </tr>
       </tbody>
     </table>
   </div>
 
+</div>
+
+<div class="col-sm-4">
+  <div id="dgraph"></div>
 </div>

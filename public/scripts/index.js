@@ -48,13 +48,3 @@ function formatDGraph(dgraph) {
 function formatVGraph(vgraph) {
   return $('#vgraph').empty().append(Viz(vgraph, { format: "png-image-element" }));
 }
-
-// Format error into HTML
-function formatError(error) {
-  var errmsg = '';
-  var rows = error.split('\n');
-  rows.forEach(function getValues(row) {
-    errmsg += '<p>'+row+'</p>';
-  });
-  return errmsg;
-}
