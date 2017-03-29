@@ -15,6 +15,7 @@ It implements the RADAR modelling language and decision analysis tool.
 
 1. Replace the RADAR/ directory with your download of RADAR
 2. You will need to update the RADAR classpath variable located inside the server.js file (```var cp = <your classpath>```) to your own
+3. run ```mongod --dbpath=data --port 27017``` to start database
 3. From your command line, run ```node server.js ```
 4. Open your browser and navigate to http://localhost:5000. You can change the port in the server.js file
 
