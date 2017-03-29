@@ -6,12 +6,28 @@ const exec       = require('child_process').exec;
 const fs         = require('fs');
 const PythonShell= require('python-shell')
 const mongoose   = require('mongoose');
+const nconf = require('nconf');
 
 /////////// Database ///////////
 
-var db = require('./config/db')
 
-mongoose.connect(db.url);
+nconf.argv().env().file('keys.json');
+
+const user = nconf.get('mongoUser');
+const pass = nconf.get('mongoPass');
+const host = nconf.get('mongoHost');
+const port = nconf.get('mongoPort');
+
+// [START client]
+let uri = `mongodb://${user}:${pass}@${host}:${port}`;
+
+if (nconf.get('mongoDatabase')) {
+  uri = `${uri}/${nconf.get('mongoDatabase')}`;
+}
+
+
+// var dburl = 'mongodb://localhost/carbondb'
+mongoose.connect(uri);
 
 var Model = mongoose.model('Model', {
   content:  String,

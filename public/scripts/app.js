@@ -352,6 +352,7 @@ app.controller('mainController', function(Service,$scope,$http) {
           $scope.dialog.message = 'Shareable id is ' + $scope.modelId;
         }
       });
+
     } else {
       // Create new entry in database
 
