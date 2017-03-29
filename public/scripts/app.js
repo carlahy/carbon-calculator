@@ -2,13 +2,17 @@ var app = angular.module('carbonCalc', ['ui.sortable']);
 
 app.controller('mainController', function(Service,$scope,$http) {
 
+  $scope.toggle = function(id) {
+    angular.element(document).find(id).toggle(200);
+  }
+
   $scope.results = {
     template:'./views/results.html'
   }
   // Form view or Code view, init as Form
   $scope.view = {
-    type: 'formView',
-    template: './views/form-view.html'
+    type: 'codeView',
+    template: './views/code-view.html'
   };
 
   // Keep track of variable names used to avoid duplicates
@@ -472,7 +476,7 @@ app.controller('mainController', function(Service,$scope,$http) {
     return content;
   }
 
-  ///////////// Submit Model /////////////
+  ///////////// Parse and Solve Model /////////////
 
   $scope.uploadedModel = '';
 
@@ -521,10 +525,9 @@ app.controller('mainController', function(Service,$scope,$http) {
         $scope.vgraph = Service.res.vgraph;
         $scope.filterable = Service.res.decisions;
 
-        var csv = d3.csvParse($scope.matrix);
-        $scope.matrixcols = csv.columns;
+        $scope.csv = d3.csvParse($scope.matrix);
+        $scope.csvcols = ['Choose'].concat($scope.csv.columns);
 
-        formatTable(csv);
         formatDGraph($scope.dgraph);
         formatVGraph($scope.vgraph);
 
@@ -565,6 +568,21 @@ app.controller('mainController', function(Service,$scope,$http) {
       };
     }
     return params;
+  }
+
+  $scope.toCompare = [];
+  $scope.isChecked = {};
+
+  $scope.checkRow = function(row,index) {
+    console.log($scope.isChecked);
+    console.log(row);
+    if($scope.isChecked[index]) {
+      $scope.toCompare.push(row);
+    } else {
+      var index = $scope.toCompare.indexOf(row);
+      $scope.toCompare.splice(index,1);
+    }
+    return;
   }
 
   function formatModel(){
@@ -613,9 +631,8 @@ app.controller('mainController', function(Service,$scope,$http) {
 
   ///////////// Handle Output /////////////
 
-  $scope.filterOutput = function() {
-    // Update table
-    var data = d3.csvParse($scope.matrix).filter(function(row) {
+  $scope.filterResult = function() {
+    $scope.csv = d3.csvParse($scope.matrix).filter(function(row) {
       for(s in $scope.filterSelect) {
         if($scope.filterSelect[s] != null && row[s] != $scope.filterSelect[s]) {
           return false;
@@ -623,11 +640,6 @@ app.controller('mainController', function(Service,$scope,$http) {
       }
       return true;
     });
-    // Push columns back into filtered data
-    data.columns = $scope.matrixcols;
-
-    // Update table in view
-    $('#model-result').empty().append(formatTable(data));
   };
 
 });
