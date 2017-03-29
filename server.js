@@ -158,7 +158,7 @@ app.set('port', (process.env.PORT || 5000))
     var radar = spawnSync('java', ['-classpath', cp, 'radar.userinterface.RADAR_CMD', '--model', filePath, '--output', outputFolder, '--parse','--debug']);
 
     if(radar.stderr != '') {
-      console.log('Parsed not successful');
+      console.log('Parsed not successful',radar.stderr);
       return res.send({
         message: radar.stderr.toString().trim(),
         success: false
