@@ -5,11 +5,25 @@ angular
 
     var service = {};
 
-    service.getModel = function(_id) {
+    service.getOrg = function(_name){
+      return $http({
+        method:'GET',
+        url:'/organisations',
+        params: {name:_name}
+      }).then(function success(res){
+        service.orgId = res.data.id;
+        handleSuccess();
+      }, handleError);
+    };
+
+    service.getModel = function(_orgId,_modelId) {
       return $http({
         method:'GET',
         url:'/models',
-        params: {id:_id}
+        params: {
+          orgId:_orgId,
+          modelId:_modelId
+        }
       }).then(function success(res){
         handleSuccess();
         service.model = res.data.model;
@@ -19,6 +33,7 @@ angular
 
     service.createModel = function(params) {
       return $http.post('/models',{
+        orgId: params.orgId,
         content: params.content,
         type: params.type
       }).then(function success(res){
@@ -29,7 +44,8 @@ angular
 
     service.updateModel = function(params) {
       return $http.put('/models',{
-        id: params.id,
+        orgId: params.orgId,
+        modelId: params.modelId,
         content: params.content,
         type: params.type
       }).then(function success(res){

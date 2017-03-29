@@ -2,6 +2,23 @@ var app = angular.module('carbonCalc', ['ui.sortable']);
 
 app.controller('mainController', function(Service,$scope,$http) {
 
+  $scope.orgName = Service.orgName;
+  $scope.orgId = Service.orgId;
+
+  $scope.orgLogin = function() {
+    if($scope.orgName) {
+      Service.getOrg($scope.orgName).then(function(){
+        if(Service.success) {
+          $scope.orgId = Service.orgId;
+          displaySuccess('Successfully logged in to '+ $scope.orgName);
+        } else {
+          $scope.orgId = null;
+          displayWarning('Could not log in to ', $scope.orgName);
+        }
+      });
+    }
+  }
+
   $scope.toggle = function(id) {
     angular.element(document).find(id).toggle(200);
   }
@@ -305,8 +322,11 @@ app.controller('mainController', function(Service,$scope,$http) {
   $scope.modelId = Service.id;
 
   $scope.uploadWithId = function() {
+    if(!$scope.orgId){
+      return displayWarning("Please log in to organisation");
+    }
     if($scope.modelId) {
-      Service.getModel($scope.modelId).then(function(){
+      Service.getModel($scope.orgId,$scope.modelId).then(function(){
         if(Service.success) {
           var content = Service.model;
           if (Service.type == 'form') {
@@ -319,7 +339,7 @@ app.controller('mainController', function(Service,$scope,$http) {
             editor.setValue(content);
           }
         } else {
-          displayError("Could not upload with id");
+          displayWarning("Could not upload with id");
         }
         return;
       });
@@ -328,7 +348,12 @@ app.controller('mainController', function(Service,$scope,$http) {
   };
 
   $scope.saveModel = function() {
+    if(!$scope.orgId) {
+      return displayWarning('Please log in to organisation');
+    }
+
     var params = {};
+
     if($scope.view.type == 'formView') {
       params.content = JSON.stringify(getState(saveScope));
       params.type = 'form';
@@ -337,40 +362,32 @@ app.controller('mainController', function(Service,$scope,$http) {
       params.type = 'code';
     }
 
+    params.orgId = $scope.orgId;
+
     if($scope.modelId) {
       // Model already exists in database, update it
-      params.id = $scope.modelId;
+      params.modelId = $scope.modelId;
+
       Service.updateModel(params).then(function(){
-        $scope.modelId = Service.id;
         if(!Service.success){
-          $scope.dialog.success = false;
-          $scope.dialog.warning = true;
-          $scope.dialog.message = 'Could not get shareable id';
+          return displayWarning('Could not get shareable id');
         } else {
-          $scope.dialog.success = true;
-          $scope.dialog.warning = false;
-          $scope.dialog.message = 'Shareable id is ' + $scope.modelId;
+          $scope.modelId = Service.id;
+          return displaySuccess('Shareable id is ' + $scope.modelId);
         }
       });
 
     } else {
       // Create new entry in database
-
       Service.createModel(params).then(function(){
-        $scope.modelId = Service.id;
         if(!Service.success){
-          $scope.dialog.success = false;
-          $scope.dialog.warning = true;
-          $scope.dialog.message = 'Could not get shareable id';
+          return displayWarning('Could not get shareable id');
         } else {
-          $scope.dialog.success = true;
-          $scope.dialog.warning = false;
-          $scope.dialog.message = 'Shareable id is ' + $scope.modelId;
+          $scope.modelId = Service.id;
+          return displaySuccess('Shareable id is ' + $scope.modelId);
         }
       });
     }
-
-
   };
 
   ///////////// Code View /////////////
@@ -485,47 +502,53 @@ app.controller('mainController', function(Service,$scope,$http) {
 
   ///////////// Parse and Solve Model /////////////
 
+  $scope.dialog = {};
+
+  function displayWarning(message) {
+    $scope.dialog.success = false;
+    $scope.dialog.warning = true;
+    $scope.dialog.message = message;
+    return;
+  }
+
+  function displaySuccess(message) {
+    $scope.dialog.warning = false;
+    $scope.dialog.success = true;
+    $scope.dialog.message = message;
+    return;
+  }
+
+  ///////////// Parse and Solve Model /////////////
+
   $scope.uploadedModel = '';
 
   $scope.filterable = [];
   $scope.filterSelect = [];
   $scope.matrix = '';
 
-  $scope.dialog = {};
+
 
   // Send model to RADAR (server)
   $scope.parseModel = function(isValid) {
     if(!isValid) {
-      $scope.dialog.success = false;
-      $scope.dialog.warning = true;
-      $scope.dialog.message = 'Model is not valid!';
-      return;
+      return displayWarning('Model is not valid!');
     }
 
     var params = getParams();
 
     Service.parseModel(params).then(function() {
       if(Service.success) {
-        $scope.dialog.success = true;
-        $scope.dialog.warning = false;
-        $scope.dialog.message = Service.message;
+        return displaySuccess(Service.message);
       } else {
         $scope.filterable = [];
-        $scope.dialog.success = false;
-        $scope.dialog.warning = true;
-        $scope.dialog.message = 'Model could not be parsed: \n'+ Service.message;
+        return displayWarning('Model could not be parsed: \n'+ Service.message);
       }
-      return;
     });
-    return;
   }
 
   $scope.solveModel = function(isValid) {
     if(!isValid) {
-      $scope.dialog.success = false;
-      $scope.dialog.warning = true;
-      $scope.dialog.message = 'Model is not valid!';
-      return;
+      return displayWarning('Model is not valid!');
     }
 
     var params = getParams();
@@ -540,21 +563,16 @@ app.controller('mainController', function(Service,$scope,$http) {
         $scope.csv = d3.csvParse($scope.matrix);
         $scope.csvcols = ['Choose'].concat($scope.csv.columns);
 
-        $scope.dialog.success = true;
-        $scope.dialog.warning = false;
-        $scope.dialog.message = 'Model was successfully solved';
-
         formatDGraph($scope.dgraph);
         formatVGraph($scope.vgraph);
 
+        return displaySuccess('Model was successfully solved');
+
       } else {
         $scope.filterable = [];
-        $scope.dialog.success = false;
-        $scope.dialog.warning = true;
-        $scope.dialog.message = 'There was an error solving the model: ' + Service.message;
+        return displayWarning('There was an error solving the model: ' + Service.message)
       }
     });
-    return;
   };
 
   function getParams() {

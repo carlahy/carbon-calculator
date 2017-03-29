@@ -6,7 +6,7 @@ const exec       = require('child_process').exec;
 const fs         = require('fs');
 const PythonShell= require('python-shell')
 const mongoose   = require('mongoose');
-const nconf = require('nconf');
+const nconf      = require('nconf');
 
 /////////// Database ///////////
 
@@ -29,11 +29,19 @@ if (nconf.get('mongoDatabase')) {
 // var dburl = 'mongodb://localhost/carbondb'
 mongoose.connect(uri);
 
-var Model = mongoose.model('Model', {
-  content:  String,
-  type: String,
-  updated_at: { type: Date, default: Date.now }
+var modelSchema = new mongoose.Schema({
+    name: String,
+    content: String,
+    type: String,
+    updated_at: { type: Date, default: Date.now }
 });
+
+var orgSchema = new mongoose.Schema({
+  name: String,
+  models: [modelSchema]
+});
+
+var Org = mongoose.model('Organisation', orgSchema);
 
 /////////// Classpath ///////////
 
@@ -53,41 +61,87 @@ app.set('port', (process.env.PORT || 5000))
     res.sendfile('./public/views/index.html');
   })
 
+  .get('/organisations', function(req,res) {
+    Org.findOne({name:req.query.name}, function(err,org){
+      if(!org || err) {
+        org = new Org({ name: req.query.name });
+        org.save(function(err) {
+          if (err) return handleError(res,err);
+          return res.send({
+            id: org._id,
+            name: org.name
+          });
+        });
+      } else {
+        return res.send({
+          id:org._id
+        });
+      }
+    })
+  })
+
   .get('/models', function(req,res){
-    Model.findById(req.query.id, function(err, model) {
-      if(err) return res.status(404).send(err);
+
+    Org.findById(req.query.orgId, function(err,org){
+      if(!org || err) return res.status(404).send(err);
+      console.log('org is ',org);
+      var model = org.models.id(req.modelId);
+
       res.send({
         model: model.content,
         type: model.type
       });
-    });
+    })
+
+    // Model.findById(req.query.id, function(err, model) {
+    //   if(err) return res.status(404).send(err);
+    //   res.send({
+    //     model: model.content,
+    //     type: model.type
+    //   });
+    // });
   })
 
   .post('/models', function (req, res) {
-    var model = new Model({
-      content: req.body.content,
-      type: req.body.type
-    });
-    model.save(function (err) {
-      if(err) return res.status(404).send(err);
-      res.send({
-        id: model._id,
-        model: model
+
+    Org.findById(req.body.orgId, function(err,org){
+      if(!org || err) return res.status(404).send(err);
+
+      var model = {
+        content: req.body.content,
+        type: req.body.type,
+        _id: mongoose.Types.ObjectId()
+      };
+
+      org.models.push(model);
+      org.save(function(err){
+        if (err) return handleError(res,err);
       });
-    });
+      console.log('pushed model ',model)
+      res.send({
+        model: model.content,
+        type: model.type,
+        id: model._id
+      });
+    })
   })
 
   .put('/models', function(req,res){
-    Model.findById(req.body.id, function(err, model) {
-      if(err) return res.status(404).send(err);
+    Org.findById(req.body.orgId, function(err,org){
+      if (err) return handleError(res,err);
+      // console.log(model);
+      var model = org.models.id(req.body.modelId);
       console.log(model);
+
       model.content = req.body.content;
       model.type = req.body.type;
-      model.save( function ( err, model ){
-        if(err) return res.status(400).send(err);
+
+      org.save( function (err){
+        if (err) return handleError(res,err);
+        console.log(org);
         res.send({
-          id:model._id,
-          type:model.type
+          id: model._id,
+          type: model.type
         });
       });
     });
@@ -133,6 +187,7 @@ app.set('port', (process.env.PORT || 5000))
     // RADAR unsuccessfully solved model, send error
     if(radar.stderr != '') {
       console.log('Error during solve');
+      console.log(radar.stderr);
       return res.send({
         message:radar.stderr.toString().trim(),
         success: false
@@ -193,3 +248,7 @@ app.set('port', (process.env.PORT || 5000))
 app.listen(app.get('port'), function() {
     console.log('Node app is running on port', app.get('port'));
   });
+
+function handleError(res,err) {
+  return res.status(404).send(err);
+}
