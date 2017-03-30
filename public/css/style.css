@@ -6,9 +6,8 @@ h1 {
 	text-align: center;
 }
 
- #id-to-upload,#form-to-upload {
-	width: 30%;
-	margin-right: 7%;
+.file-upload {
+	max-width: 55%;
 }
 
 th {
@@ -70,7 +69,7 @@ label input[type='checkbox'] {
 #editor {
 	min-height: 200px;
 	border: 1px solid lightgrey;
-	margin-top: 5%;
+	margin-top: 2%;
 }
 
 .btn-group {

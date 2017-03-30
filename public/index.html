@@ -18,28 +18,42 @@
     <div class="page-header">
       <h1>Community Carbon Calculator <small></small></h1>
     </div>
-    <br>
+    <!-- <div id="dgraph"></div> TODO-->
 
-    <div class="row-align">
-      <input type="text" value="Organisation" ng-model="orgName">
-      <button type="button" class="btn btn-default" ng-click="orgLogin()">Login to your organisation</button>
-    </div>
+    <!--- ========= Toggle Form/Code ========= -->
+    <nav class="navbar navbar-default">
+      <div class="container-fluid">
+        <div class="collapse navbar-collapse">
+          <form class="navbar-form navbar-left">
+            <div class="form-group"><input type="text" class="form-control" placeholder="Organisation" ng-model="orgName"></div>
+            <button type="button" class="btn btn-default" ng-click="orgLogin()">Login</button>
+          </form>
+
+          <form class="navbar-form navbar-left">
+            <div class="form-group"><input type="file" id="file-to-upload" accept=".json,.rdr"></div>
+            <button type="button"  class="btn btn-default" ng-click="uploadFile(event)">Upload File</button>
+          </form>
+
+          <form class="navbar-form navbar-left">
+            <div class="form-group"><input type="text" class="form-control" placeholder="Model id" ng-model="modelId"></div>
+            <button type="button" class="btn btn-default" ng-click="uploadWithId()">Upload With Id</button>
+          </form>
+        </div>
+      </div>
+    </nav>
 
     <h2>Step 1: Build the Model</h2>
 
-    <div id="dgraph"></div>
-
-    <!--- ========= Toggle Form/Code ========= -->
     <div class="btn-group" role="group">
-      <button type="button" class="btn btn-secondary" id="btn-form" ng-click="switchToForm()">Form View</button>
-      <button type="button" class="btn btn-secondary" id="btn-code" ng-click="switchToCode()">Code View</button>
+      <button type="button" class="btn btn-success" id="btn-form" ng-click="switchToForm()">Form View</button>
+      <button type="button" class="btn btn-success" id="btn-code" ng-click="switchToCode()">Code View</button>
     </div>
 
     <div class="row">
       <div ng-include="view.template"></div>
     </div>
 
-    <h2>Step 2: Results</h2>
+    <h2>Step 2: Analyse the Results</h2>
 
     <div class="row">
       <div ng-include="results.template"></div>

@@ -85,7 +85,7 @@ app.set('port', (process.env.PORT || 5000))
     Org.findById(req.query.orgId, function(err,org){
       if(!org || err) return res.status(404).send(err);
       console.log('org is ',org);
-      var model = org.models.id(req.modelId);
+      var model = org.models.id(req.query.modelId);
 
       res.send({
         model: model.content,

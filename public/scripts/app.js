@@ -43,9 +43,10 @@ app.controller('mainController', function(Service,$scope,$http) {
 
 ///////////// Model Name /////////////
 
-  $scope.modelName = '';
+  // $scope.modelName = '';
 
   $scope.addModelName = function(name) {
+    console.log(name);
     if(name) {
       if(!includes($scope.varnames,name)) {
           $scope.varnames.push(name);
@@ -322,6 +323,7 @@ app.controller('mainController', function(Service,$scope,$http) {
   $scope.modelId = Service.id;
 
   $scope.uploadWithId = function() {
+    console.log('hello ',$scope.modelId);
     if(!$scope.orgId){
       return displayWarning("Please log in to organisation");
     }
@@ -398,6 +400,7 @@ app.controller('mainController', function(Service,$scope,$http) {
       type: 'codeView',
       template: './views/code-view.html'
     }
+    console.log($scope.view.type)
     return;
   }
 
@@ -416,42 +419,31 @@ app.controller('mainController', function(Service,$scope,$http) {
     return;
   }
 
-  ///////////// Model Upload /////////////
-
-  $scope.uploadCode = function(event) {
-    var input = document.getElementById('fileinput');
-    var file = input.files[0];
-    var reader = new FileReader();
-
-    reader.onload = function(event) {
-      var content = event.target.result;
-
-      // Set code editor
-      var editor = ace.edit('editor');
-      editor.setValue(content);
-    }
-    reader.readAsText(file);
-  };
-
-  ///////////////// Form Upload and Restore /////////////////
+  ///////////// Upload Files /////////////
 
   // All of the $scope variables needed to save and restore a form view
   var saveScope = ['varnames', 'modelName', 'objectives', 'variables', 'parameters', 'equations', 'decisions'];
 
-  $scope.uploadForm = function(event) {
-    var input = document.getElementById('form-to-upload');
+  $scope.uploadFile = function(event) {
+    var input = document.getElementById('file-to-upload');
     var file = input.files[0];
     var reader = new FileReader();
-
     reader.onload = function(event) {
       var content = event.target.result;
-      content = JSON.parse(content);
-
-      for(s in saveScope) {
-        $scope[saveScope[s]] = content[saveScope[s]];
+      if($scope.view.type == 'formView') {
+        content = JSON.parse(content);
+        for(s in saveScope) {
+          $scope[saveScope[s]] = content[saveScope[s]];
+        }
+      } else {
+        console.log('code');
+        var editor = ace.edit('editor');
+        editor.setValue(content);
       }
+
     }
-    reader.readAsText(file);
+
+    return reader.readAsText(file);
   };
 
   ///////////// Download Model /////////////

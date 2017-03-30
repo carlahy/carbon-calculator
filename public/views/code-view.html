@@ -2,16 +2,14 @@
 
 <div class="col-sm-8 codeView">
   <form class="" name="codeView">
-    <div class="row-align">
+    <!-- <div class="row-align">
       <input type="file" id="fileinput" name="model_upload" accept=".rdr">
       <button type="button" class="btn btn-default" ng-click="uploadCode(event)">Upload File</button>
-      <button type="button" class="btn btn-default" ng-click="formToCode()">Upload Form</button>
-    </div>
-    <div class="row-align">
-      <input type="text" id="id-to-upload" value="Model id" ng-model="$parent.modelId">
-      <button type="button" class="btn btn-default" ng-click="uploadWithId()">Upload With Id</button>
-    </div>
+    </div> -->
 
+
+
+    <button type="button" class="btn btn-default" ng-click="formToCode()">Load Form</button>
     <div id="editor" ng-model="uploadedModel"></div>
   </form>
 
