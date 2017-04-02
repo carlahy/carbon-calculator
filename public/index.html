@@ -6,34 +6,28 @@
 
   <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
   <link rel="stylesheet" type="text/css" href="css/style.css">
-
-  <!-- <base href="http://localhost:5000" /> -->
-
 </head>
 
-<body ng-app="carbonCalc" ng-controller="mainController">
+<body ng-app="carbonCalc">
 
   <div class="container">
 
     <div class="page-header">
       <h1>Community Carbon Calculator <small></small></h1>
     </div>
-    <!-- <div id="dgraph"></div> TODO-->
 
-    <!--- ========= Toggle Form/Code ========= -->
-    <nav class="navbar navbar-default">
+    <!--- ========= Navigation Bar ========= -->
+    <nav class="navbar navbar-default" ng-controller="dbController">
       <div class="container-fluid">
         <div class="collapse navbar-collapse">
           <form class="navbar-form navbar-left">
             <div class="form-group"><input type="text" class="form-control" placeholder="Organisation" ng-model="orgName"></div>
             <button type="button" class="btn btn-default" ng-click="orgLogin()">Login</button>
           </form>
-
           <form class="navbar-form navbar-left">
             <div class="form-group"><input type="file" id="file-to-upload" accept=".json,.rdr"></div>
             <button type="button"  class="btn btn-default" ng-click="uploadFile(event)">Upload File</button>
           </form>
-
           <form class="navbar-form navbar-left">
             <div class="form-group"><input type="text" class="form-control" placeholder="Model id" ng-model="modelId"></div>
             <button type="button" class="btn btn-default" ng-click="uploadWithId()">Upload With Id</button>
@@ -41,6 +35,8 @@
         </div>
       </div>
     </nav>
+
+    <!--- ========= Form/Code Views ========= -->
 
     <h2>Step 1: Build the Model</h2>
 
@@ -53,35 +49,31 @@
       <div ng-include="view.template"></div>
     </div>
 
+    <!--- ========= Results ========= -->
+
     <h2>Step 2: Analyse the Results</h2>
 
-    <div class="row">
+    <div class="row" ng-controller="resultController">
       <div ng-include="results.template"></div>
     </div>
 
   </div>
 
-  <!-- <footer class="footer">
-    <div class="container">
-      <p class="navbar-text pull-left">FOOTER
-      </p>
+  <script type="text/javascript" src="js/libs/jquery-3.1.1.min.js"></script>
+  <script type="text/javascript" src="js/libs/jquery-ui.min.js"></script>
+  <script type="text/javascript" src="js/libs/angular.min.js"></script>
+  <script type="text/javascript" src="js/libs/sortable.js"></script>
+  <script type="text/javascript" src="js/libs/d3.min.js"></script>
+  <script type="text/javascript" src="js/libs/bootstrap.min.js"></script>
+  <script type="text/javascript" src="js/app.js"></script>
+  <script type="text/javascript" src="js/services/service.js"></script>
+  <script type="text/javascript" src="js/services/helper.js"></script>
+  <script type="text/javascript" src="js/controllers/mainCtrl.js"></script>
+  <script type="text/javascript" src="js/controllers/resultCtrl.js"></script>
+  <script type="text/javascript" src="js/controllers/dbCtrl.js"></script>
+  <script type="text/javascript" src="js/libs/src-min-noconflict/ace.js" charset="utf-8"></script>
 
-      <a href="https://github.com/carlahy/carbon-calculator" class="pull-right"><span class="glypihcon icon-github"></span></a>
-    </div>
-  </footer> -->
-
-  <script type="text/javascript" src="scripts/libs/jquery-3.1.1.min.js"></script>
-  <script type="text/javascript" src="scripts/libs/jquery-ui.min.js"></script>
-  <script type="text/javascript" src="scripts/libs/angular.min.js"></script>
-  <script type="text/javascript" src="scripts/libs/sortable.js"></script>
-  <script type="text/javascript" src="scripts/libs/d3.min.js"></script>
-  <script type="text/javascript" src="scripts/libs/bootstrap.min.js"></script>
-  <script type="text/javascript" src="scripts/app.js"></script>
-  <script type="text/javascript" src="scripts/service.js"></script>
-  <script type="text/javascript" src="scripts/libs/src-min-noconflict/ace.js" charset="utf-8"></script>
-  <script type="text/javascript" src="scripts/index.js"></script>
-
-  <script type="text/javascript" src="scripts/libs/viz.js"></script>
+  <script type="text/javascript" src="js/libs/viz.js"></script>
 
 
 </body>

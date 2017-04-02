@@ -10,23 +10,23 @@ const nconf      = require('nconf');
 
 /////////// Database ///////////
 
+// MongoDB with mLab
+// nconf.argv().env().file('keys.json');
+//
+// const user = nconf.get('mongoUser');
+// const pass = nconf.get('mongoPass');
+// const host = nconf.get('mongoHost');
+// const port = nconf.get('mongoPort');
 
-nconf.argv().env().file('keys.json');
+// let uri = `mongodb://${user}:${pass}@${host}:${port}`;
+//
+// if (nconf.get('mongoDatabase')) {
+//   uri = `${uri}/${nconf.get('mongoDatabase')}`;
+// }
 
-const user = nconf.get('mongoUser');
-const pass = nconf.get('mongoPass');
-const host = nconf.get('mongoHost');
-const port = nconf.get('mongoPort');
+// MongoDB local server
+let uri = 'mongodb://localhost/carbondb';
 
-// [START client]
-let uri = `mongodb://${user}:${pass}@${host}:${port}`;
-
-if (nconf.get('mongoDatabase')) {
-  uri = `${uri}/${nconf.get('mongoDatabase')}`;
-}
-
-
-// var dburl = 'mongodb://localhost/carbondb'
 mongoose.connect(uri);
 
 var modelSchema = new mongoose.Schema({
@@ -57,10 +57,6 @@ app.set('port', (process.env.PORT || 5000))
 
   .use(express.static(__dirname + '/public'))
 
-  .get('/', function(req, res) {
-    res.sendfile('./public/views/index.html');
-  })
-
   .get('/organisations', function(req,res) {
     Org.findOne({name:req.query.name}, function(err,org){
       if(!org || err) {
@@ -84,7 +80,6 @@ app.set('port', (process.env.PORT || 5000))
 
     Org.findById(req.query.orgId, function(err,org){
       if(!org || err) return res.status(404).send(err);
-      console.log('org is ',org);
       var model = org.models.id(req.query.modelId);
 
       res.send({
@@ -92,14 +87,6 @@ app.set('port', (process.env.PORT || 5000))
         type: model.type
       });
     })
-
-    // Model.findById(req.query.id, function(err, model) {
-    //   if(err) return res.status(404).send(err);
-    //   res.send({
-    //     model: model.content,
-    //     type: model.type
-    //   });
-    // });
   })
 
   .post('/models', function (req, res) {
@@ -114,10 +101,10 @@ app.set('port', (process.env.PORT || 5000))
       };
 
       org.models.push(model);
+
       org.save(function(err){
         if (err) return handleError(res,err);
       });
-      console.log('pushed model ',model)
       res.send({
         model: model.content,
         type: model.type,
@@ -129,16 +116,13 @@ app.set('port', (process.env.PORT || 5000))
   .put('/models', function(req,res){
     Org.findById(req.body.orgId, function(err,org){
       if (err) return handleError(res,err);
-      // console.log(model);
       var model = org.models.id(req.body.modelId);
-      console.log(model);
 
       model.content = req.body.content;
       model.type = req.body.type;
 
       org.save( function (err){
         if (err) return handleError(res,err);
-        console.log(org);
         res.send({
           id: model._id,
           type: model.type
@@ -222,7 +206,6 @@ app.set('port', (process.env.PORT || 5000))
               dgraph: fs.readFileSync(graphPath+'dgraph.dot','utf8'),
               vgraph: fs.readFileSync(graphPath+'vgraph.dot','utf8'),
               decisions: pyres[0],
-              // objectives: pyres[1],
               success: true
             });
           }

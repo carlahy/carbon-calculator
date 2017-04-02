@@ -1,39 +1,16 @@
-var app = angular.module('carbonCalc', ['ui.sortable']);
+angular.module('carbonCalc').controller('mainController', function(Service,Helper,$scope,$http) {
 
-app.controller('mainController', function(Service,$scope,$http) {
 
-  $scope.orgName = Service.orgName;
-  $scope.orgId = Service.orgId;
-
-  $scope.orgLogin = function() {
-    if($scope.orgName) {
-      Service.getOrg($scope.orgName).then(function(){
-        if(Service.success) {
-          $scope.orgId = Service.orgId;
-          displaySuccess('Successfully logged in to '+ $scope.orgName);
-        } else {
-          $scope.orgId = null;
-          displayWarning('Could not log in to ', $scope.orgName);
-        }
-      });
-    }
-  }
+///////////// View Handlers /////////////
 
   $scope.toggle = function(id) {
     angular.element(document).find(id).toggle(200);
   }
 
-  $scope.results = {
-    template:'./views/results.html'
-  }
-  // Form view or Code view, init as Form
   $scope.view = {
     type: 'formView',
     template: './views/form-view.html'
   };
-
-  // Keep track of variable names used to avoid duplicates
-  $scope.varnames = [];
 
   $scope.input = {
     objective:{},
@@ -41,14 +18,17 @@ app.controller('mainController', function(Service,$scope,$http) {
     option:''
   };
 
+  $scope.varnames = [];
+
+  // All of the $scope variables needed to save and restore a form view
+  var saveScope = ['varnames', 'modelName', 'objectives', 'variables', 'parameters', 'equations', 'unassignedDecisions','decisions'];
+
 ///////////// Model Name /////////////
 
-  // $scope.modelName = '';
-
   $scope.addModelName = function(name) {
-    console.log(name);
+    $scope.modelName = name;
     if(name) {
-      if(!includes($scope.varnames,name)) {
+      if(!Helper.includes($scope.varnames,name)) {
           $scope.varnames.push(name);
       }
     }
@@ -66,7 +46,7 @@ app.controller('mainController', function(Service,$scope,$http) {
   $scope.addObj = function() {
     var o = $scope.input.objective;
     if(o.name) {
-      if(!includes($scope.varnames,name)) {
+      if(!Helper.includes($scope.varnames,name)) {
         $scope.objectives.push({
           mode: o.mode,
           name: o.name,
@@ -75,7 +55,7 @@ app.controller('mainController', function(Service,$scope,$http) {
         });
         $scope.varnames.push(o.name);
         if(o.expression) {
-          var vars = getVars(o.expression);
+          var vars = Helper.getVars(o.expression);
           addNewVariables(vars);
         }
       }
@@ -84,10 +64,8 @@ app.controller('mainController', function(Service,$scope,$http) {
   };
 
   $scope.deleteObj = function(o) {
-    // Remove from objectives
     var index = $scope.objectives.indexOf(o);
     $scope.objectives.splice(index,1);
-    // Remove from variables
     index = $scope.varnames.indexOf(o.name);
     $scope.varnames.splice(index,1);
     return;
@@ -95,8 +73,7 @@ app.controller('mainController', function(Service,$scope,$http) {
 
   $scope.addExpression = function(expression) {
     if(expression) {
-      // Parse expression for new variables
-      var vars = getVars(expression);
+      var vars = Helper.getVars(expression);
       addNewVariables(vars);
     }
   }
@@ -108,6 +85,7 @@ app.controller('mainController', function(Service,$scope,$http) {
 
   $scope.assignVariable = function(v,option) {
     reassignVariable(v);
+    v.assigned = true;
     switch (option) {
       case 'Parameter': $scope.parameters.push(v);
         break;
@@ -136,10 +114,10 @@ app.controller('mainController', function(Service,$scope,$http) {
     // If variable is assigned to a decision
     if (v.decision) {
       // Find decision
-      var d = indexOfAttribute($scope.decisions, 'name', v.decision);
+      var d = Helper.indexOfAttribute($scope.decisions, 'name', v.decision);
       if(d != -1) {
         // Find variable
-        index = indexOfAttribute($scope.decisions[d].variables,'name',v.name);
+        index = Helper.indexOfAttribute($scope.decisions[d].variables,'name',v.name);
         $scope.decisions[d].variables.splice(index,1);
       }
       delete v.decision;
@@ -159,7 +137,7 @@ app.controller('mainController', function(Service,$scope,$http) {
     index = $scope.varnames.indexOf(v.name);
     $scope.varnames.splice(index,1);
 
-    // If assigned to a type, then remove from type list
+    // If declared as a type, then remove from type
     if(v.type == 'Parameter') {
       index = $scope.parameters.indexOf(v);
       $scope.parameters.splice(index,1);
@@ -168,7 +146,7 @@ app.controller('mainController', function(Service,$scope,$http) {
       $scope.equations.splice(index,1);
     } else if (v.type == 'Decision') {
       if(v.decision) {
-        var d = indexOfAttribute($scope.decisions,'name',v.decision);
+        var d = Helper.indexOfAttribute($scope.decisions,'name',v.decision);
         index = $scope.decisions[d].variables.indexOf(v);
         $scope.decisions[d].variables.splice(index,1);
       } else {
@@ -179,15 +157,15 @@ app.controller('mainController', function(Service,$scope,$http) {
     return;
   }
 
-  // Add new variables to variable list and as variable names
   function addNewVariables(vars){
     for(v in vars) {
       v = vars[v];
-      if(!includes($scope.varnames,v)) {
+      if(!Helper.includes($scope.varnames,v)) {
         // Add variable to list
         $scope.varnames.push(v);
         $scope.variables.push({
-          name:v
+          name:v,
+          assigned:false
         });
       }
     }
@@ -201,7 +179,7 @@ app.controller('mainController', function(Service,$scope,$http) {
   $scope.saveParameter = function(p,value) {
     if(value) {
       p.value = value;
-      var vars = getVars(value);
+      var vars = Helper.getVars(value);
       addNewVariables(vars);
     }
   };
@@ -220,7 +198,7 @@ app.controller('mainController', function(Service,$scope,$http) {
   $scope.saveEquation = function(e,expression) {
     if(expression) {
       e.value = expression;
-      var vars = getVars(expression);
+      var vars = Helper.getVars(expression);
       addNewVariables(vars);
     }
   };
@@ -229,7 +207,7 @@ app.controller('mainController', function(Service,$scope,$http) {
     var index = $scope.equations.indexOf(e);
     $scope.equations.splice(index,1);
     index = $scope.varnames.indexOf(e.name);
-    $scope.varnames.splice(index,1);
+    return $scope.varnames.splice(index,1);
   };
 
   ///////////// Decisions /////////////
@@ -242,33 +220,26 @@ app.controller('mainController', function(Service,$scope,$http) {
   // Variable {decision,name,options[{name:value}]}
 
   $scope.addDecision = function(d) {
-    if(d) {
-      if(indexOfAttribute($scope.decisions,'name',d) == -1) {
-        $scope.decisions.push({
-          name:d,
-          options:[],
-          variables:[]
-        });
-      }
+    if(d && Helper.indexOfAttribute($scope.decisions,'name',d) == -1) {
+      $scope.decisions.push({
+        name:d,
+        options:[],
+        variables:[]
+      });
     }
-    $scope.input.decision = '';
-    return;
+    return $scope.input.decision = '';
   }
 
   $scope.assignDecision = function (v) {
     // Remove variable from unassigned
     var index = $scope.unassignedDecisions.indexOf(v);
     $scope.unassignedDecisions.splice(index,1);
-
     // Add variable to decision
-    index = indexOfAttribute($scope.decisions,'name',v.decision);
+    index = Helper.indexOfAttribute($scope.decisions,'name',v.decision);
     var decision = $scope.decisions[index];
-
     // Push variable to decision variables
     v.options = [];
-    decision.variables.push(v);
-
-    return;
+    return decision.variables.push(v);
   };
 
   // Change the decision name for an existing decision
@@ -287,9 +258,7 @@ app.controller('mainController', function(Service,$scope,$http) {
       $scope.unassignedDecisions.push(d.variables[v]);
     }
     var index = $scope.decisions.indexOf(d);
-    $scope.decisions.splice(index,1);
-
-    return;
+    return $scope.decisions.splice(index,1);
   }
 
   // Add new option for a decision
@@ -297,7 +266,7 @@ app.controller('mainController', function(Service,$scope,$http) {
     if(option && d.options.indexOf(option) == -1) {
       d.options.push(option);
     }
-    $scope.input.option = '';
+    return $scope.input.option = '';
   };
 
   // Parse expression for a decision variable's option assignment
@@ -307,47 +276,16 @@ app.controller('mainController', function(Service,$scope,$http) {
       v.options.splice(index,1);
     } else {
       // Parse expression
-      var vars = getVars(v.options[o]);
+      var vars = Helper.getVars(v.options[o]);
       addNewVariables(vars);
     }
+    return;
   };
 
   $scope.deleteOption = function(d,o) {
     var index = d.options.indexOf(o);
-    d.options.splice(index,1);
+    return d.options.splice(index,1);
   }
-
-  ///////////// Database /////////////
-
-  // Database ID
-  $scope.modelId = Service.id;
-
-  $scope.uploadWithId = function() {
-    console.log('hello ',$scope.modelId);
-    if(!$scope.orgId){
-      return displayWarning("Please log in to organisation");
-    }
-    if($scope.modelId) {
-      Service.getModel($scope.orgId,$scope.modelId).then(function(){
-        if(Service.success) {
-          var content = Service.model;
-          if (Service.type == 'form') {
-            content = JSON.parse(content);
-            for(s in saveScope) {
-              $scope[saveScope[s]] = content[saveScope[s]];
-            }
-          } else {
-            var editor = ace.edit('editor');
-            editor.setValue(content);
-          }
-        } else {
-          displayWarning("Could not upload with id");
-        }
-        return;
-      });
-    }
-    return;
-  };
 
   $scope.saveModel = function() {
     if(!$scope.orgId) {
@@ -392,59 +330,29 @@ app.controller('mainController', function(Service,$scope,$http) {
     }
   };
 
-  ///////////// Code View /////////////
+///////////// Code View /////////////
 
   // Upload the 'Form view' data to editor
   $scope.switchToCode = function() {
-    $scope.view = {
+    return $scope.view = {
       type: 'codeView',
       template: './views/code-view.html'
     }
-    console.log($scope.view.type)
-    return;
   }
 
   $scope.switchToForm = function () {
-    $scope.view = {
+    return $scope.view = {
       type: 'formView',
       template: './views/form-view.html'
     }
-    return;
   }
 
+  // Load the model from form to code view
   $scope.formToCode = function() {
-    var content = formatModel();
+    var content = Helper.formatModel();
     var editor = ace.edit('editor');
-    editor.setValue(content);
-    return;
+    return editor.setValue(content);
   }
-
-  ///////////// Upload Files /////////////
-
-  // All of the $scope variables needed to save and restore a form view
-  var saveScope = ['varnames', 'modelName', 'objectives', 'variables', 'parameters', 'equations', 'decisions'];
-
-  $scope.uploadFile = function(event) {
-    var input = document.getElementById('file-to-upload');
-    var file = input.files[0];
-    var reader = new FileReader();
-    reader.onload = function(event) {
-      var content = event.target.result;
-      if($scope.view.type == 'formView') {
-        content = JSON.parse(content);
-        for(s in saveScope) {
-          $scope[saveScope[s]] = content[saveScope[s]];
-        }
-      } else {
-        console.log('code');
-        var editor = ace.edit('editor');
-        editor.setValue(content);
-      }
-
-    }
-
-    return reader.readAsText(file);
-  };
 
   ///////////// Download Model /////////////
 
@@ -479,7 +387,6 @@ app.controller('mainController', function(Service,$scope,$http) {
     var file = new Blob([content], {type:type});
     dlbtn.href = URL.createObjectURL(file);
     dlbtn.download = fileName;
-
   };
 
   // Save state of $scope variables
@@ -492,7 +399,7 @@ app.controller('mainController', function(Service,$scope,$http) {
     return content;
   }
 
-  ///////////// Parse and Solve Model /////////////
+  ///////////// Dialog /////////////
 
   $scope.dialog = {};
 
@@ -518,22 +425,20 @@ app.controller('mainController', function(Service,$scope,$http) {
   $scope.filterSelect = [];
   $scope.matrix = '';
 
-
-
   // Send model to RADAR (server)
   $scope.parseModel = function(isValid) {
     if(!isValid) {
       return displayWarning('Model is not valid!');
     }
 
-    var params = getParams();
+    var params = Helper.getParams($scope.view.type,$scope.modelName);
 
     Service.parseModel(params).then(function() {
       if(Service.success) {
         return displaySuccess(Service.message);
       } else {
         $scope.filterable = [];
-        return displayWarning('Model could not be parsed: \n'+ Service.message);
+        return displayWarning('Model could not bef parsed: \n'+ Service.message);
       }
     });
   }
@@ -543,7 +448,7 @@ app.controller('mainController', function(Service,$scope,$http) {
       return displayWarning('Model is not valid!');
     }
 
-    var params = getParams();
+    var params = Helper.getParams($scope.view.type,$scope.modelName);
 
     Service.solveModel(params).then(function(){
       if(Service.success) {
@@ -555,8 +460,8 @@ app.controller('mainController', function(Service,$scope,$http) {
         $scope.csv = d3.csvParse($scope.matrix);
         $scope.csvcols = ['Choose'].concat($scope.csv.columns);
 
-        formatDGraph($scope.dgraph);
-        formatVGraph($scope.vgraph);
+        Helper.formatDGraph($scope.dgraph);
+        Helper.formatVGraph($scope.vgraph);
 
         return displaySuccess('Model was successfully solved');
 
@@ -564,110 +469,6 @@ app.controller('mainController', function(Service,$scope,$http) {
         $scope.filterable = [];
         return displayWarning('There was an error solving the model: ' + Service.message)
       }
-    });
-  };
-
-  function getParams() {
-
-    var content = '';
-
-    if($scope.view.type == 'formView') {
-      content = formatModel();
-      params = {
-        modelName: $scope.modelName,
-        modelContent: content,
-      };
-    } else if($scope.view.type == 'codeView') {
-      content = ace.edit('editor').getValue();
-      // Seach for model name
-      var lines = content.split('\n');
-      for(l in lines) {
-        var line = lines[l].split(' ');
-        if(line[0].trim() == 'Model') {
-          $scope.modelName = line[1].trim().split(';')[0];
-          break;
-        }
-      }
-      params = {
-        modelName: $scope.modelName,
-        modelContent: content,
-      };
-    }
-    return params;
-  }
-
-  $scope.toCompare = [];
-  $scope.isChecked = {};
-
-  $scope.checkRow = function(row,index) {
-
-    if($scope.isChecked[index]) {
-      $scope.toCompare.push(row);
-    } else {
-      var index = $scope.toCompare.indexOf(row);
-      $scope.toCompare.splice(index,1);
-    }
-    return;
-  };
-
-  $scope.export = function() {
-    console.log('export');
-  }
-
-  function formatModel(){
-    var eol = ';\n';
-    var result = '';
-
-    // Format model name
-    result += 'Model '+ $scope.modelName + eol;
-
-    // Format objectives
-    result += '\n//Objectives\n\n';
-    for(i in $scope.objectives) {
-      var obj = $scope.objectives[i];
-      result += 'Objective '+obj.mode+' '+obj.name+' = '+obj.statistic+'('+obj.expression+')'+eol;
-    }
-
-    // Format parameters
-    result += '\n//Parameters\n\n';
-    for(i in $scope.parameters) {
-      var param = $scope.parameters[i];
-      result +=  param.name+' = '+param.distribution+'('+param.value+')'+eol;
-    }
-
-    // Format equations
-    result += '\n//Equations\n\n';
-    for(i in $scope.equations) {
-      var eq = $scope.equations[i];
-      result += eq.name + ' = ' + eq.value + eol;
-    }
-
-    // Format decisions
-    result += '\n//Decisions\n\n';
-    for(d in $scope.decisions) {
-      var d = $scope.decisions[d];
-      for(v in d.variables) {
-        v = d.variables[v];
-        result += v.name+' = decision("'+v.decision+'") {\n';
-        for(o in v.options) {
-          result += '\t"'+o+'": '+v.options[o]+eol;
-        }
-        result += '}\n\n';
-      }
-    }
-    return result;
-  }
-
-  ///////////// Handle Output /////////////
-
-  $scope.filterResult = function() {
-    $scope.csv = d3.csvParse($scope.matrix).filter(function(row) {
-      for(s in $scope.filterSelect) {
-        if($scope.filterSelect[s] != null && row[s] != $scope.filterSelect[s]) {
-          return false;
-        }
-      }
-      return true;
     });
   };
 

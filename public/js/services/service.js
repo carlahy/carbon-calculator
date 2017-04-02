@@ -54,10 +54,6 @@ angular
       }, handleError);
     };
 
-    service.deleteModel = function() {
-
-    };
-
     service.parseModel = function(params) {
       return $http.post('/parse', params).then(function success(res){
         service.success = res.data.success;
@@ -85,5 +81,6 @@ angular
       service.success = false;
       return $q.reject(res.data);
     }
+
 
 });
