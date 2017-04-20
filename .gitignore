@@ -1,4 +1,4 @@
 data/
-radar-models/*
-radar-output/*
+radar-models/
+radar-output/
 keys.json

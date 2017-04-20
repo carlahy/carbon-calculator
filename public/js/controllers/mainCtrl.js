@@ -334,6 +334,7 @@ angular.module('carbonCalc').controller('mainController', function(Service,Helpe
 
   // Upload the 'Form view' data to editor
   $scope.switchToCode = function() {
+    console.log('Hello');
     return $scope.view = {
       type: 'codeView',
       template: './views/code-view.html'
@@ -341,6 +342,7 @@ angular.module('carbonCalc').controller('mainController', function(Service,Helpe
   }
 
   $scope.switchToForm = function () {
+    console.log('World');
     return $scope.view = {
       type: 'formView',
       template: './views/form-view.html'
