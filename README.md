@@ -1,32 +1,24 @@
 # carbon-calculator
 
-This should include all the technical details that would enable a student to continue your project next year,
-and be able to amend or extend your code. For example, Where is the code?, What do you do to compile and install it?
+Below are all the technical details to download and run the carbon-calculator. The Carbon Calculator tool is a web application for sustainable decision making under uncertainty, that provides a simple web user interface for the complex RADAR modelling language and multi-objective decision analysis tool.
 
-The Carbon Calculator tool is a web application for sustainable decision making under uncertainty.
-It implements the RADAR modelling language and decision analysis tool.
+For more information about RADAR, you can access the tool and the paper [here](http://www0.cs.ucl.ac.uk/staff/S.Busari/RADAR/).
 
 ### Requirements:
 * [Node.js](https://nodejs.org/en/)
+* [npm](https://www.npmjs.com/)
 * [MongoDB](https://www.mongodb.com/)
 * [RADAR](http://www0.cs.ucl.ac.uk/staff/S.Busari/RADAR/)
+* [Python](https://www.python.org/)
 
 ### How to run:
 
-1. Replace the RADAR/ directory with your download of RADAR
-2. You will need to update the RADAR classpath variable located inside the server.js file (```var cp = <your classpath>```) to your own
-3. run ```mongod --dbpath=data --port 27017``` to start database
-3. From your command line, run ```node server.js ```
-4. Open your browser and navigate to http://localhost:5000. You can change the port in the server.js file
+1. Download the source code from the github repository
+2. Replace the RADAR/ directory with your local version of RADAR
+3. You will need to update the RADAR classpath variable located inside the server.js file, at ```var cp = <your classpath>```
+4. Open a terminal and navigate to the carbon-calculator/ directory
+5. To run a local Mongo datbase, run the command ```mongod --dbpath=data --port 27017```
+6. Run the command ```npm install``` to install the node modules necessary.
+7. Run the command ```node server.js``` or ```npm start```
+8. Open your browser and navigate to http://localhost:5000. Alternatively, change the port in server.js.
 
-### Front-end:
-
-The front-end is written in [AngularJs](https://angularjs.org/).
-
-### Back-end:
-
-The back-end is in Node.js with an [Express](http://expressjs.com/) server
-
-### RADAR:
-
-You can download RADAR [here](http://www0.cs.ucl.ac.uk/staff/S.Busari/RADAR/)
