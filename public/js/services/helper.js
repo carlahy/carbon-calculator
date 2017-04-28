@@ -46,7 +46,7 @@ angular
       var content = '';
 
       if(_viewType == 'formView') {
-        content = this.formatModel(); //TODO
+        content = this.formatModel();
         params = {
           modelName:_modelName,
           modelContent: content,

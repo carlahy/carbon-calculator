@@ -29,10 +29,11 @@ def parseCSV(mfile):
     ndecisions = len(decisions)
     ncols = model.shape[1]
     colsToScale = model.columns.values[ndecisions:ncols-1]
-    for c in colsToScale:
-        colvals = model.values[:,model.columns.get_loc(c)].astype(float)
-        col = preprocessing.scale(np.array(colvals))
-        model.loc[:,c] = col.reshape(len(col),1)
+    # Toggle to scale columns in matrix
+    # for c in colsToScale:
+    #     colvals = model.values[:,model.columns.get_loc(c)].astype(float)
+    #     col = preprocessing.scale(np.array(colvals))
+    #     model.loc[:,c] = col.reshape(len(col),1)
 
     model = model.round(5)
 
@@ -53,7 +54,6 @@ def parseCSV(mfile):
 
 if __name__ == '__main__':
     args = sys.argv
-    # args = json.loads(args)
     decisions, objectives = parseCSV(args[1])
     res = decisions, objectives
 

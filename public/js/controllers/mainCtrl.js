@@ -1,6 +1,5 @@
 angular.module('carbonCalc').controller('mainController', function(Service,Helper,$scope,$http) {
 
-
 ///////////// View Handlers /////////////
 
   $scope.toggle = function(id) {
